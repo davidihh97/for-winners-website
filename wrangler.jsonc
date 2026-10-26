@@ -1,0 +1,19 @@
+
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "for-winners-website",
+  "main": "src/index.js",
+  "compatibility_date": "2026-10-26",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "for-winners-db",
+      "database_id": "9bf5c7c6-0937-48a8-8b60-0952875f1016",
+      "migrations_dir": "migrations"
+    }
+  ]
+}
