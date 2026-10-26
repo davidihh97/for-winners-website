@@ -1,5 +1,4 @@
-/* ===== DATOS EDITABLES ===== */
-const WA_NUMBER="593000000000"; // ← pon aquí el WhatsApp de For Winners (código de país + número)
+const WA_NUMBER="593999769785"; // ← pon aquí el WhatsApp de For Winners (código de país + número)
 const WA_MSG="Hola For Winners, quiero información.";
 const NIVELACION=[["Primaria",6],["Bachillerato",7],["Universidad",8]];
 const UNIS={
