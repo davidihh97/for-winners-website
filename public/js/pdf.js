@@ -8,7 +8,7 @@
     social: "TikTok e Instagram: @forwinnersec",
     wa: typeof WA_NUMBER !== "undefined" ? WA_NUMBER : "593999769785",
   };
-  const C = { navy: [11, 42, 91], gold: [245, 185, 33], ink: [29, 29, 31], mut: [110, 110, 115], light: [245, 245, 247], line: [222, 222, 228], ok: [31, 157, 85], bad: [214, 69, 69], mid: [245, 185, 33], white: [255, 255, 255] };
+  const C = { navy: [11, 42, 91], blue: [46, 107, 209], gold: [201, 161, 59], ink: [29, 29, 31], mut: [110, 110, 115], light: [245, 245, 247], line: [222, 222, 228], ok: [31, 157, 85], bad: [214, 69, 69], mid: [201, 161, 59], white: [255, 255, 255] };
   const W = 210, H = 297, M = 16;
 
   // Las fuentes estándar de PDF solo cubren Latin-1: se traducen los símbolos matemáticos.
@@ -120,7 +120,7 @@
     for (const k of [0.25, 0.5, 0.75, 1]) poly(doc, items.map((_, i) => [cx + r * k * Math.cos(ang(i)), cy + r * k * Math.sin(ang(i))]), null, "S");
     items.forEach((_, i) => doc.line(cx, cy, cx + r * Math.cos(ang(i)), cy + r * Math.sin(ang(i))));
     doc.setGState(new doc.GState({ opacity: 0.35 }));
-    poly(doc, items.map((it, i) => [cx + (r * it.pct / 100) * Math.cos(ang(i)), cy + (r * it.pct / 100) * Math.sin(ang(i))]), C.gold, "F");
+    poly(doc, items.map((it, i) => [cx + (r * it.pct / 100) * Math.cos(ang(i)), cy + (r * it.pct / 100) * Math.sin(ang(i))]), C.blue, "F");
     doc.setGState(new doc.GState({ opacity: 1 }));
     doc.setDrawColor(...C.navy); doc.setLineWidth(0.6);
     poly(doc, items.map((it, i) => [cx + (r * it.pct / 100) * Math.cos(ang(i)), cy + (r * it.pct / 100) * Math.sin(ang(i))]), null, "S");
@@ -245,7 +245,7 @@
     radar(doc, M + 42, y + 36, 27, r.profile.slice().sort((a, b) => "RIASEC".indexOf(a.code) - "RIASEC".indexOf(b.code)).map(p => ({ label: p.name, pct: p.pct })));
     font(doc, 10); color(doc, C.ink);
     doc.text(doc.splitTextToSize(t(r.message), 92), W - M - 92, y + 6);
-    bars(doc, W - M - 92, y + 20, 92, r.profile.map((p, i) => ({ label: p.name, pct: p.pct, color: i < 3 ? C.gold : [200, 205, 215] })), { labelW: 30, rowH: 8 });
+    bars(doc, W - M - 92, y + 20, 92, r.profile.map((p, i) => ({ label: p.name, pct: p.pct, color: i < 3 ? C.navy : [200, 207, 222] })), { labelW: 30, rowH: 8 });
     y += 80;
     y = sectionTitle(doc, y, "Otras carreras muy afines a ti");
     const cw = (W - 2 * M - 4) / 2;
@@ -277,7 +277,7 @@
         if (d.section === "body" && d.column.index === 4) {
           const pct = parseInt(r.careers[d.row.index].fit, 10);
           fill(doc, C.light); doc.rect(d.cell.x + 13, d.cell.y + d.cell.height / 2 - 1.5, 24, 3, "F");
-          fill(doc, d.row.index < 3 ? C.gold : C.navy); doc.rect(d.cell.x + 13, d.cell.y + d.cell.height / 2 - 1.5, (24 * pct) / 100, 3, "F");
+          fill(doc, d.row.index < 3 ? C.gold : C.blue); doc.rect(d.cell.x + 13, d.cell.y + d.cell.height / 2 - 1.5, (24 * pct) / 100, 3, "F");
         }
       },
     });

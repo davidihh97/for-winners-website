@@ -29,7 +29,7 @@
     return out;
   };
   const fmtTime = s => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
-  const bandColor = p => (p >= 80 ? "var(--ok)" : p >= 50 ? "var(--accent)" : "var(--bad)");
+  const bandColor = p => (p >= 80 ? "var(--ok)" : p >= 50 ? "var(--gold)" : "var(--bad)");
 
   // ---------- Formulario de contacto validado ----------
   // El botón queda inactivo hasta que: nombre y apellido, celular de 10 dígitos (09…),
