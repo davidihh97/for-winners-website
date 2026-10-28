@@ -199,3 +199,12 @@ section:not(.alt) .pick button{background:var(--bg2)}
 .tip li.lock{filter:blur(4px);user-select:none}
 .tip .lockcta{margin-top:auto;padding-top:12px;font-size:14px;font-weight:600;color:var(--brand)}
 .dark-card{background:var(--brand)!important;color:#fff}.dark-card p{color:#D6E2FA}
+/* protección de simuladores */
+.runner{position:relative;overflow:hidden}
+.runner[data-protected]{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.runner input,.runner textarea,.runner select{-webkit-user-select:text;user-select:text}
+.runner[data-protected]::after{content:"FOR WINNERS · SIMULADOR";position:absolute;inset:0;display:grid;place-items:center;font-weight:800;font-size:clamp(28px,7vw,64px);letter-spacing:.12em;color:var(--fg);opacity:.035;transform:rotate(-24deg);pointer-events:none;white-space:nowrap;overflow:hidden}
+.rn-figure{display:flex;justify-content:center;margin:4px 0 14px;color:var(--fg)}
+.rn-figure svg{max-width:100%;height:auto}
+.rn-q{white-space:pre-line}
+@media print{.runner[data-protected] *{display:none!important}.runner[data-protected]::before{content:"La impresión de los simuladores está deshabilitada.";display:block}.runner::after{display:none}}

@@ -2,7 +2,7 @@ const WA_NUMBER="593999769785"; // ← pon aquí el WhatsApp de For Winners (có
 const WA_MSG="Hola For Winners, quiero información.";
 const NIVELACION=[["Primaria",6],["Bachillerato",7],["Universidad",8]];
 const UNIS={
- "UTN":{t:"Universidad Técnica del Norte",d:["Un curso por facultad: FICAYA, FICA, FECYT-FACAE y Ciencias de la Salud.","Modalidad intensiva o regular, según el tiempo que tengas.","Temario y simulacros según tu carrera."]},
+ "UTN":{t:"Universidad Técnica del Norte",d:["Un curso por facultad: FICA-FICAYA (Ingenierías), FECYT-FACAE y Ciencias de la Salud.","Modalidad intensiva o regular, según el tiempo que tengas.","Temario y simulacros según tu carrera."]},
  "Central":{t:"Universidad Central del Ecuador",d:["Curso conjunto con UPEC y Yachay: comparten razonamiento verbal, lógico, numérico y abstracto.","Clases en bloques de fin de semana, mañana o tarde.","Simulacros cronometrados del formato UCE."]},
  "UPEC":{t:"Universidad Politécnica Estatal del Carchi",d:["Curso conjunto con Central y Yachay.","Práctica de razonamiento con el formato de tu prueba.","Grupos reducidos y seguimiento semanal."]},
  "Yachay":{t:"Universidad Yachay Tech",d:["Curso conjunto con Central y UPEC.","Enfoque en razonamiento lógico y numérico.","Simulacros y revisión personalizada de errores."]}

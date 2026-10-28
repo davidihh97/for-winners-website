@@ -4,7 +4,9 @@ import { reportHtml, sendEmail, sendWhatsApp, normalizePhone, summaryLine, waLin
 import { ACADEMIC_GUIDE_HTML } from "./guide.js";
 
 const DEFAULT_WA = "593999769785";
-const json = (data, status = 200) => new Response(JSON.stringify(data), { status, headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" } });
+const json = (data, status = 200) => new Response(JSON.stringify(data), { status, headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store", "X-Robots-Tag": "noindex, nofollow" } });
+// Intentos permitidos por IP: evita que alguien automatice la descarga de los bancos de preguntas.
+const LIMITS = { start: [[3600, 15], [86400, 40]], submit: [[3600, 20]], lead: [[3600, 10]] };
 const bad = msg => json({ error: msg }, 400);
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -26,6 +28,7 @@ async function api(request, env, ctx, url) {
   if (p === "/api/catalog" && request.method === "GET") return json(publicCatalog());
 
   if (p === "/api/quiz/start" && request.method === "POST") {
+    if (await limited(env, request, "start")) return json({ error: "Alcanzaste el límite de simuladores por ahora. Vuelve más tarde o escríbenos por WhatsApp para practicar con un tutor." }, 429);
     const b = await body(request);
     const seen = Array.isArray(b.seen) ? b.seen.filter(x => typeof x === "string").slice(-3000) : [];
     const sections = Array.isArray(b.sections) ? b.sections.map(String).slice(0, 10) : [];
@@ -34,6 +37,7 @@ async function api(request, env, ctx, url) {
   }
 
   if (p === "/api/quiz/submit" && request.method === "POST") {
+    if (await limited(env, request, "submit")) return json({ error: "Demasiados envíos seguidos. Intenta en unos minutos." }, 429);
     const b = await body(request);
     if (b.website) return json({ ok: true }); // honeypot anti-bots
     const contact = checkContact(b.contact);
@@ -68,6 +72,7 @@ async function api(request, env, ctx, url) {
   }
 
   if (p === "/api/lead" && request.method === "POST") {
+    if (await limited(env, request, "lead")) return json({ error: "Demasiados envíos seguidos. Intenta en unos minutos." }, 429);
     const b = await body(request);
     if (b.website) return json({ ok: true });
     const contact = checkContact(b);
@@ -88,6 +93,22 @@ async function api(request, env, ctx, url) {
   }
 
   return json({ error: "No encontrado" }, 404);
+}
+
+async function limited(env, request, action) {
+  if (!env.DB) return false;
+  const ip = request.headers.get("CF-Connecting-IP") || "local";
+  const now = Math.floor(Date.now() / 1000);
+  try {
+    for (const [win, max] of LIMITS[action]) {
+      const k = `${action}:${win}:${ip}`;
+      const row = await env.DB.prepare(
+        "INSERT INTO rate_limits (k, n, reset_at) VALUES (?1, 1, ?2) ON CONFLICT(k) DO UPDATE SET n = CASE WHEN reset_at <= ?3 THEN 1 ELSE n + 1 END, reset_at = CASE WHEN reset_at <= ?3 THEN ?2 ELSE reset_at END RETURNING n"
+      ).bind(k, now + win, now).first();
+      if (row && row.n > max) return true;
+    }
+  } catch (e) { console.error("rate limit", e); }
+  return false;
 }
 
 async function body(request) {

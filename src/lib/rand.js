@@ -37,6 +37,12 @@ export function options(answer, distractors, n = 4, fill) {
     if (out.length >= n) break;
     if (!out.includes(s)) out.push(s);
   }
+  // Si faltan distractores y la respuesta empieza con un número, se completan con valores cercanos.
+  const m = !fill && String(answer).match(/^(-?\d+(?:,\d+)?)(.*)$/);
+  if (m) {
+    const v = parseFloat(m[1].replace(",", ".")), unit = m[2];
+    fill = k => fmt(v + (k % 2 ? 1 : -1) * Math.ceil(k / 2) * (Number.isInteger(v) ? Math.max(1, Math.round(Math.abs(v) / 10)) : 0.5)) + unit;
+  }
   let k = 1;
   while (fill && out.length < n && k < 50) {
     const s = String(fill(k++));

@@ -20,27 +20,27 @@ const SPELL = [
 dict("le.spell", SPELL, ([ok, ...bad]) => ({ prompt: "¿Cuál palabra está escrita correctamente?", options: options(ok, bad) }));
 
 bank("le.grammar", [
-  { q: "En la oración «Los estudiantes de Ibarra ganaron el concurso», el núcleo del sujeto es:", o: ["estudiantes", "Ibarra", "ganaron", "concurso"] },
+  { q: "En la oración «La vieja casona de mis abuelos amaneció cubierta de neblina», el núcleo del sujeto es:", o: ["casona", "abuelos", "vieja", "neblina"] },
   { q: "En «María compró flores para su madre», el complemento directo es:", o: ["flores", "María", "para su madre", "compró"] },
   { q: "¿Qué clase de palabra es «rápidamente»?", o: ["Adverbio", "Adjetivo", "Verbo", "Sustantivo"] },
-  { q: "¿Cuál es una palabra aguda?", o: ["Canción", "Árbol", "Lápiz", "Música"] },
+  { q: "¿Cuál de estas palabras es aguda?", o: ["Sofá", "Fácil", "Mármol", "Cráter"] },
   { q: "¿Cuál es una palabra esdrújula?", o: ["Murciélago", "Camión", "Cárcel", "Mesa"] },
   { q: "La palabra «casa» se clasifica según su acento como:", o: ["Llana o grave", "Aguda", "Esdrújula", "Sobresdrújula"] },
   { q: "¿Cuál oración tiene el verbo en pretérito perfecto simple?", o: ["Ayer llovió en Quito", "Mañana lloverá", "Está lloviendo", "Llueve mucho"] },
-  { q: "Elige la oración correctamente escrita:", o: ["Hubo muchos problemas en la reunión", "Hubieron muchos problemas en la reunión", "Habían muchos problemas en la reunión", "Hubieran muchos problemas en la reunión"] },
+  { q: "Elige la oración correctamente escrita:", o: ["Habrá varias funciones de cine el sábado", "Habrán varias funciones de cine el sábado", "Hubieron varias funciones de cine el sábado", "Habían varias funciones de cine el sábado"], e: "El verbo «haber» impersonal no se pluraliza." },
   { q: "¿Qué oración usa correctamente «porque»?", o: ["No vino porque estaba enfermo", "¿Porque no viniste?", "No sé el porque de su enojo", "Lo hizo porqué quiso"] },
   { q: "El plural de «el análisis» es:", o: ["Los análisis", "Los análisises", "Los análisis's", "Los analisis"] },
   { q: "En «El perro de mi vecino ladra fuerte», el predicado es:", o: ["ladra fuerte", "El perro", "de mi vecino", "El perro de mi vecino"] },
   { q: "¿Cuál es un sustantivo abstracto?", o: ["Libertad", "Mesa", "Montaña", "Perro"] },
   { q: "¿Qué signo se usa para encerrar una aclaración dentro de una oración?", o: ["Paréntesis", "Punto y coma", "Dos puntos", "Signo de admiración"] },
-  { q: "¿Cuál oración está correctamente puntuada?", o: ["Compré pan, leche y huevos.", "Compré, pan leche y huevos.", "Compré pan leche, y huevos.", "Compré: pan, leche, y, huevos."] },
+  { q: "¿Cuál oración está correctamente puntuada?", o: ["Quito, la capital, amaneció soleada.", "Quito la capital, amaneció soleada.", "Quito, la capital amaneció, soleada.", "Quito: la capital, amaneció soleada."] },
   { q: "«Sus ojos eran dos luceros» es un ejemplo de:", o: ["Metáfora", "Hipérbole", "Onomatopeya", "Personificación"] },
   { q: "«El viento susurraba entre los árboles» es un ejemplo de:", o: ["Personificación", "Metáfora", "Hipérbaton", "Anáfora"] },
   { q: "«Te lo he dicho un millón de veces» es un ejemplo de:", o: ["Hipérbole", "Símil", "Metáfora", "Antítesis"] },
   { q: "¿Quién escribió «Cien años de soledad»?", o: ["Gabriel García Márquez", "Mario Vargas Llosa", "Jorge Icaza", "Pablo Neruda"] },
-  { q: "¿Quién escribió la novela ecuatoriana «Huasipungo»?", o: ["Jorge Icaza", "Juan Montalvo", "Juan León Mera", "Medardo Ángel Silva"] },
+  { q: "¿A qué generación literaria ecuatoriana perteneció Medardo Ángel Silva?", o: ["Generación decapitada", "Grupo de Guayaquil", "Tzántzicos", "Generación del 98"] },
   { q: "«Cumandá» es una novela de:", o: ["Juan León Mera", "Jorge Icaza", "Juan Montalvo", "Pablo Palacio"] },
-  { q: "Un texto que busca convencer al lector con argumentos es:", o: ["Argumentativo", "Narrativo", "Descriptivo", "Instructivo"] },
+  { q: "Un texto que explica paso a paso cómo armar un mueble es:", o: ["Instructivo", "Narrativo", "Lírico", "Argumentativo"] },
   { q: "La palabra que significa lo mismo que «comenzar» es:", o: ["Iniciar", "Terminar", "Detener", "Olvidar"] },
   { q: "¿Qué conector expresa oposición?", o: ["Sin embargo", "Además", "Por lo tanto", "Por ejemplo"] },
   { q: "¿Qué conector expresa consecuencia?", o: ["Por lo tanto", "Aunque", "Asimismo", "Es decir"] },
@@ -48,7 +48,7 @@ bank("le.grammar", [
 ]);
 
 // ================= QUÍMICA =================
-const COMPOUNDS = [["H₂O", 18], ["CO₂", 44], ["NaCl", 58.5], ["CH₄", 16], ["NH₃", 17], ["O₂", 32], ["HCl", 36.5], ["CaCO₃", 100], ["NaOH", 40], ["H₂SO₄", 98], ["C₆H₁₂O₆", 180]];
+const COMPOUNDS = [["H₂O", 18], ["CO₂", 44], ["NaCl", 58.5], ["CH₄", 16], ["NH₃", 17], ["O₂", 32], ["HCl", 36.5], ["CaCO₃", 100], ["NaOH", 40], ["C₆H₁₂O₆", 180]];
 gen("q.moles", r => {
   const [f, M] = r.pick(COMPOUNDS), n = r.pick([0.5, 1, 2, 3, 4, 5, 0.25]);
   const m = M * n;
@@ -74,9 +74,9 @@ bank("q.bank", [
   { q: "El enlace en el NaCl es principalmente:", o: ["Iónico", "Covalente apolar", "Metálico", "Puente de hidrógeno"] },
   { q: "Los gases nobles se ubican en el grupo:", o: ["18 (VIIIA)", "1 (IA)", "17 (VIIA)", "2 (IIA)"] },
   { q: "El cambio de estado de sólido a gas sin pasar por líquido se llama:", o: ["Sublimación", "Fusión", "Evaporación", "Condensación"] },
-  { q: "¿Cuál es una mezcla homogénea?", o: ["Agua con sal disuelta", "Agua con arena", "Aceite y agua", "Ensalada"] },
+  { q: "¿Qué método permite separar una mezcla de agua y aceite?", o: ["Decantación", "Destilación", "Imantación", "Tamizado"] },
   { q: "La fórmula del ácido clorhídrico es:", o: ["HCl", "HClO", "NaCl", "Cl₂"] },
-  { q: "La masa molar del agua (H₂O) es aproximadamente:", o: ["18 g/mol", "16 g/mol", "10 g/mol", "20 g/mol"] },
+  { q: "Un mol de cualquier sustancia contiene aproximadamente:", o: ["6,022 × 10²³ partículas", "1000 partículas", "22,4 partículas", "6,022 × 10⁻²³ partículas"] },
   { q: "¿Qué gas se libera en la fotosíntesis?", o: ["Oxígeno", "Dióxido de carbono", "Nitrógeno", "Hidrógeno"] },
   { q: "Un catalizador:", o: ["Acelera una reacción sin consumirse", "Detiene la reacción", "Es siempre un reactivo", "Aumenta la masa total"] },
   { q: "Los isótopos de un elemento tienen distinto número de:", o: ["Neutrones", "Protones", "Electrones de valencia", "Número atómico"] },
@@ -89,13 +89,13 @@ bank("q.bank", [
 // ================= BIOLOGÍA =================
 bank("b.bank", [
   { q: "La unidad básica de la vida es:", o: ["La célula", "El tejido", "El átomo", "El órgano"] },
-  { q: "El organelo donde se realiza la respiración celular es:", o: ["La mitocondria", "El cloroplasto", "El ribosoma", "La vacuola"] },
+  { q: "El organelo que contiene enzimas digestivas y degrada sustancias dentro de la célula es:", o: ["El lisosoma", "El cloroplasto", "El ribosoma", "La pared celular"] },
   { q: "La fotosíntesis ocurre en:", o: ["Los cloroplastos", "Las mitocondrias", "El núcleo", "Los lisosomas"] },
   { q: "La molécula que contiene la información genética es:", o: ["ADN", "ATP", "Glucosa", "Colesterol"] },
   { q: "Las células procariotas se caracterizan por:", o: ["No tener núcleo definido", "Tener muchos núcleos", "Ser siempre vegetales", "Tener cloroplastos"] },
-  { q: "La síntesis de proteínas ocurre en:", o: ["Los ribosomas", "Las vacuolas", "La membrana", "Los centríolos"] },
+  { q: "Los centríolos participan principalmente en:", o: ["La división celular", "La fotosíntesis", "El almacenamiento de agua", "La síntesis de lípidos"] },
   { q: "El órgano que bombea la sangre es:", o: ["El corazón", "El hígado", "El pulmón", "El riñón"] },
-  { q: "Los glóbulos rojos transportan principalmente:", o: ["Oxígeno", "Anticuerpos", "Hormonas", "Plaquetas"] },
+  { q: "Las plaquetas intervienen principalmente en:", o: ["La coagulación de la sangre", "El transporte de oxígeno", "La producción de anticuerpos", "La digestión"] },
   { q: "La insulina es producida por:", o: ["El páncreas", "El hígado", "La tiroides", "El estómago"] },
   { q: "El sistema que defiende al cuerpo de infecciones es el:", o: ["Inmunológico", "Digestivo", "Óseo", "Endocrino"] },
   { q: "La división celular que produce gametos es la:", o: ["Meiosis", "Mitosis", "Fisión binaria", "Gemación"] },
@@ -129,7 +129,7 @@ bank("s.bank", [
   { q: "Las cuatro regiones naturales del Ecuador son:", o: ["Costa, Sierra, Amazonía e Insular", "Norte, Sur, Este y Oeste", "Costa, Sierra, Páramo y Selva", "Sierra, Valle, Costa y Galápagos continental"] },
   { q: "Ecuador debe su nombre a:", o: ["La línea equinoccial", "El río Guayas", "El volcán Chimborazo", "Un presidente"] },
   { q: "El volcán Chimborazo es conocido por ser:", o: ["El punto de la superficie terrestre más alejado del centro de la Tierra", "El volcán más activo del mundo", "La montaña más alta de América", "El único volcán de la Costa"] },
-  { q: "El ensayista ambateño autor de «Las Catilinarias» es:", o: ["Juan Montalvo", "Juan León Mera", "José Joaquín de Olmedo", "Eugenio Espejo"] },
+  { q: "El poeta guayaquileño autor de «La victoria de Junín. Canto a Bolívar» es:", o: ["José Joaquín de Olmedo", "Juan Montalvo", "Juan León Mera", "Eugenio Espejo"] },
   { q: "El autor de la letra del Himno Nacional del Ecuador es:", o: ["Juan León Mera", "Antonio Neumane", "Juan Montalvo", "Olmedo"] },
   { q: "La cultura precolombina conocida por sus figuras de cerámica «Venus» es:", o: ["Valdivia", "Inca", "Cañari", "Quitu-Cara"] },
   { q: "El océano que baña las costas del Ecuador es el:", o: ["Pacífico", "Atlántico", "Índico", "Ártico"] },
@@ -183,9 +183,9 @@ bank("q.bank2", [
   { q: "¿Cuál ecuación está correctamente balanceada?", o: ["CH₄ + 2O₂ → CO₂ + 2H₂O", "CH₄ + O₂ → CO₂ + H₂O", "CH₄ + 2O₂ → 2CO₂ + H₂O", "2CH₄ + O₂ → CO₂ + 2H₂O"] },
   { q: "¿Cuál ecuación está correctamente balanceada?", o: ["N₂ + 3H₂ → 2NH₃", "N₂ + H₂ → NH₃", "N₂ + 2H₂ → 2NH₃", "2N₂ + 3H₂ → NH₃"] },
   { q: "La reacción HCl + NaOH → NaCl + H₂O es de tipo:", o: ["Neutralización", "Combustión", "Síntesis", "Descomposición"] },
-  { q: "La reacción CaCO₃ → CaO + CO₂ es de tipo:", o: ["Descomposición", "Síntesis", "Neutralización", "Sustitución doble"] },
+  { q: "La reacción Zn + 2HCl → ZnCl₂ + H₂ es de tipo:", o: ["Sustitución simple", "Síntesis", "Descomposición", "Combustión"] },
   { q: "La configuración electrónica del sodio (Z = 11) termina en:", o: ["3s¹", "2p⁶", "3p¹", "4s¹"] },
-  { q: "El número de oxidación del oxígeno en la mayoría de compuestos es:", o: ["−2", "+2", "−1", "0"] },
+  { q: "El número de oxidación de cualquier elemento en estado libre (por ejemplo, el Fe metálico) es:", o: ["0", "+1", "+2", "−1"] },
   { q: "Un elemento con 8 protones y 10 neutrones tiene número másico:", o: ["18", "8", "10", "2"] },
   { q: "El NaOH se clasifica como:", o: ["Hidróxido (base)", "Ácido", "Óxido", "Sal"] },
   { q: "El CO₂ es un:", o: ["Óxido no metálico", "Hidróxido", "Hidruro", "Ácido oxácido"] },

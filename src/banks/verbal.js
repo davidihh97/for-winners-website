@@ -3,24 +3,28 @@ import { options } from "../lib/rand.js";
 
 // Palabra, sinónimo, antónimo. Sirve para preguntas de sinónimos y antónimos con distractores variables.
 const WORDS = [
-  ["efímero", "pasajero", "duradero", "dur"], ["diáfano", "transparente", "opaco", "luz"], ["perenne", "permanente", "temporal", "dur"],
-  ["austero", "sobrio", "derrochador", "mod"], ["benevolente", "bondadoso", "malvado", "ama"], ["exiguo", "escaso", "abundante", "abu"],
-  ["locuaz", "hablador", "callado", "hab"], ["prolijo", "esmerado", "descuidado", "cui"], ["arduo", "difícil", "sencillo"],
-  ["sagaz", "astuto", "ingenuo"], ["tenaz", "perseverante", "inconstante", "ten"], ["inocuo", "inofensivo", "dañino"],
-  ["afable", "amable", "hosco", "ama"], ["pródigo", "generoso", "tacaño", "gen"], ["lóbrego", "sombrío", "luminoso", "luz"],
+  ["ufano", "orgulloso", "avergonzado"], ["exhaustivo", "completo", "superficial", "sup"], ["somero", "superficial", "profundo", "sup"],
+  ["inicuo", "injusto", "justo"], ["ladino", "astuto", "ingenuo", "ast"], ["conspicuo", "notable", "desconocido"], ["probo", "honrado", "deshonesto"],
+  ["deleznable", "despreciable", "admirable"], ["exultante", "eufórico", "abatido"], ["avezado", "experto", "novato"], ["acucioso", "diligente", "negligente"],
+  ["pusilánime", "cobarde", "valeroso", "val"], ["ecuánime", "imparcial", "parcial"], ["prístino", "original", "alterado"], ["procaz", "insolente", "respetuoso"],
+  ["diáfano", "transparente", "opaco", "luz"], ["perenne", "permanente", "temporal", "dur"],
+  ["benevolente", "bondadoso", "malvado", "ama"], 
+  ["prolijo", "esmerado", "descuidado", "cui"], ["arduo", "difícil", "sencillo"],
+  ["sagaz", "astuto", "ingenuo", "ast"], ["tenaz", "perseverante", "inconstante", "ten"], 
+  ["afable", "amable", "hosco", "ama"], ["lóbrego", "sombrío", "luminoso", "luz"],
   ["ávido", "ansioso", "indiferente", "pas"], ["recóndito", "oculto", "visible"], ["vetusto", "antiguo", "moderno", "ant"],
   ["intrépido", "valiente", "cobarde", "val"], ["sosegado", "tranquilo", "inquieto", "cal"], ["fortuito", "casual", "intencional"],
-  ["impávido", "imperturbable", "asustado", "val"], ["lacónico", "breve", "extenso", "breve"], ["acérrimo", "tenaz", "tibio", "ten"],
+  ["impávido", "imperturbable", "asustado", "val"], ["lacónico", "breve", "extenso", "breve"], 
   ["altivo", "orgulloso", "humilde", "hum"], ["apacible", "sereno", "violento", "cal"], ["dócil", "obediente", "rebelde", "obe"],
   ["elocuente", "expresivo", "inexpresivo", "hab"], ["escueto", "conciso", "detallado", "breve"], ["fútil", "insignificante", "importante", "ins"],
-  ["hostil", "adverso", "amistoso", "ama"], ["inherente", "propio", "ajeno"], ["mesurado", "moderado", "exagerado", "mod"],
-  ["nimio", "insignificante", "trascendental", "ins"], ["obsoleto", "anticuado", "actual", "ant"], ["pulcro", "limpio", "sucio", "cui"],
+  ["inherente", "propio", "ajeno"], ["mesurado", "moderado", "exagerado", "mod"],
+  ["nimio", "insignificante", "trascendental", "ins"], ["pulcro", "limpio", "sucio", "cui"],
   ["sumiso", "obediente", "insumiso", "obe"], ["taciturno", "callado", "conversador", "hab"], ["ubérrimo", "fértil", "estéril", "abu"],
   ["vehemente", "apasionado", "indiferente", "pas"], ["zafio", "tosco", "refinado"], ["indulgente", "tolerante", "severo", "sev"],
   ["magnánimo", "generoso", "mezquino", "gen"], ["parco", "moderado", "excesivo", "mod"], ["sucinto", "breve", "extenso", "breve"],
-  ["exacerbar", "agravar", "mitigar", "mit"], ["dilucidar", "aclarar", "confundir"], ["menoscabar", "disminuir", "aumentar", "elo"],
+  ["exacerbar", "agravar", "mitigar", "mit"], ["menoscabar", "disminuir", "aumentar", "elo"],
   ["acatar", "obedecer", "desobedecer", "obe"], ["vislumbrar", "entrever", "ignorar"], ["dilapidar", "derrochar", "ahorrar", "gen"],
-  ["enaltecer", "elogiar", "denigrar", "elo"], ["mitigar", "aliviar", "agravar", "mit"], ["soslayar", "eludir", "afrontar"],
+  ["enaltecer", "elogiar", "denigrar", "elo"], ["soslayar", "eludir", "afrontar"],
 ];
 
 // Distractores de otras palabras, excluyendo las que comparten campo semántico (4.º elemento).
@@ -41,18 +45,18 @@ dict("vb.ant", WORDS, ([w, syn, ant], r, all, idx) => ({
 }));
 
 bank("vb.analogy", [
-  { q: "MÉDICO es a HOSPITAL como PROFESOR es a:", o: ["Escuela", "Libro", "Alumno", "Pizarra"] },
+  { q: "ALFARERO es a ARCILLA como ESCULTOR es a:", o: ["Mármol", "Museo", "Cincel", "Estatua"] },
+  { q: "VELOCÍMETRO es a VELOCIDAD como CRONÓMETRO es a:", o: ["Tiempo", "Carrera", "Segundo", "Reloj"] },
+  { q: "ARCHIPIÉLAGO es a ISLA como CONSTELACIÓN es a:", o: ["Estrella", "Cielo", "Galaxia", "Noche"] },
+  { q: "NAVEGANTE es a FARO como VIAJERO es a:", o: ["Señal", "Maleta", "Viaje", "Pasaporte"] },
+  { q: "TIMIDEZ es a AUDACIA como TRISTEZA es a:", o: ["Júbilo", "Llanto", "Pena", "Soledad"] },
+  { q: "SASTRE es a TIJERA como LEÑADOR es a:", o: ["Hacha", "Bosque", "Madera", "Árbol"] },
   { q: "PEZ es a AGUA como AVE es a:", o: ["Aire", "Nido", "Pluma", "Árbol"] },
-  { q: "PIE es a ZAPATO como MANO es a:", o: ["Guante", "Dedo", "Anillo", "Brazo"] },
   { q: "LIBRO es a PÁGINA como CASA es a:", o: ["Ladrillo", "Puerta", "Techo", "Ciudad"] },
   { q: "FRÍO es a CALOR como OSCURIDAD es a:", o: ["Luz", "Noche", "Sombra", "Sol"] },
   { q: "PINTOR es a PINCEL como ESCRITOR es a:", o: ["Pluma", "Novela", "Lector", "Papel"] },
-  { q: "SED es a AGUA como HAMBRE es a:", o: ["Alimento", "Plato", "Cocina", "Estómago"] },
   { q: "OJO es a VER como OÍDO es a:", o: ["Escuchar", "Sonido", "Oreja", "Música"] },
   { q: "SEMILLA es a ÁRBOL como HUEVO es a:", o: ["Ave", "Nido", "Cáscara", "Yema"] },
-  { q: "CAPITÁN es a BARCO como PILOTO es a:", o: ["Avión", "Aeropuerto", "Cielo", "Pasajero"] },
-  { q: "LEÓN es a MANADA como ABEJA es a:", o: ["Enjambre", "Miel", "Colmena", "Flor"] },
-  { q: "TERMÓMETRO es a TEMPERATURA como BALANZA es a:", o: ["Masa", "Altura", "Tiempo", "Volumen"] },
   { q: "QUITO es a ECUADOR como LIMA es a:", o: ["Perú", "Bolivia", "Chile", "Colombia"] },
   { q: "AGUA es a SÓLIDO como HIELO es a… (cuando se calienta):", o: ["Líquido", "Frío", "Gas", "Nieve"] },
   { q: "CARPINTERO es a MADERA como HERRERO es a:", o: ["Hierro", "Martillo", "Fuego", "Taller"] },
@@ -74,12 +78,12 @@ bank("vb.analogy", [
 ]);
 
 bank("vb.odd", [
+  { q: "Término excluido: Saturno, Júpiter, Sirio, Neptuno", o: ["Sirio", "Saturno", "Júpiter", "Neptuno"], e: "Sirio es una estrella; los demás son planetas." },
+  { q: "Término excluido: Loja, Ambato, Riobamba, Medellín", o: ["Medellín", "Loja", "Ambato", "Riobamba"], e: "Medellín está en Colombia." },
   { q: "Término excluido: manzana, pera, silla, uva", o: ["Silla", "Manzana", "Pera", "Uva"] },
-  { q: "Término excluido: Mercurio, Venus, Luna, Marte", o: ["Luna", "Mercurio", "Venus", "Marte"], e: "La Luna es un satélite, no un planeta." },
   { q: "Término excluido: guitarra, violín, arpa, flauta", o: ["Flauta", "Guitarra", "Violín", "Arpa"], e: "La flauta es de viento; los demás son de cuerda." },
   { q: "Término excluido: cuadrado, rombo, triángulo, rectángulo", o: ["Triángulo", "Cuadrado", "Rombo", "Rectángulo"], e: "Los demás tienen cuatro lados." },
   { q: "Término excluido: alegría, tristeza, mesa, ira", o: ["Mesa", "Alegría", "Tristeza", "Ira"] },
-  { q: "Término excluido: Quito, Guayaquil, Cuenca, Bogotá", o: ["Bogotá", "Quito", "Guayaquil", "Cuenca"] },
   { q: "Término excluido: correr, saltar, nadar, rápido", o: ["Rápido", "Correr", "Saltar", "Nadar"], e: "Rápido es adjetivo; los demás son verbos." },
   { q: "Término excluido: ballena, delfín, tiburón, foca", o: ["Tiburón", "Ballena", "Delfín", "Foca"], e: "El tiburón es un pez; los demás son mamíferos." },
   { q: "Término excluido: hidrógeno, oxígeno, agua, nitrógeno", o: ["Agua", "Hidrógeno", "Oxígeno", "Nitrógeno"], e: "El agua es un compuesto; los demás son elementos." },

@@ -68,10 +68,11 @@ gen("rn.work", r => {
   const opts = [2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 24, 30].filter(x => x !== w1 && total % x === 0);
   const w2 = r.pick(opts.length ? opts : [1]);
   const d2 = total / w2;
+  const [who, task, unit] = r.pick([["pintores", "pintan una escuela", "días"], ["costureras", "confeccionan un pedido de uniformes", "días"], ["jardineros", "arreglan un parque", "horas"], ["máquinas iguales", "embotellan un lote", "horas"], ["voluntarios", "reforestan una ladera", "días"]]);
   return {
-    prompt: `${w1} obreros construyen un muro en ${d1} días. Trabajando al mismo ritmo, ¿cuántos días tardarán ${w2} obreros?`,
-    options: options(d2, [(d1 * w2) / w1 | 0 || d1 + 1, d1 + (w1 - w2), total, d2 + 2], 4, near(d2)),
-    explain: `Proporción inversa: ${w1} × ${d1} = ${w2} × x → x = ${total}/${w2} = ${d2} días.`,
+    prompt: `${w1} ${who} ${task} en ${d1} ${unit}. Al mismo ritmo, ¿cuánto tardarían ${w2} ${who}?`,
+    options: options(`${d2} ${unit}`, [`${(d1 * w2) / w1 | 0 || d1 + 1} ${unit}`, `${d1 + (w1 - w2)} ${unit}`, `${total} ${unit}`, `${d2 + 2} ${unit}`], 4, k => `${d2 + k} ${unit}`),
+    explain: `Proporción inversa: ${w1} × ${d1} = ${w2} × x → x = ${total}/${w2} = ${d2}.`,
   };
 });
 
@@ -143,11 +144,20 @@ gen("rn.sets", r => {
 
 gen("rn.meet", r => {
   const v1 = r.int(4, 12) * 10, v2 = r.int(3, 10) * 10, t = r.pick([1, 2, 3, 0.5, 1.5]);
-  const d = (v1 + v2) * t;
+  const kind = r.chance(0.5);
+  if (kind) {
+    const d = (v1 + v2) * t;
+    return {
+      prompt: `Un tren y un bus salen a la misma hora desde dos terminales separadas ${fmt(d)} km y van al encuentro el uno del otro, a ${v1} km/h y ${v2} km/h. ¿Cuántas horas tardan en cruzarse?`,
+      options: options(`${fmt(t)} h`, [`${fmt(d / v1)} h`, `${fmt(t + 1)} h`, `${fmt(t + 0.5)} h`, `${fmt(t * 2)} h`], 4, k => `${fmt(t + k)} h`),
+      explain: `Se acercan a ${v1 + v2} km/h: t = ${fmt(d)}/${v1 + v2} = ${fmt(t)} h.`,
+    };
+  }
+  const fast = Math.max(v1, v2) + 10, slow = Math.min(v1, v2), gap = (fast - slow) * t;
   return {
-    prompt: `Dos autos parten al mismo tiempo desde ciudades separadas ${fmt(d)} km, uno hacia el otro, a ${v1} km/h y ${v2} km/h. ¿En cuánto tiempo se encuentran?`,
-    options: options(`${fmt(t)} h`, [`${fmt(d / v1)} h`, `${fmt(t + 1)} h`, `${fmt(t + 0.5)} h`, `${fmt(t * 2)} h`], 4, k => `${fmt(t + k)} h`),
-    explain: `Se acercan a ${v1 + v2} km/h: t = ${fmt(d)}/${v1 + v2} = ${fmt(t)} h.`,
+    prompt: `Una moto a ${fast} km/h persigue a un camión que va a ${slow} km/h por la misma vía y le lleva ${fmt(gap)} km de ventaja. ¿En cuánto tiempo lo alcanza?`,
+    options: options(`${fmt(t)} h`, [`${fmt(gap / fast)} h`, `${fmt(gap / (fast + slow))} h`, `${fmt(t + 1)} h`, `${fmt(t * 2)} h`], 4, k => `${fmt(t + k)} h`),
+    explain: `Diferencia de velocidades: ${fast - slow} km/h. t = ${fmt(gap)}/${fast - slow} = ${fmt(t)} h.`,
   };
 });
 
@@ -193,7 +203,7 @@ gen("rl.calendar", r => {
   return { prompt: `Si el ayer de mañana es ${DAYS[d]}, ¿qué día fue ayer?`, options: options(DAYS[(d + 6) % 7], [DAYS[d], DAYS[(d + 1) % 7], DAYS[(d + 5) % 7]]), explain: `"El ayer de mañana" es hoy (${DAYS[d]}); ayer fue ${DAYS[(d + 6) % 7]}.` };
 });
 
-const WORDS = ["CASA", "LIBRO", "MESA", "PERRO", "GATO", "SOL", "LUNA", "ÁRBOL", "PLAYA", "TREN", "NUBE", "FLOR", "VERDE", "LAPIZ"].map(w => w.replace("Á", "A"));
+const WORDS = ["CASA", "RADIO", "MESA", "PERRO", "GATO", "SOL", "LUNA", "ÁRBOL", "PLAYA", "TREN", "NUBE", "FLOR", "VERDE", "LAPIZ"].map(w => w.replace("Á", "A"));
 gen("rl.code", r => {
   const k = r.pick([1, 2, 3, -1]);
   const enc = w => [...w].map(c => ABC[(ABC.indexOf(c) + k + 27) % 27]).join("");

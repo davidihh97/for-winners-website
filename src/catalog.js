@@ -5,6 +5,8 @@ import "./gen/reasoning.js";
 import "./banks/verbal.js";
 import "./banks/school.js";
 import "./banks/english.js";
+import "./banks/pre.js";
+import "./gen/advanced.js";
 import "./vocational.js";
 
 // Porcentaje de la prueba real que se muestra en el simulador gratuito.
@@ -16,6 +18,11 @@ const LOGICO = ["rl.order", "rl.syllogism", "rl.calendar", "rl.code", ["rl.bank"
 const ABSTRACTO = ["ra.arrow", "ra.poly", "ra.dots", "ra.quad", "ra.orbit", "ra.odd"];
 const MATE_PRE = ["m.eq1", "m.powers", "m.func", "m.system", "m.quad", "m.percent", "m.frac", ["m.concepts", 2]];
 const FISICA_PRE = ["f.mru", "f.mruv", "f.freefall", "f.newton", "f.weight", "f.energy", "f.potential", "f.ohm", "f.density", "f.power", ["f.concepts", 2]];
+const MATE_ING = ["ma.limInf", "ma.limFactor", "ma.chain", "ma.integral", "ma.det", "ma.line", "ma.logeq", "m.deriv", "m.quad", "m.log", "m.trig", "rn.work", "rn.pchange", "rn.ages", "ra.arrow", "ra.poly", "re.net"];
+const FISICA_ING = [...FISICA_PRE, "fx.vertical", "fx.circular", "fx.sci", "fx.work", "fx.impulse"];
+const LENGUAJE = [["ln.bank", 4], "vb.analogy", "vb.ant", "vb.syn", ["le.grammar", 2]];
+const ESTADISTICA = [["st.bank", 3], "st.mean", "st.median", "st.mode", "st.var", "st.prob", "st.freq", "st.class"];
+const ANATOMIA = [["an.bank", 5], "an.bones", "an.glands", "b.organs"];
 const QUIMICA = [["q.bank", 3], ["q.bank2", 2], ["q.symbols", 2], "q.moles", "q.molar"];
 const BIOLOGIA = [["b.bank", 3], ["b.bank2", 2], ["b.organelles", 2], ["b.organs", 2]];
 const SOCIALES = [["s.bank", 3], "s.capitals"];
@@ -29,17 +36,17 @@ function split(total, parts) {
   return out.map(({ w, ...p }) => p);
 }
 
-// real: tamaño y duración de la prueba oficial (AJUSTAR con los simuladores reales de cada universidad).
+// real: tamaño y duración de la prueba oficial, según los simuladores de curso de For Winners.
 function uniLevel(label, real, parts) {
   const n = Math.round(real.questions * SIM_SHARE);
   return { label, real, minutes: Math.round(real.minutes * SIM_SHARE), sections: split(n, parts) };
 }
-const RAZ = (wV, wN, wL, wA) => [
-  { name: "Razonamiento verbal", w: wV, src: VERBAL },
-  { name: "Razonamiento numérico", w: wN, src: NUMERICO },
-  { name: "Razonamiento lógico", w: wL, src: LOGICO },
-  { name: "Razonamiento abstracto", w: wA, src: ABSTRACTO },
-];
+const V = w => ({ name: "Razonamiento verbal", w, src: [...VERBAL, ["vb.read", 2]] });
+const N = w => ({ name: "Razonamiento numérico", w, src: NUMERICO });
+const L = w => ({ name: "Razonamiento lógico", w, src: LOGICO });
+const A = w => ({ name: "Razonamiento abstracto", w, src: ABSTRACTO });
+const ATENCION = w => ({ name: "Atención y concentración", w, src: ["at.letters", "at.digits", "at.pairs"] });
+const YACHAY_EXTRA = w => ({ name: "Módulo Yachay: matemática, lectura científica y espacial", w, src: [["ma.ineq", 2], ["m.system", 1], ["ma.line", 1], ["m.func", 1], ["ma.pyth", 2], ["ma.solid", 2], ["ma.seq", 2], ["ma.sets", 2], ["rn.sets", 1], ["yc.read", 1], ["re.paint", 2]] });
 
 const ENGLISH_LEVELS = {
   a1: { label: "A1 · Principiante", grammar: [["en.g.a1", 3], ["en.g.a1.x", 2], "en.be", "en.article", "en.ps3"] },
@@ -95,37 +102,37 @@ export const QUIZZES = {
   uce: {
     kind: "score", title: "Simulador Universidad Central del Ecuador",
     cta: { service: "Preuniversitario UCE", text: "Reservar cupo en el preuniversitario", wa: "Hola For Winners, hice el simulador de la Central y quiero el preuniversitario. Resultado: " },
-    levels: { general: uniLevel("Razonamiento", { questions: 100, minutes: 120 }, RAZ(3, 3, 2, 2)) },
+    levels: { general: uniLevel("Razonamiento", { questions: 150, minutes: 120 }, [V(40), N(40), L(35), A(35)]) },
   },
   upec: {
     kind: "score", title: "Simulador UPEC",
     cta: { service: "Preuniversitario UPEC", text: "Reservar cupo en el preuniversitario", wa: "Hola For Winners, hice el simulador de la UPEC y quiero el preuniversitario. Resultado: " },
-    levels: { general: uniLevel("Razonamiento", { questions: 100, minutes: 120 }, RAZ(3, 3, 2, 2)) },
+    levels: { general: uniLevel("Razonamiento y atención", { questions: 60, minutes: 60 }, [V(15), N(15), L(15), ATENCION(15)]) },
   },
   yachay: {
     kind: "score", title: "Simulador Yachay Tech",
     cta: { service: "Preuniversitario Yachay Tech", text: "Reservar cupo en el preuniversitario", wa: "Hola For Winners, hice el simulador de Yachay Tech y quiero el preuniversitario. Resultado: " },
-    levels: { general: uniLevel("Razonamiento", { questions: 100, minutes: 120 }, RAZ(2, 4, 3, 2)) },
+    levels: { general: uniLevel("Razonamiento + módulo de matemáticas", { questions: 80, minutes: 90 }, [V(15), N(15), L(12), A(13), YACHAY_EXTRA(25)]) },
   },
   utn: {
     kind: "score", title: "Simulador Universidad Técnica del Norte",
     cta: { service: "Preuniversitario UTN", text: "Reservar cupo en el preuniversitario UTN", wa: "Hola For Winners, hice el simulador UTN y quiero el preuniversitario. Resultado: " },
     levels: {
-      fica: uniLevel("FICA · Ingeniería en Ciencias Aplicadas", { questions: 100, minutes: 120 }, [
-        { name: "Matemática", w: 3, src: MATE_PRE }, { name: "Física", w: 2, src: FISICA_PRE },
-        { name: "Razonamiento numérico", w: 3, src: NUMERICO }, { name: "Razonamiento lógico", w: 2, src: LOGICO },
+      ingenierias: uniLevel("FICA · FICAYA (Ingenierías)", { questions: 90, minutes: 120 }, [
+        { name: "Lenguaje", w: 10, src: LENGUAJE }, { name: "Estadística", w: 10, src: ESTADISTICA },
+        { name: "Matemática", w: 30, src: [...MATE_ING, ...MATE_PRE] }, { name: "Física", w: 30, src: FISICA_ING },
+        { name: "Química", w: 10, src: QUIMICA },
       ]),
-      ficaya: uniLevel("FICAYA · Ciencias Agropecuarias y Ambientales", { questions: 100, minutes: 120 }, [
-        { name: "Biología", w: 3, src: BIOLOGIA }, { name: "Química", w: 2, src: QUIMICA },
-        { name: "Matemática", w: 2, src: MATE_PRE }, { name: "Razonamiento", w: 3, src: [...NUMERICO, ...LOGICO] },
+      salud: uniLevel("FCCSS · Ciencias de la Salud", { questions: 90, minutes: 90 }, [
+        { name: "Lenguaje", w: 10, src: LENGUAJE }, { name: "Estadística", w: 10, src: ESTADISTICA },
+        { name: "Biología", w: 20, src: BIOLOGIA }, { name: "Anatomía", w: 40, src: ANATOMIA },
+        { name: "Química", w: 10, src: QUIMICA },
       ]),
-      salud: uniLevel("FCCSS · Ciencias de la Salud", { questions: 100, minutes: 120 }, [
-        { name: "Biología", w: 3, src: BIOLOGIA }, { name: "Química", w: 3, src: QUIMICA },
-        { name: "Razonamiento verbal", w: 2, src: VERBAL }, { name: "Razonamiento numérico", w: 2, src: NUMERICO },
-      ]),
+      // El simulador de curso FECYT-FACAE no indica tiempo: se asumen 120 minutos (AJUSTAR si es distinto).
       fecyt: uniLevel("FECYT · FACAE (Educación y Ciencias Administrativas)", { questions: 100, minutes: 120 }, [
-        { name: "Lengua y Literatura", w: 2, src: ["le.grammar", "le.spell", "vb.complete"] }, { name: "Estudios Sociales", w: 2, src: SOCIALES },
-        { name: "Razonamiento verbal", w: 3, src: VERBAL }, { name: "Razonamiento numérico", w: 3, src: NUMERICO },
+        { name: "Matemática, estadística y abstracto", w: 30, src: ["m.frac", "m.eq1", "m.system", "m.powers", "ma.line", "ma.det", "ma.limInf", "ma.integral", "st.median", "st.prob", "st.var", "st.class", ["st.bank", 2], "ra.poly", "ra.arrow", "ra.dots", "ra.orbit"] },
+        { name: "Emprendimiento", w: 40, src: [["em.bank", 3], ["em.calc", 2]] },
+        { name: "Verbal", w: 30, src: [["ln.bank", 3], "vb.syn", "vb.ant", "vb.analogy", "vb.roman", "le.spell", "le.grammar"] },
       ]),
     },
   },

@@ -25,7 +25,7 @@
 <main>
 <section class="hero c"><div class="wrap">
     <h1>Simuladores de<br><em>admisión.</em></h1>
-    <p class="lead">Practica con preguntas tipo examen y descubre cuánto te falta para conseguir tu cupo.</p>
+    <p class="lead">Practica con preguntas tipo examen, con la misma estructura y el mismo ritmo de la prueba real, y descubre cuánto te falta para conseguir tu cupo.</p>
     <div class="facts"><span>25 % de la prueba real</span><span>Cronometrado</span><span>Preguntas nuevas en cada intento</span></div>
   </div></section>
 
@@ -34,17 +34,16 @@
       <h2>Elige tu universidad.</h2>
       <div class="pick" id="unis">
         <button data-q="uce"><span class="ic">🏛️</span><b>Universidad Central</b><span>Razonamiento verbal, numérico, lógico y abstracto</span></button>
-        <button data-q="upec"><span class="ic">🌄</span><b>UPEC</b><span>Razonamiento verbal, numérico, lógico y abstracto</span></button>
-        <button data-q="yachay"><span class="ic">🔬</span><b>Yachay Tech</b><span>Énfasis en razonamiento numérico y lógico</span></button>
+        <button data-q="upec"><span class="ic">🌄</span><b>UPEC</b><span>Razonamiento verbal, numérico, lógico y atención y concentración</span></button>
+        <button data-q="yachay"><span class="ic">🔬</span><b>Yachay Tech</b><span>Razonamiento + módulo de matemáticas, lectura científica y espacial</span></button>
         <button data-q="utn"><span class="ic">🎓</span><b>UTN</b><span>Según la facultad a la que quieres entrar</span></button>
       </div>
       <div id="facs" hidden>
         <p class="step-lbl">Elige tu facultad</p>
         <div class="pick">
-          <button data-l="fica"><b>FICA</b><span>Ingeniería en Ciencias Aplicadas</span></button>
-          <button data-l="ficaya"><b>FICAYA</b><span>Ciencias Agropecuarias y Ambientales</span></button>
-          <button data-l="salud"><b>Ciencias de la Salud</b><span>Medicina, Enfermería, Nutrición, Fisioterapia…</span></button>
-          <button data-l="fecyt"><b>FECYT · FACAE</b><span>Educación y Ciencias Administrativas</span></button>
+          <button data-l="ingenierias"><b>FICA · FICAYA</b><span>Ingenierías: Lenguaje, Estadística, Matemática, Física y Química</span></button>
+          <button data-l="salud"><b>Ciencias de la Salud</b><span>Lenguaje, Estadística, Biología, Anatomía y Química</span></button>
+          <button data-l="fecyt"><b>FECYT · FACAE</b><span>Matemática y estadística, Emprendimiento y Verbal</span></button>
         </div>
       </div>
       <div id="ready" hidden>
@@ -62,7 +61,9 @@
       <div class="card"><span class="ic">📖</span><h3>Razonamiento verbal</h3><p>Analogías, sinónimos, antónimos, término excluido, oraciones incompletas y comprensión lectora.</p></div>
       <div class="card"><span class="ic">🔢</span><h3>Razonamiento numérico</h3><p>Series, proporciones, porcentajes, edades, operadores y problemas de planteo.</p></div>
       <div class="card"><span class="ic">🧩</span><h3>Razonamiento lógico</h3><p>Ordenamiento, silogismos, calendarios, codificación y deducción.</p></div>
-      <div class="card"><span class="ic">🔷</span><h3>Razonamiento abstracto</h3><p>Secuencias de figuras, giros, patrones y la figura que no pertenece.</p></div>
+      <div class="card"><span class="ic">🔷</span><h3>Razonamiento abstracto y espacial</h3><p>Secuencias de figuras, giros, patrones, desarrollos de cubos y cubos pintados.</p></div>
+      <div class="card"><span class="ic">🎯</span><h3>Atención y concentración</h3><p>Conteo de letras y dígitos y comparación de datos contra el reloj (UPEC).</p></div>
+      <div class="card"><span class="ic">🧪</span><h3>Conocimientos por facultad</h3><p>UTN: Lenguaje, Estadística, Matemática, Física, Química, Biología, Anatomía y Emprendimiento.</p></div>
     </div>
   </div></section>
 
@@ -90,7 +91,7 @@
     if(!quiz||!level){ready.hidden=true;return}
     ready.hidden=false;
     const l=cat&&cat[quiz]&&cat[quiz].levels[level];
-    document.getElementById("info").innerHTML=l?`<span>${l.questions} preguntas</span><span>${l.minutes} minutos</span><span>${l.sections.join(" · ")}</span>`:"";
+    document.getElementById("info").innerHTML=l?`<span>${l.questions} preguntas · ${l.minutes} min</span>${l.real?`<span>Prueba real: ${l.real.questions} preguntas en ${l.real.minutes} min</span>`:""}<span>${l.sections.join(" · ")}</span>`:"";
   }
   $$("#unis button").forEach(b=>b.onclick=()=>{
     quiz=b.dataset.q;$$("#unis button").forEach(x=>x.classList.toggle("on",x===b));

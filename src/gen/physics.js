@@ -44,7 +44,7 @@ gen("f.freefall", r => {
 });
 
 gen("f.newton", r => {
-  const m = r.int(2, 50), a = r.int(1, 9);
+  const m = r.int(2, 50), a = m === 25 ? r.pick([1, 2, 3, 5, 6]) : r.int(1, 9);
   return {
     prompt: `¿Qué fuerza neta se necesita para que un cuerpo de ${m} kg acelere a ${a} m/s²?`,
     options: options(u(m * a, "N"), alt(m * a, "N", [m + a, m / a, m * a * 2]), 4, k => u(m * a + k * a, "N")),
@@ -82,7 +82,7 @@ gen("f.potential", r => {
 });
 
 gen("f.ohm", r => {
-  const i = r.pick([0.5, 1, 1.5, 2, 3, 4]), R = r.int(2, 30) * 5;
+  const i = r.pick([0.5, 1, 1.5, 2, 3, 4]), R0 = r.int(2, 30) * 5, R = i === 3 && R0 === 40 ? 45 : R0;
   const kind = r.pick(["V", "I"]);
   if (kind === "V") return {
     prompt: `Por una resistencia de ${R} Ω circula una corriente de ${fmt(i)} A. ¿Cuál es el voltaje?`,

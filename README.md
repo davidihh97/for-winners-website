@@ -17,6 +17,27 @@ Sitio web de For Winners (Cloudflare Workers + archivos estáticos + base de dat
 - Para que no se repitan, el navegador recuerda lo que ya vio el usuario (`localStorage`) y el servidor da prioridad a lo no visto. El orden de las preguntas y de las opciones cambia en cada intento.
 - Cada resultado se guarda en la tabla `assessments` y como contacto en `inquiries`.
 
+### Estructura de cada simulador (25 % de la prueba real)
+Tomada de los simuladores de curso de For Winners. **Ninguna pregunta del material de curso está en el sitio**: el contenido web es original y los generadores evitan reproducir los datos de esas preguntas.
+
+| Simulador | Prueba real | Simulador web | Secciones |
+|---|---|---|---|
+| UCE | 150 preg. · 120 min | 38 preg. · 30 min | Verbal, Numérico, Lógico, Abstracto |
+| UPEC | 60 preg. · 60 min | 15 preg. · 15 min | Verbal, Numérico, Lógico, Atención y concentración |
+| Yachay Tech | 80 preg. · 90 min | 20 preg. · 23 min | Verbal, Numérico, Lógico, Abstracto + módulo de matemáticas, lectura científica y espacial |
+| UTN FICA · FICAYA | 90 preg. · 120 min | 23 preg. · 30 min | Lenguaje, Estadística, Matemática, Física, Química |
+| UTN Ciencias de la Salud | 90 preg. · 90 min | 23 preg. · 23 min | Lenguaje, Estadística, Biología, Anatomía, Química |
+| UTN FECYT · FACAE | 100 preg. · 120 min (*) | 25 preg. · 30 min | Matemática/estadística/abstracto, Emprendimiento, Verbal |
+
+(*) El simulador de curso no indica tiempo; se asumieron 120 minutos.
+
+### Protección del contenido
+- El navegador solo recibe las preguntas del intento actual, nunca el banco completo ni las respuestas.
+- Límite por IP: 15 simuladores por hora y 40 por día (tabla `rate_limits`), para impedir la descarga automatizada.
+- En el simulador están bloqueados copiar, seleccionar, el clic derecho, arrastrar, imprimir y Ctrl/Cmd + P/S/U; el contenido lleva marca de agua.
+- `/api/` no se indexa en buscadores (`robots.txt` y `X-Robots-Tag`).
+- Los PDF del material de curso no se suben al repositorio (`.gitignore`).
+
 ### Ajustar una prueba
 En `src/catalog.js`:
 - `SIM_SHARE = 0.25` → el simulador muestra el 25 % de la prueba real.
@@ -25,7 +46,7 @@ En `src/catalog.js`:
 
 ## Puesta en marcha
 ```bash
-npx wrangler d1 migrations apply for-winners-db --remote
+npx wrangler d1 migrations apply for-winners-db --remote   # aplica 0002 y 0003
 npx wrangler deploy
 ```
 

@@ -71,16 +71,15 @@ export function startAttempt(quizId, levelId, { sections: only, seen = [] } = {}
 }
 
 function pickOne(srcs, seenPos, usedKeys, prompts) {
-  const hasGen = srcs.some(s => SOURCES[s.key].kind === "gen");
-  const weighted = srcs.map(s => {
+  // Fuentes con preguntas nunca vistas (los generadores siempre cuentan como nuevas) tienen prioridad.
+  const info = srcs.map(s => {
     const src = SOURCES[s.key];
-    if (src.kind === "gen") return { s, w: s.w };
+    if (src.kind === "gen") return { s, fresh: true, free: 1 };
     const free = freeIndexes(s.key, src, usedKeys);
-    if (!free.length) return { s, w: 0 };
-    const fresh = free.some(i => !seenPos.has(`${s.key}|${i}`));
-    // Si el banco ya se vio completo, se privilegian los generadores (preguntas siempre nuevas).
-    return { s, w: s.w * (fresh || !hasGen ? 1 : 0.25) };
-  }).filter(x => x.w > 0);
+    return { s, free: free.length, fresh: free.some(i => !seenPos.has(`${s.key}|${i}`)) };
+  }).filter(x => x.free);
+  const anyFresh = info.some(x => x.fresh);
+  const weighted = info.map(x => ({ s: x.s, w: x.s.w * (x.fresh || !anyFresh ? 1 : 0.05) }));
   if (!weighted.length) return null;
 
   for (let t = 0; t < MAX_TRIES; t++) {
@@ -113,7 +112,7 @@ function pickOne(srcs, seenPos, usedKeys, prompts) {
   return null;
 }
 
-const promptKey = q => q.prompt + (q.svg ? q.svg.join("") : "");
+const promptKey = q => q.prompt + (q.svg ? q.svg.join("") : "") + (q.figure || "");
 const freeIndexes = (key, src, used) => Array.from({ length: src.size }, (_, i) => i).filter(i => !used.has(`${key}|${i}`));
 function weightedPick(list) {
   let x = Math.random() * list.reduce((a, b) => a + b.w, 0);
@@ -126,6 +125,7 @@ function toClient({ id, q, section }) {
   const out = { id, sk: seenKey(id, q), section, type, prompt: q.prompt };
   if (q.passage) { out.passage = q.passage; out.passageTitle = q.passageTitle; }
   if (q.svg) out.svg = q.svg;
+  if (q.figure) out.figure = q.figure;
   if (q.optionsSvg) out.optionsSvg = true;
   if (type === "mc") out.options = q.keepOrder ? q.options.slice() : shuffle(q.options);
   if (type === "order") {
@@ -199,7 +199,7 @@ function scoreResult(base, quiz, level, graded) {
   const wrong = graded.filter(g => !g.ok);
   // Informe parcial: solo se revelan algunas correcciones; el resto queda para la clase.
   const review = wrong.slice(0, 2).map(g => ({
-    section: g.section, prompt: g.q.optionsSvg || g.q.svg ? "Pregunta de figuras (razonamiento abstracto)" : g.q.prompt,
+    section: g.section, prompt: g.q.optionsSvg || g.q.svg || g.q.figure ? "Pregunta de figuras (razonamiento abstracto o espacial)" : g.q.prompt,
     yours: g.q.optionsSvg ? (g.a ? "Figura seleccionada" : "Sin responder") : g.a || "Sin responder",
     correct: g.q.optionsSvg ? "Disponible en tu clase de revisión" : correctText(g.q), explain: g.q.explain || "",
   }));

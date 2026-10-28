@@ -28,12 +28,25 @@
   const fmtTime = s => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
   const bandColor = p => (p >= 80 ? "var(--ok)" : p >= 50 ? "var(--accent)" : "var(--bad)");
 
+  // Protección del contenido: sin copiar, arrastrar, menú contextual, imprimir ni guardar la página.
+  function protect(root) {
+    if (root.dataset.protected) return;
+    root.dataset.protected = "1";
+    const allow = e => e.target.closest && e.target.closest("input, textarea, select");
+    ["copy", "cut", "contextmenu", "dragstart", "selectstart"].forEach(ev => root.addEventListener(ev, e => { if (!allow(e)) e.preventDefault(); }));
+    document.addEventListener("keydown", e => {
+      const k = e.key.toLowerCase();
+      if ((e.ctrlKey || e.metaKey) && ["p", "s", "u"].includes(k) && document.querySelector(".runner .rn-q")) e.preventDefault();
+    });
+  }
+
   function mount(root, opts) {
+    protect(root);
     const st = { attempt: null, i: 0, answers: {}, timer: null, left: 0, done: false };
     root.classList.add("runner");
     root.innerHTML = "";
     root.append(h("div", { class: "rn-load" }, "Preparando tus preguntas…"));
-    root.scrollIntoView({ block: "start" });
+    root.scrollIntoView({ block: "start", behavior: "instant" });
     let first = true;
 
     const leaveGuard = e => { if (st.attempt && !st.done) { e.preventDefault(); e.returnValue = ""; } };
@@ -75,6 +88,7 @@
       const meta = h("div", { class: "rn-meta" }, h("span", {}, `Pregunta ${st.i + 1} de ${n}`), a.kind === "vocational" ? null : h("span", { class: "rn-sec" }, q.section));
       const body = h("div", { class: "rn-body" });
       if (q.passage) body.append(h("div", { class: "rn-passage" }, q.passageTitle ? h("b", {}, q.passageTitle) : null, ...q.passage.split("\n").map(p => h("p", {}, p))));
+      if (q.figure) body.append(h("div", { class: "rn-figure", html: q.figure }));
       if (q.svg) body.append(h("div", { class: "rn-seq" }, ...q.svg.map(s => h("div", { class: "rn-fig", html: s })), h("div", { class: "rn-fig q" }, "?")));
       body.append(h("div", { class: "rn-q" }, q.prompt));
       body.append(answerUI(q));
@@ -83,7 +97,7 @@
         h("button", { class: "btn o", disabled: st.i === 0, onclick: () => { st.i--; renderQ(); } }, "Anterior"),
         h("button", { class: "btn", onclick: () => { if (last) renderGate(false); else { st.i++; renderQ(); } } }, last ? "Terminar" : "Siguiente"));
       root.append(head, bar, meta, body, nav);
-      if (first || root.getBoundingClientRect().top < 0) root.scrollIntoView({ block: "start" });
+      if (first || root.getBoundingClientRect().top < 0) root.scrollIntoView({ block: "start", behavior: "instant" });
       first = false;
       const focus = root.querySelector(".opt.sel, input, .opt");
       if (focus && document.activeElement && root.contains(document.activeElement)) focus.focus({ preventScroll: true });
