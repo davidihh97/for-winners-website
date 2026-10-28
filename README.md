@@ -4,15 +4,17 @@ Sitio web de For Winners (Cloudflare Workers + archivos estáticos + base de dat
 ## Páginas
 | Página | Qué hace |
 |---|---|
-| `diagnostico.html` | Diagnóstico gratuito por nivel (Escuela, Colegio, Universidad) y materias (Matemática, Física, Química, Lengua, Inglés). Lleva a **Nivelación**. |
-| `ingles.html#practica` | Práctica de inglés: Grammar, Writing y Reading del A1 al C1. Lleva al **curso de inglés**. |
+| `diagnostico.html` | Diagnóstico gratuito: se elige el nivel (Escuela, Colegio, Universidad) y **una** materia (Matemática, Física, Química o Lengua); 12 preguntas con desglose por temas. Lleva a **Nivelación**. |
+| `ingles.html#practica` | Práctica de inglés: primero el nivel (A1–C1) y luego la skill (Grammar, Writing, Reading). El resultado se ve sin datos; con datos se descarga el informe completo con cada error explicado. Lleva al **curso de inglés**. |
 | `simuladores.html` | Simuladores de razonamiento para UCE, UPEC y Yachay Tech, y por facultad para la UTN. Llevan al **preuniversitario**. |
-| `test-vocacional.html` | Test vocacional (modelo RIASEC) con carreras de pregrado del Ecuador. Lleva a **orientación vocacional**. |
-| `asesoria.html` | Tips de redacción académica (parte bloqueada) + formulario que envía una guía gratis. Lleva a **asesoría**. |
-| `informe.html?id=…` | Informe en línea que se enlaza desde el correo / WhatsApp. |
+| `test-vocacional.html` | Test vocacional (modelo RIASEC): muestra la carrera más recomendada entre 86 de pregrado del Ecuador; con datos se descarga el informe PDF (áreas de destreza, perfil, 15 carreras afines). |
+| `asesoria.html` | Tips de redacción académica (parte bloqueada) + guía gratis en PDF a cambio de los datos. Lleva a **asesoría**. |
 
 ## Cómo funcionan los simuladores
-- Las preguntas se arman en el servidor (`src/`). El navegador **nunca recibe las respuestas**, así que el resultado solo se ve después de dejar nombre + WhatsApp o correo.
+- Las preguntas se arman en el servidor (`src/`). El navegador **nunca recibe las respuestas**.
+- Diagnóstico y simuladores de admisión: el resultado se ve después de dejar nombre y apellido, celular de 10 dígitos (09…), correo verificado y la aceptación de datos; el botón queda inactivo hasta entonces.
+- Inglés y test vocacional: el resultado se ve al instante; los datos desbloquean el informe completo.
+- **Los informes se descargan en PDF** (generados en el navegador con jsPDF, `public/js/pdf.js`); no se envían por correo ni WhatsApp.
 - Hay dos tipos de preguntas: **bancos** escritos a mano (`src/banks/`) y **generadores** que crean preguntas nuevas con números y datos al azar (`src/gen/`).
 - Para que no se repitan, el navegador recuerda lo que ya vio el usuario (`localStorage`) y el servidor da prioridad a lo no visto. El orden de las preguntas y de las opciones cambia en cada intento.
 - Cada resultado se guarda en la tabla `assessments` y como contacto en `inquiries`.
@@ -50,15 +52,15 @@ npx wrangler d1 migrations apply for-winners-db --remote   # aplica 0002 y 0003
 npx wrangler deploy
 ```
 
-### Variables de entorno (Cloudflare → Worker → Settings → Variables)
+### Variables de entorno (opcionales)
 | Variable | Para qué |
 |---|---|
 | `WA_NUMBER` | WhatsApp de For Winners (ej. `593999769785`). |
-| `SITE_URL` | Dominio público (ej. `https://forwinners.ec`) para los enlaces del informe. |
-| `ADMIN_EMAIL` | Correo que recibe cada nuevo contacto con su resultado. |
-| `RESEND_API_KEY` (secreto) y `MAIL_FROM` | Envío de correos con [Resend](https://resend.com). `MAIL_FROM` debe ser de un dominio verificado, ej. `For Winners <informes@forwinners.ec>`. |
-| `WHATSAPP_TOKEN` (secreto), `WHATSAPP_PHONE_ID`, `WHATSAPP_TEMPLATE`, `WHATSAPP_LANG` | Envío automático por WhatsApp Cloud API (Meta). Requiere una plantilla aprobada con 4 variables: `{{1}}` nombre, `{{2}}` prueba, `{{3}}` resultado, `{{4}}` enlace al informe. |
+| `ADMIN_EMAIL`, `RESEND_API_KEY` (secreto) y `MAIL_FROM` | Aviso interno por correo al equipo de For Winners cada vez que llega un contacto ([Resend](https://resend.com)). Los estudiantes no reciben correos: descargan su informe. |
 
-Sin estas variables el sitio funciona igual: el resultado se muestra en pantalla, se guarda en la base de datos y el botón de WhatsApp abre el chat con For Winners con el resultado ya escrito.
+Sin estas variables el sitio funciona igual: cada contacto queda guardado en la base de datos (tablas `assessments` e `inquiries`).
 
-Secretos: `npx wrangler secret put RESEND_API_KEY` y `npx wrangler secret put WHATSAPP_TOKEN`.
+Secreto: `npx wrangler secret put RESEND_API_KEY`.
+
+## Datos de For Winners
+Av. Teodoro Gómez de la Torre 746 y Calixto Miranda, Ibarra, Ecuador · Lunes a sábado, de 9:00 a 20:00 · TikTok e Instagram: @forwinnersec

@@ -27,23 +27,36 @@ for (const [t, list] of Object.entries(ITEMS)) {
 }
 export const VOC_LIKERT = LIKERT;
 
-// Carreras de pregrado frecuentes en universidades del Ecuador, con su código RIASEC dominante.
+// Destreza principal de cada tipo (se usa en el informe PDF).
+export const SKILLS = {
+  R: "Habilidad práctica, técnica y manual", I: "Análisis, investigación y razonamiento científico", A: "Creatividad, imaginación y expresión",
+  S: "Comunicación, empatía y servicio a los demás", E: "Liderazgo, negociación y toma de decisiones", C: "Organización, precisión y manejo de datos",
+};
+
+// Oferta de pregrado frecuente en universidades públicas y privadas del Ecuador, con su código RIASEC dominante.
+const SAL = "Salud", ING = "Ingeniería y tecnología", CIE = "Ciencias exactas y naturales", AGR = "Agro y ambiente", ART = "Arte y diseño",
+  COM = "Comunicación", EDU = "Educación", SOC = "Ciencias sociales y jurídicas", NEG = "Negocios y administración", TUR = "Turismo y hospitalidad";
 export const CAREERS = [
-  ["Medicina", "IS", "Salud"], ["Enfermería", "SI", "Salud"], ["Odontología", "IR", "Salud"], ["Nutrición y Dietética", "IS", "Salud"],
-  ["Fisioterapia", "SR", "Salud"], ["Psicología Clínica", "SI", "Salud"], ["Psicología", "SI", "Ciencias sociales"], ["Medicina Veterinaria", "IR", "Agro y ambiente"],
-  ["Laboratorio Clínico", "IC", "Salud"], ["Obstetricia", "SI", "Salud"],
-  ["Software", "IC", "Ingeniería y tecnología"], ["Tecnologías de la Información", "IC", "Ingeniería y tecnología"], ["Computación", "IR", "Ingeniería y tecnología"],
-  ["Ingeniería Civil", "RI", "Ingeniería y tecnología"], ["Electricidad", "RI", "Ingeniería y tecnología"], ["Mecatrónica", "RI", "Ingeniería y tecnología"],
-  ["Ingeniería Industrial", "RC", "Ingeniería y tecnología"], ["Telecomunicaciones", "RI", "Ingeniería y tecnología"], ["Ingeniería Automotriz", "RI", "Ingeniería y tecnología"],
-  ["Biotecnología", "IR", "Ciencias"], ["Biología", "IR", "Ciencias"], ["Física", "IR", "Ciencias"], ["Matemática", "IC", "Ciencias"], ["Química", "IR", "Ciencias"],
-  ["Agronomía", "RI", "Agro y ambiente"], ["Agroindustria", "RE", "Agro y ambiente"], ["Ingeniería Forestal", "RI", "Agro y ambiente"], ["Ingeniería Ambiental", "IR", "Agro y ambiente"], ["Recursos Naturales Renovables", "RI", "Agro y ambiente"],
-  ["Arquitectura", "AR", "Arte y diseño"], ["Diseño Gráfico", "AE", "Arte y diseño"], ["Artes Plásticas", "AR", "Arte y diseño"], ["Música", "AS", "Arte y diseño"], ["Diseño Textil y Moda", "AE", "Arte y diseño"],
-  ["Comunicación", "AE", "Comunicación"], ["Periodismo", "AS", "Comunicación"], ["Publicidad", "AE", "Comunicación"],
-  ["Pedagogía de los Idiomas Nacionales y Extranjeros", "SA", "Educación"], ["Educación Inicial", "SA", "Educación"], ["Educación Básica", "SC", "Educación"],
-  ["Pedagogía de la Actividad Física y Deporte", "SR", "Educación"], ["Pedagogía de las Ciencias Experimentales", "SI", "Educación"],
-  ["Derecho", "ES", "Ciencias sociales"], ["Trabajo Social", "SE", "Ciencias sociales"], ["Sociología", "SI", "Ciencias sociales"], ["Relaciones Internacionales", "ES", "Ciencias sociales"],
-  ["Economía", "IC", "Negocios"], ["Administración de Empresas", "EC", "Negocios"], ["Contabilidad y Auditoría", "CE", "Negocios"], ["Mercadotecnia", "EA", "Negocios"],
-  ["Finanzas", "CE", "Negocios"], ["Turismo", "ES", "Negocios"], ["Gastronomía", "AR", "Negocios"], ["Gestión del Talento Humano", "SE", "Negocios"], ["Comercio Exterior", "EC", "Negocios"],
+  ["Medicina", "IS", SAL], ["Enfermería", "SI", SAL], ["Obstetricia", "SI", SAL], ["Odontología", "IR", SAL], ["Nutrición y Dietética", "IS", SAL],
+  ["Fisioterapia", "SR", SAL], ["Terapia Ocupacional", "SR", SAL], ["Terapia de Lenguaje", "SA", SAL], ["Laboratorio Clínico", "IC", SAL],
+  ["Imagenología y Radiología", "IR", SAL], ["Optometría", "IR", SAL], ["Bioquímica y Farmacia", "IC", SAL], ["Psicología Clínica", "SI", SAL],
+  ["Software", "IC", ING], ["Tecnologías de la Información", "IC", ING], ["Computación", "IR", ING], ["Ciencia de Datos", "IC", ING], ["Ciberseguridad", "IC", ING],
+  ["Telecomunicaciones", "RI", ING], ["Electrónica y Automatización", "RI", ING], ["Electricidad", "RI", ING], ["Mecánica", "RI", ING], ["Mecatrónica", "RI", ING],
+  ["Ingeniería Automotriz", "RI", ING], ["Ingeniería Industrial", "RC", ING], ["Ingeniería Civil", "RI", ING], ["Ingeniería Química", "IR", ING],
+  ["Ingeniería en Alimentos", "IR", ING], ["Ingeniería en Minas", "RI", ING], ["Ingeniería en Petróleos", "RI", ING], ["Geología", "IR", ING],
+  ["Biología", "IR", CIE], ["Biotecnología", "IR", CIE], ["Física", "IR", CIE], ["Matemática", "IC", CIE], ["Química", "IR", CIE], ["Estadística", "CI", CIE],
+  ["Agronomía", "RI", AGR], ["Agropecuaria", "RE", AGR], ["Agroindustria", "RE", AGR], ["Ingeniería Forestal", "RI", AGR], ["Ingeniería Ambiental", "IR", AGR],
+  ["Recursos Naturales Renovables", "RI", AGR], ["Medicina Veterinaria", "IR", AGR], ["Acuicultura", "RI", AGR],
+  ["Arquitectura", "AR", ART], ["Diseño Gráfico", "AE", ART], ["Diseño de Interiores", "AR", ART], ["Diseño Textil y Moda", "AE", ART], ["Artes Plásticas", "AR", ART],
+  ["Artes Escénicas", "AS", ART], ["Música", "AS", ART], ["Cine y Producción Audiovisual", "AE", ART], ["Diseño Industrial", "AR", ART],
+  ["Comunicación", "AE", COM], ["Periodismo", "AS", COM], ["Publicidad", "AE", COM], ["Relaciones Públicas", "ES", COM],
+  ["Educación Inicial", "SA", EDU], ["Educación Básica", "SC", EDU], ["Pedagogía de los Idiomas Nacionales y Extranjeros", "SA", EDU],
+  ["Pedagogía de las Matemáticas y la Física", "SI", EDU], ["Pedagogía de las Ciencias Experimentales", "SI", EDU], ["Pedagogía de la Lengua y la Literatura", "SA", EDU],
+  ["Pedagogía de la Historia y las Ciencias Sociales", "SI", EDU], ["Educación Especial", "SA", EDU], ["Psicopedagogía", "SI", EDU], ["Pedagogía de la Actividad Física y Deporte", "SR", EDU],
+  ["Psicología", "SI", SOC], ["Derecho", "ES", SOC], ["Trabajo Social", "SE", SOC], ["Sociología", "SI", SOC], ["Ciencias Políticas", "ES", SOC], ["Relaciones Internacionales", "ES", SOC],
+  ["Economía", "IC", NEG], ["Administración de Empresas", "EC", NEG], ["Contabilidad y Auditoría", "CE", NEG], ["Finanzas", "CE", NEG], ["Mercadotecnia", "EA", NEG],
+  ["Comercio Exterior y Negocios Internacionales", "EC", NEG], ["Gestión del Talento Humano", "SE", NEG], ["Administración Pública", "EC", NEG], ["Emprendimiento e Innovación", "EA", NEG],
+  ["Turismo", "ES", TUR], ["Hotelería", "ES", TUR], ["Gastronomía", "AR", TUR],
 ];
 
 export function scoreVocational(answers /* [{type, value}] */) {
@@ -55,11 +68,18 @@ export function scoreVocational(answers /* [{type, value}] */) {
     max[type] += 3;
   }
   const profile = Object.keys(TYPES)
-    .map(code => ({ code, name: TYPES[code].name, desc: TYPES[code].desc, pct: max[code] ? Math.round((sum[code] / max[code]) * 100) : 0 }))
+    .map(code => ({ code, name: TYPES[code].name, desc: TYPES[code].desc, skill: SKILLS[code], pct: max[code] ? Math.round((sum[code] / max[code]) * 100) : 0 }))
     .sort((a, b) => b.pct - a.pct);
   const pct = Object.fromEntries(profile.map(p => [p.code, p.pct]));
+  const rank = Object.fromEntries(profile.map((p, i) => [p.code, i]));
   const careers = CAREERS
     .map(([name, code, area]) => ({ name, area, code, fit: Math.round(pct[code[0]] * 0.65 + pct[code[1]] * 0.35) }))
-    .sort((a, b) => b.fit - a.fit);
-  return { profile, careers };
+    .sort((a, b) => b.fit - a.fit || rank[a.code[0]] - rank[b.code[0]] || rank[a.code[1]] - rank[b.code[1]]);
+  // Afinidad por área: promedio de sus 3 carreras más compatibles.
+  const byArea = {};
+  for (const c of careers) (byArea[c.area] ||= []).push(c.fit);
+  const areas = Object.entries(byArea)
+    .map(([area, fits]) => ({ area, pct: Math.round(fits.slice(0, 3).reduce((a, b) => a + b, 0) / Math.min(3, fits.length)), careers: careers.filter(c => c.area === area).slice(0, 3).map(c => c.name) }))
+    .sort((a, b) => b.pct - a.pct);
+  return { profile, careers, areas };
 }
