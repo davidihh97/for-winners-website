@@ -23,8 +23,23 @@ export default {
   },
 };
 
+// Crea las tablas nuevas si aún no existen (equivale a las migraciones 0002 y 0003),
+// para que el sitio funcione aunque no se hayan aplicado a mano en D1.
+let schemaReady = null;
+function ensureSchema(env) {
+  if (!env.DB) return Promise.resolve();
+  schemaReady ||= env.DB.batch([
+    env.DB.prepare("CREATE TABLE IF NOT EXISTS assessments (id TEXT PRIMARY KEY, quiz TEXT NOT NULL, level TEXT, full_name TEXT NOT NULL, email TEXT, phone TEXT, score_pct INTEGER, result_json TEXT NOT NULL, email_status TEXT, whatsapp_status TEXT, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)"),
+    env.DB.prepare("CREATE INDEX IF NOT EXISTS idx_assessments_quiz_date ON assessments(quiz, created_at)"),
+    env.DB.prepare("CREATE TABLE IF NOT EXISTS inquiries (id INTEGER PRIMARY KEY AUTOINCREMENT, full_name TEXT NOT NULL, email TEXT, phone TEXT, interested_course TEXT, message TEXT, status TEXT NOT NULL DEFAULT 'new' CHECK (status IN ('new', 'contacted', 'enrolled', 'closed')), created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)"),
+    env.DB.prepare("CREATE TABLE IF NOT EXISTS rate_limits (k TEXT PRIMARY KEY, n INTEGER NOT NULL DEFAULT 0, reset_at INTEGER NOT NULL)"),
+  ]).catch(e => { console.error("schema", e); schemaReady = null; });
+  return schemaReady;
+}
+
 async function api(request, env, ctx, url) {
   const p = url.pathname;
+  if (request.method === "POST" || p.startsWith("/api/report/")) await ensureSchema(env);
   if (p === "/api/catalog" && request.method === "GET") return json(publicCatalog());
 
   if (p === "/api/quiz/start" && request.method === "POST") {
@@ -136,12 +151,10 @@ async function saveAttempt(env, id, result, contact) {
   const score = result.kind === "vocational" ? null : result.pct;
   const note = `${result.title} (${result.label}): ${summaryLine(result)}`;
   try {
-    await env.DB.batch([
-      env.DB.prepare("INSERT INTO assessments (id, quiz, level, full_name, email, phone, score_pct, result_json) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
-        .bind(id, result.quiz, result.level, contact.name, contact.email || null, contact.phone || null, score, JSON.stringify(result)),
-      env.DB.prepare("INSERT INTO inquiries (full_name, email, phone, interested_course, message) VALUES (?, ?, ?, ?, ?)")
-        .bind(contact.name, contact.email || null, contact.phone || null, result.cta.service, note),
-    ]);
+    await env.DB.prepare("INSERT INTO assessments (id, quiz, level, full_name, email, phone, score_pct, result_json) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
+      .bind(id, result.quiz, result.level, contact.name, contact.email || null, contact.phone || null, score, JSON.stringify(result)).run();
+    await env.DB.prepare("INSERT INTO inquiries (full_name, email, phone, interested_course, message) VALUES (?, ?, ?, ?, ?)")
+      .bind(contact.name, contact.email || null, contact.phone || null, result.cta.service, note).run();
   } catch (e) { console.error("save attempt", e); }
 }
 
