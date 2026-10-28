@@ -1,7 +1,7 @@
 // Motor de simuladores: arma intentos sin repetir preguntas y los corrige en el servidor.
 import { SOURCES } from "./lib/sources.js";
 import { rng, randomSeed, shuffle } from "./lib/rand.js";
-import { QUIZZES } from "./catalog.js";
+import { QUIZZES, TOPICS } from "./catalog.js";
 import { scoreVocational, CAREERS } from "./vocational.js";
 
 const MAX_TRIES = 20;
@@ -48,7 +48,8 @@ export function startAttempt(quizId, levelId, { sections: only, seen = [] } = {}
   const seenPos = new Map(seen.map((k, i) => [k, i]));
   const usedKeys = new Set(), prompts = new Set();
   let sections = level.sections;
-  if (quiz.pickSections && only && only.length) sections = sections.filter(s => only.includes(s.name));
+  // En el diagnóstico se evalúa una sola materia por intento.
+  if (quiz.pickSections && only && only.length) sections = sections.filter(s => s.name === only[0]);
   if (!sections.length) sections = level.sections;
 
   const blocks = [];
@@ -65,7 +66,7 @@ export function startAttempt(quizId, levelId, { sections: only, seen = [] } = {}
   }
   const questions = shuffle(blocks).flat().map(toClient);
   return {
-    quiz: quizId, level: levelId, title: quiz.title, kind: quiz.kind, label: level.label,
+    quiz: quizId, level: levelId, title: quiz.title, kind: quiz.kind, flow: quiz.flow || "gate", label: level.label,
     minutes: level.minutes || 0, questions,
   };
 }
@@ -157,7 +158,9 @@ function sectionMap(level) {
   return m;
 }
 
-export function gradeAttempt(quizId, levelId, answers /* [{id, a}] */) {
+// mode: "gate" (resultado con revisión parcial), "summary" (solo puntajes, sin datos de contacto)
+// o "full" (informe completo para descargar en PDF).
+export function gradeAttempt(quizId, levelId, answers /* [{id, a}] */, mode = "gate") {
   const found = getLevel(quizId, levelId);
   if (!found) return null;
   const { quiz, level } = found;
@@ -175,14 +178,14 @@ export function gradeAttempt(quizId, levelId, answers /* [{id, a}] */) {
     graded.push({ id, section, q, a: typeof a === "string" ? a.slice(0, 300) : "", ok: isCorrect(q, a) });
   }
   if (!graded.length) return null;
-  const base = { quiz: quizId, level: levelId, title: quiz.title, label: level.label, kind: quiz.kind, cta: quiz.cta };
-  return quiz.kind === "vocational" ? vocationalResult(base, graded) : scoreResult(base, quiz, level, graded);
+  const base = { quiz: quizId, level: levelId, title: quiz.title, label: level.label, kind: quiz.kind, cta: quiz.cta, mode };
+  return quiz.kind === "vocational" ? vocationalResult(base, graded, mode) : scoreResult(base, quiz, level, graded, mode);
 }
 
 const band = pct => pct >= 85 ? "Sobresaliente" : pct >= 70 ? "Competitivo" : pct >= 50 ? "En progreso" : "Inicial";
 const sectionAdvice = pct => pct >= 80 ? "Buen dominio" : pct >= 50 ? "Refuerzo recomendado" : "Necesita apoyo";
 
-function scoreResult(base, quiz, level, graded) {
+function scoreResult(base, quiz, level, graded, mode) {
   const order = level.sections.map(s => s.name);
   const bySec = new Map();
   for (const g of graded) {
@@ -197,16 +200,34 @@ function scoreResult(base, quiz, level, graded) {
   const weak = sections.filter(s => s.pct < 70).sort((a, b) => a.pct - b.pct).map(s => s.name);
   const strong = sections.filter(s => s.pct >= 80).map(s => s.name);
   const wrong = graded.filter(g => !g.ok);
-  // Informe parcial: solo se revelan algunas correcciones; el resto queda para la clase.
-  const review = wrong.slice(0, 2).map(g => ({
-    section: g.section, prompt: g.q.optionsSvg || g.q.svg || g.q.figure ? "Pregunta de figuras (razonamiento abstracto o espacial)" : g.q.prompt,
-    yours: g.q.optionsSvg ? (g.a ? "Figura seleccionada" : "Sin responder") : g.a || "Sin responder",
-    correct: g.q.optionsSvg ? "Disponible en tu clase de revisión" : correctText(g.q), explain: g.q.explain || "",
-  }));
-  return {
-    ...base, correct, total, pct, band: band(pct), sections, weak, strong, review, locked: Math.max(0, wrong.length - review.length),
+  const isFig = q => q.optionsSvg || q.svg || q.figure;
+  const detail = g => ({
+    section: g.section, ok: g.ok, prompt: isFig(g.q) ? "Pregunta de figuras (razonamiento abstracto o espacial)" : g.q.prompt,
+    passage: g.q.passageTitle || "",
+    yours: isFig(g.q) ? (g.a ? (g.ok ? "Figura correcta" : "Figura incorrecta") : "Sin responder") : g.a || "Sin responder",
+    correct: isFig(g.q) ? "Se revisa en clase" : correctText(g.q), explain: g.q.explain || "",
+  });
+  const out = {
+    ...base, correct, total, pct, band: band(pct), sections, weak, strong, wrongCount: wrong.length,
     real: level.real || null, message: scoreMessage(base.quiz, pct, weak),
   };
+  if (quiz.pickSections) {
+    const by = new Map();
+    for (const g of graded) {
+      const name = TOPICS[g.id.split("|")[0]] || g.section;
+      const tp = by.get(name) || { name, correct: 0, total: 0 };
+      tp.total++; if (g.ok) tp.correct++;
+      by.set(name, tp);
+    }
+    out.topics = [...by.values()].map(tp => ({ ...tp, pct: Math.round((tp.correct / tp.total) * 100), advice: sectionAdvice((tp.correct / tp.total) * 100) })).sort((a, b) => a.pct - b.pct);
+    out.weak = out.topics.filter(tp => tp.pct < 70).map(tp => tp.name);
+    out.strong = out.topics.filter(tp => tp.pct >= 80).map(tp => tp.name);
+    out.message = scoreMessage(base.quiz, pct, out.weak);
+  }
+  if (mode === "full") out.items = graded.map(detail);
+  // Informe parcial: solo se revelan algunas correcciones; el resto queda para la clase.
+  if (mode === "gate") { out.review = wrong.slice(0, 2).map(detail); out.locked = Math.max(0, wrong.length - out.review.length); }
+  return out;
 }
 
 function scoreMessage(quiz, pct, weak) {
@@ -217,15 +238,15 @@ function scoreMessage(quiz, pct, weak) {
   return (pct >= 70 ? "Vas por buen camino, pero el examen real es 4 veces más largo y con más presión de tiempo." : "Aún estás lejos del puntaje que necesitas. La buena noticia: el razonamiento se entrena.") + w;
 }
 
-function vocationalResult(base, graded) {
+function vocationalResult(base, graded, mode) {
   const answers = graded.map(g => ({ type: g.id.split("|")[0].split(".")[1], value: g.a }));
-  const { profile, careers } = scoreVocational(answers);
+  const { profile, careers, areas } = scoreVocational(answers);
   const code = profile.slice(0, 3).map(p => p.code).join("");
-  return {
-    ...base, total: graded.length, code, profile,
-    careers: careers.slice(0, 3), locked: Math.max(4, careers.filter(c => c.fit >= 50).length - 3),
-    areas: [...new Set(careers.slice(0, 8).map(c => c.area))].slice(0, 3),
+  const out = {
+    ...base, total: graded.length, code, top: careers[0], careers: careers.slice(0, 3), allCareers: CAREERS.length,
     message: `Tu perfil predominante es ${profile[0].name}, seguido de ${profile[1].name} y ${profile[2].name}.`,
-    allCareers: CAREERS.length,
+    profileTop: profile.slice(0, 2).map(p => ({ code: p.code, name: p.name, desc: p.desc })),
   };
+  if (mode === "full") Object.assign(out, { profile, areas, careers: careers.slice(0, 15) });
+  return out;
 }

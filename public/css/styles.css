@@ -208,3 +208,19 @@ section:not(.alt) .pick button{background:var(--bg2)}
 .rn-figure svg{max-width:100%;height:auto}
 .rn-q{white-space:pre-line}
 @media print{.runner[data-protected] *{display:none!important}.runner[data-protected]::before{content:"La impresión de los simuladores está deshabilitada.";display:block}.runner::after{display:none}}
+/* formulario validado e informes */
+.rn-hint2{display:block;font-size:13px;font-weight:400;min-height:1.2em;margin-top:4px;color:var(--mut)}
+.rn-hint2.good{color:var(--ok)}.rn-hint2.bad{color:var(--bad)}
+.linkbtn.inline{margin:0;padding:0;font-weight:600;color:var(--brand)}
+.rn-form .btn[disabled]{opacity:.45;cursor:not-allowed;transform:none;filter:none}
+.rn-download{margin-top:24px;border:2px solid var(--accent);border-radius:20px;padding:20px;text-align:center;background:color-mix(in srgb,var(--accent) 7%,transparent)}
+.rn-download>b{font-size:18px}
+.rn-download>p{color:var(--mut);font-size:15px;margin:6px auto 0;max-width:520px}
+.rn-download .rn-form{margin-top:16px}
+.rn-download>.btn{margin-top:14px}
+.rn-top{display:grid;gap:6px;justify-items:start}
+.rn-topname{font-size:clamp(28px,5vw,40px);font-weight:800;letter-spacing:-.02em;line-height:1.1;color:var(--brand)}
+.dark .rn-topname{color:#9DBBF7}
+.rn-fitbig{font-size:18px;font-weight:700;color:var(--ok)}
+.pick button[disabled]{opacity:.5}
+.startbar .btn[disabled]{opacity:.45;cursor:not-allowed;transform:none}

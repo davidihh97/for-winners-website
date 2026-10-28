@@ -9,6 +9,21 @@ import "./banks/pre.js";
 import "./gen/advanced.js";
 import "./vocational.js";
 
+// Nombre de tema de cada fuente (desglose por temas en el diagnóstico).
+export const TOPICS = {
+  "m.ops": "Operaciones combinadas", "m.frac": "Fracciones", "m.percent": "Porcentajes", "m.area": "Geometría: áreas y perímetros", "m.problem": "Problemas de la vida diaria",
+  "m.eq1": "Ecuaciones lineales", "m.powers": "Potenciación", "m.func": "Funciones", "m.system": "Sistemas de ecuaciones", "m.concepts": "Conceptos básicos", "m.quad": "Ecuaciones cuadráticas",
+  "m.deriv": "Derivadas", "m.log": "Logaritmos", "m.trig": "Trigonometría", "ma.line": "Geometría analítica", "ma.ineq": "Inecuaciones", "ma.pyth": "Teorema de Pitágoras", "ma.seq": "Progresiones",
+  "ma.limInf": "Límites", "ma.limFactor": "Límites", "ma.chain": "Derivadas", "ma.integral": "Integrales", "ma.det": "Matrices y determinantes", "ma.logeq": "Logaritmos",
+  "f.mru": "Movimiento (MRU)", "f.speed": "Movimiento (MRU)", "f.mruv": "Movimiento acelerado (MRUV)", "f.freefall": "Caída libre", "fx.vertical": "Lanzamiento vertical", "f.newton": "Leyes de Newton",
+  "f.weight": "Leyes de Newton", "fx.impulse": "Leyes de Newton", "f.energy": "Trabajo y energía", "f.potential": "Trabajo y energía", "fx.work": "Trabajo y energía", "f.power": "Potencia",
+  "f.ohm": "Electricidad", "f.density": "Densidad", "fx.circular": "Movimiento circular", "fx.sci": "Notación científica", "f.units": "Unidades de medida", "f.concepts": "Conceptos de física",
+  "q.bank": "Química general", "q.bank2": "Reacciones y nomenclatura", "q.symbols": "Tabla periódica", "q.moles": "Estequiometría (moles)", "q.molar": "Masa molar",
+  "le.spell": "Ortografía", "le.grammar": "Gramática", "ln.bank": "Lenguaje y argumentación", "vb.syn": "Sinónimos", "vb.ant": "Antónimos", "vb.complete": "Oraciones incompletas",
+  "vb.read": "Comprensión lectora", "vb.analogy": "Analogías", "vb.odd": "Término excluido",
+  "b.bank": "Biología general", "b.bank2": "Biología general", "b.organs": "Cuerpo humano", "b.organelles": "La célula",
+};
+
 // Porcentaje de la prueba real que se muestra en el simulador gratuito.
 export const SIM_SHARE = 0.25;
 
@@ -69,33 +84,30 @@ for (const [l, def] of Object.entries(ENGLISH_LEVELS)) {
 
 export const QUIZZES = {
   diagnostico: {
-    kind: "score", title: "Diagnóstico académico", pickSections: true,
+    kind: "score", flow: "gate", title: "Diagnóstico académico", pickSections: true,
     cta: { service: "Nivelación", text: "Agenda tu clase de nivelación", wa: "Hola For Winners, hice el diagnóstico académico y quiero reforzar: " },
     levels: {
       egb: { label: "Escuela (EGB)", sections: [
-        { name: "Matemática", n: 4, src: ["m.ops", "m.frac", "m.percent", "m.area", "m.problem"] },
-        { name: "Lengua y Literatura", n: 4, src: [["le.spell", 2], ["le.grammar", 2], "vb.syn"] },
-        { name: "Ciencias Naturales", n: 4, src: [["b.bank", 2], "b.organs", "b.organelles", "f.units"] },
-        { name: "Inglés", n: 4, src: [["en.g.a1", 2], "en.be", "en.article", "en.ps3"] },
+        { name: "Matemática", n: 12, src: ["m.ops", "m.frac", "m.percent", "m.area", "m.problem"] },
+        { name: "Lengua y Literatura", n: 12, src: [["le.spell", 2], ["le.grammar", 2], "vb.syn", "vb.analogy", "vb.odd"] },
+        { name: "Ciencias Naturales", n: 12, src: [["b.bank", 2], ["b.bank2", 2], "b.organs", "b.organelles", "f.units", "q.symbols"] },
       ] },
       bach: { label: "Colegio (Bachillerato)", sections: [
-        { name: "Matemática", n: 4, src: ["m.eq1", "m.powers", "m.func", "m.system", "m.frac", "m.percent", "m.concepts"] },
-        { name: "Física", n: 4, src: ["f.mru", "f.speed", "f.mruv", "f.newton", "f.weight", "f.energy", "f.ohm", "f.density", ["f.concepts", 2]] },
-        { name: "Química", n: 4, src: QUIMICA },
-        { name: "Lengua y Literatura", n: 4, src: [["le.grammar", 3], "le.spell", "vb.syn", "vb.ant", "vb.complete"] },
-        { name: "Inglés", n: 4, src: [["en.g.a2", 2], ["en.g.b1", 2], "en.past", "en.comp"] },
+        { name: "Matemática", n: 12, src: ["m.eq1", "m.powers", "m.func", "m.system", "m.frac", "m.percent", "m.concepts", "ma.line", "ma.ineq", "ma.pyth", "ma.seq", "m.trig"] },
+        { name: "Física", n: 12, src: ["f.mru", "f.speed", "f.mruv", "f.newton", "f.weight", "f.energy", "f.ohm", "f.density", "fx.vertical", "fx.circular", "fx.sci", ["f.concepts", 2]] },
+        { name: "Química", n: 12, src: QUIMICA },
+        { name: "Lengua y Literatura", n: 12, src: [["le.grammar", 3], ["ln.bank", 3], "le.spell", "vb.syn", "vb.ant", "vb.complete", "vb.read"] },
       ] },
       uni: { label: "Universidad", sections: [
-        { name: "Matemática", n: 4, src: ["m.quad", "m.deriv", "m.log", "m.trig", "m.system", "m.func"] },
-        { name: "Física", n: 4, src: ["f.mruv", "f.freefall", "f.energy", "f.potential", "f.power", "f.ohm", ["f.concepts", 2]] },
-        { name: "Química", n: 4, src: QUIMICA },
-        { name: "Lengua y Redacción", n: 4, src: [["le.grammar", 2], "vb.complete", "vb.analogy", "vb.ant"] },
-        { name: "Inglés", n: 4, src: [["en.g.b1", 2], ["en.g.b2", 2], "en.cond", "en.passive"] },
+        { name: "Matemática", n: 12, src: ["m.quad", "m.deriv", "m.log", "m.trig", "m.system", "m.func", "ma.limInf", "ma.limFactor", "ma.chain", "ma.integral", "ma.det", "ma.logeq"] },
+        { name: "Física", n: 12, src: ["f.mruv", "f.freefall", "f.energy", "f.potential", "f.power", "f.ohm", "fx.vertical", "fx.work", "fx.impulse", "fx.circular", ["f.concepts", 2]] },
+        { name: "Química", n: 12, src: QUIMICA },
+        { name: "Lengua y Redacción", n: 12, src: [["le.grammar", 2], ["ln.bank", 3], "vb.complete", "vb.analogy", "vb.ant", "vb.read"] },
       ] },
     },
   },
   ingles: {
-    kind: "score", title: "Práctica de inglés",
+    kind: "score", flow: "open", title: "Práctica de inglés",
     cta: { service: "Curso de inglés", text: "Quiero mi curso de inglés", wa: "Hola For Winners, hice la práctica de inglés y quiero información del curso. Resultado: " },
     levels: englishLevels,
   },
@@ -137,15 +149,15 @@ export const QUIZZES = {
     },
   },
   vocacional: {
-    kind: "vocational", title: "Test vocacional",
-    cta: { service: "Orientación vocacional", text: "Quiero mi sesión de orientación", wa: "Hola For Winners, hice el test vocacional y quiero mi informe completo. Mi perfil: " },
+    kind: "vocational", flow: "open", title: "Test vocacional",
+    cta: { service: "Orientación vocacional", text: "Quiero mi sesión de orientación", wa: "Hola For Winners, hice el test vocacional y quiero una sesión de orientación. Mi perfil: " },
     levels: { general: { label: "Intereses y preferencias", minutes: 0, sections: ["R", "I", "A", "S", "E", "C"].map(t => ({ name: t, n: 5, src: [`voc.${t}`] })) } },
   },
 };
 
 export function publicCatalog() {
   return Object.fromEntries(Object.entries(QUIZZES).map(([id, q]) => [id, {
-    title: q.title, kind: q.kind,
+    title: q.title, kind: q.kind, flow: q.flow || "gate",
     levels: Object.fromEntries(Object.entries(q.levels).map(([k, l]) => [k, {
       label: l.label, minutes: l.minutes || 0, questions: l.sections.reduce((a, s) => a + s.n, 0),
       real: l.real || null, sections: q.kind === "vocational" ? [] : l.sections.map(s => s.name),
