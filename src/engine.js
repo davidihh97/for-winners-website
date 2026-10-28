@@ -59,12 +59,15 @@ export function startAttempt(quizId, levelId, { sections: only, seen = [] } = {}
     while (count < sec.n && guard++ < sec.n * MAX_TRIES) {
       const block = pickOne(srcs, seenPos, usedKeys, prompts);
       if (!block) break;
-      block.forEach(b => (b.section = sec.name));
+      block.forEach(b => { b.section = sec.group || sec.name; b.group = sec.group || sec.name; });
       blocks.push(block);
       count += block.length;
     }
   }
-  const questions = shuffle(blocks).flat().map(toClient);
+  // Test por partes (vocacional): se respeta el orden de las partes y se mezclan las preguntas dentro de cada una.
+  let ordered = shuffle(blocks);
+  if (quiz.ordered) { const groups = [...new Set(sections.map(s => s.group || s.name))]; ordered = groups.flatMap(g => ordered.filter(b => b[0].group === g)); }
+  const questions = ordered.flat().map(toClient);
   return {
     quiz: quizId, level: levelId, title: quiz.title, kind: quiz.kind, flow: quiz.flow || "gate", label: level.label,
     minutes: level.minutes || 0, questions,
@@ -239,14 +242,15 @@ function scoreMessage(quiz, pct, weak) {
 }
 
 function vocationalResult(base, graded, mode) {
-  const answers = graded.map(g => ({ type: g.id.split("|")[0].split(".")[1], value: g.a }));
-  const { profile, careers, areas } = scoreVocational(answers);
-  const code = profile.slice(0, 3).map(p => p.code).join("");
+  const answers = graded.map(g => ({ key: g.id.split("|")[0], value: g.a }));
+  const r = scoreVocational(answers);
+  const code = r.profile.slice(0, 3).map(p => p.code).join("");
   const out = {
-    ...base, total: graded.length, code, top: careers[0], careers: careers.slice(0, 3), allCareers: CAREERS.length,
-    message: `Tu perfil predominante es ${profile[0].name}, seguido de ${profile[1].name} y ${profile[2].name}.`,
-    profileTop: profile.slice(0, 2).map(p => ({ code: p.code, name: p.name, desc: p.desc })),
+    ...base, total: graded.length, code, top: r.careers[0], careers: r.careers.slice(0, 3), allCareers: CAREERS.length,
+    message: `Tu perfil predominante es ${r.profile[0].name}, seguido de ${r.profile[1].name} y ${r.profile[2].name}.`,
+    profileTop: r.profile.slice(0, 2).map(p => ({ code: p.code, name: p.name, desc: p.desc })),
+    readiness: r.readiness, readinessLabel: r.readinessLabel, topValues: r.values.slice(0, 3).map(v => v.name),
   };
-  if (mode === "full") Object.assign(out, { profile, areas, careers: careers.slice(0, 15) });
+  if (mode === "full") Object.assign(out, { profile: r.profile, areas: r.areas, careers: r.careers.slice(0, 15), personality: r.personality, values: r.values, adaptability: r.adaptability });
   return out;
 }

@@ -7,7 +7,10 @@ import "./banks/school.js";
 import "./banks/english.js";
 import "./banks/pre.js";
 import "./gen/advanced.js";
-import "./vocational.js";
+import "./gen/visual.js";
+import "./banks/extra-es.js";
+import "./banks/extra-en.js";
+import { VOC_SECTIONS } from "./vocational.js";
 
 // Nombre de tema de cada fuente (desglose por temas en el diagnóstico).
 export const TOPICS = {
@@ -30,10 +33,11 @@ export const SIM_SHARE = 0.25;
 const VERBAL = ["vb.analogy", "vb.syn", "vb.ant", "vb.odd", "vb.complete"];
 const NUMERICO = ["rn.series", "rn.ages", "rn.work", "rn.prop", "rn.pchange", "rn.avg", "rn.operator", "rn.grid", "rn.sets", "rn.meet", "rn.letters"];
 const LOGICO = ["rl.order", "rl.syllogism", "rl.calendar", "rl.code", ["rl.bank", 2]];
-const ABSTRACTO = ["ra.arrow", "ra.poly", "ra.dots", "ra.quad", "ra.orbit", "ra.odd"];
+const ABSTRACTO = ["ra.arrow", "ra.poly", "ra.dots", "ra.quad", "ra.orbit", "ra.odd", ["ra.matrix", 2], "ra.pie", "ra.clock", "ra.combo", "ra.grow", "re.cubes", "re.rotate", "re.net"];
+const ESPACIAL = ["re.cubes", "re.rotate", "re.net", "re.paint"];
 const MATE_PRE = ["m.eq1", "m.powers", "m.func", "m.system", "m.quad", "m.percent", "m.frac", ["m.concepts", 2]];
 const FISICA_PRE = ["f.mru", "f.mruv", "f.freefall", "f.newton", "f.weight", "f.energy", "f.potential", "f.ohm", "f.density", "f.power", ["f.concepts", 2]];
-const MATE_ING = ["ma.limInf", "ma.limFactor", "ma.chain", "ma.integral", "ma.det", "ma.line", "ma.logeq", "m.deriv", "m.quad", "m.log", "m.trig", "rn.work", "rn.pchange", "rn.ages", "ra.arrow", "ra.poly", "re.net"];
+const MATE_ING = ["ma.limInf", "ma.limFactor", "ma.chain", "ma.integral", "ma.det", "ma.line", "ma.logeq", "m.deriv", "m.quad", "m.log", "m.trig", "rn.work", "rn.pchange", "rn.ages", "ra.arrow", "ra.poly", "re.net", "re.cubes", "re.rotate", "ra.matrix", "ra.combo"];
 const FISICA_ING = [...FISICA_PRE, "fx.vertical", "fx.circular", "fx.sci", "fx.work", "fx.impulse"];
 const LENGUAJE = [["ln.bank", 4], "vb.analogy", "vb.ant", "vb.syn", ["le.grammar", 2]];
 const ESTADISTICA = [["st.bank", 3], "st.mean", "st.median", "st.mode", "st.var", "st.prob", "st.freq", "st.class"];
@@ -61,7 +65,7 @@ const N = w => ({ name: "Razonamiento numérico", w, src: NUMERICO });
 const L = w => ({ name: "Razonamiento lógico", w, src: LOGICO });
 const A = w => ({ name: "Razonamiento abstracto", w, src: ABSTRACTO });
 const ATENCION = w => ({ name: "Atención y concentración", w, src: ["at.letters", "at.digits", "at.pairs"] });
-const YACHAY_EXTRA = w => ({ name: "Módulo Yachay: matemática, lectura científica y espacial", w, src: [["ma.ineq", 2], ["m.system", 1], ["ma.line", 1], ["m.func", 1], ["ma.pyth", 2], ["ma.solid", 2], ["ma.seq", 2], ["ma.sets", 2], ["rn.sets", 1], ["yc.read", 1], ["re.paint", 2]] });
+const YACHAY_EXTRA = w => ({ name: "Módulo Yachay: matemática, lectura científica y espacial", w, src: [["ma.ineq", 2], ["m.system", 1], ["ma.line", 1], ["m.func", 1], ["ma.pyth", 2], ["ma.solid", 2], ["ma.seq", 2], ["ma.sets", 2], ["rn.sets", 1], ["yc.read", 1], ["re.paint", 2], ["re.cubes", 2], ["re.rotate", 2], ["re.net", 1]] });
 
 const ENGLISH_LEVELS = {
   a1: { label: "A1 · Principiante", grammar: [["en.g.a1", 3], ["en.g.a1.x", 2], "en.be", "en.article", "en.ps3"] },
@@ -142,7 +146,7 @@ export const QUIZZES = {
       ]),
       // El simulador de curso FECYT-FACAE no indica tiempo: se asumen 120 minutos (AJUSTAR si es distinto).
       fecyt: uniLevel("FECYT · FACAE (Educación y Ciencias Administrativas)", { questions: 100, minutes: 120 }, [
-        { name: "Matemática, estadística y abstracto", w: 30, src: ["m.frac", "m.eq1", "m.system", "m.powers", "ma.line", "ma.det", "ma.limInf", "ma.integral", "st.median", "st.prob", "st.var", "st.class", ["st.bank", 2], "ra.poly", "ra.arrow", "ra.dots", "ra.orbit"] },
+        { name: "Matemática, estadística y abstracto", w: 30, src: ["m.frac", "m.eq1", "m.system", "m.powers", "ma.line", "ma.det", "ma.limInf", "ma.integral", "st.median", "st.prob", "st.var", "st.class", ["st.bank", 2], "ra.poly", "ra.arrow", "ra.dots", "ra.orbit", "ra.matrix", "ra.pie", "ra.clock", "ra.combo", "re.rotate"] },
         { name: "Emprendimiento", w: 40, src: [["em.bank", 3], ["em.calc", 2]] },
         { name: "Verbal", w: 30, src: [["ln.bank", 3], "vb.syn", "vb.ant", "vb.analogy", "vb.roman", "le.spell", "le.grammar"] },
       ]),
@@ -151,9 +155,29 @@ export const QUIZZES = {
   vocacional: {
     kind: "vocational", flow: "open", title: "Test vocacional",
     cta: { service: "Orientación vocacional", text: "Quiero mi sesión de orientación", wa: "Hola For Winners, hice el test vocacional y quiero una sesión de orientación. Mi perfil: " },
-    levels: { general: { label: "Intereses y preferencias", minutes: 0, sections: ["R", "I", "A", "S", "E", "C"].map(t => ({ name: t, n: 5, src: [`voc.${t}`] })) } },
+    ordered: true,
+    levels: { general: { label: "Intereses, personalidad, valores y adaptabilidad", minutes: 0, sections: VOC_SECTIONS } },
   },
 };
+
+// Bancos de respaldo: donde se use un banco, se suman sus bancos extra con el mismo peso,
+// así cada intento tiene más preguntas disponibles y se repiten cada vez menos.
+const BACKUPS = {
+  "vb.analogy": ["vb.analogy2"], "vb.odd": ["vb.odd2"], "vb.complete": ["vb.complete2"], "vb.read": ["vb.read2"],
+  "rl.bank": ["rl.bank2"], "le.grammar": ["le.grammar2"], "ln.bank": ["ln.bank2"], "q.bank": ["q.bank3"], "b.bank": ["b.bank3"],
+  "an.bank": ["an.bank2"], "s.bank": ["s.bank2"], "f.concepts": ["f.concepts2"], "em.bank": ["em.bank2"], "st.bank": ["st.bank2"],
+  ...Object.fromEntries(["a1", "a2", "b1", "b2", "c1"].flatMap(l => [
+    [`en.g.${l}`, [`en.g.${l}.y`]], [`en.w.order.${l}`, [`en.w.order.${l}.y`]], [`en.w.fix.${l}`, [`en.w.fix.${l}.y`]], [`en.r.${l}`, [`en.r.${l}.y`]],
+  ])),
+};
+for (const quiz of Object.values(QUIZZES)) for (const level of Object.values(quiz.levels)) for (const sec of level.sections) {
+  const extra = [];
+  for (const src of sec.src) {
+    const [key, w] = Array.isArray(src) ? src : [src, 1];
+    for (const b of BACKUPS[key] || []) if (!sec.src.some(x => (Array.isArray(x) ? x[0] : x) === b)) extra.push([b, w]);
+  }
+  sec.src = [...sec.src, ...extra];
+}
 
 export function publicCatalog() {
   return Object.fromEntries(Object.entries(QUIZZES).map(([id, q]) => [id, {
