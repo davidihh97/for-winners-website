@@ -1,0 +1,14 @@
+{
+  "name": "for-winners-website",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "build": "echo \"Sin paso de compilación: Wrangler empaqueta src/ y public/\"",
+    "db:migrate": "wrangler d1 migrations apply for-winners-db --remote"
+  },
+  "devDependencies": {
+    "wrangler": "^4.154.0"
+  }
+}
