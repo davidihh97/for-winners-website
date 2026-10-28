@@ -233,3 +233,4 @@ section:not(.alt) .pick button{background:var(--bg2)}
 .rn-fitbig{font-size:18px;font-weight:700;color:var(--ok)}
 .pick button[disabled]{opacity:.5}
 .startbar .btn[disabled]{opacity:.45;cursor:not-allowed;transform:none}
+.rn-figure svg{min-width:96px;min-height:96px}

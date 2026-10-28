@@ -167,7 +167,7 @@
         h("div", {}, h("b", {}, a.title), h("span", {}, a.kind === "vocational" ? "" : " · " + a.label)),
         a.minutes ? h("span", { class: "rn-timer" }, "⏱ " + fmtTime(st.left)) : null);
       const bar = h("div", { class: "bar" }, h("i", { style: `width:${(answered / n) * 100}%` }));
-      const meta = h("div", { class: "rn-meta" }, h("span", {}, `Pregunta ${st.i + 1} de ${n}`), a.kind === "vocational" ? null : h("span", { class: "rn-sec" }, q.section));
+      const meta = h("div", { class: "rn-meta" }, h("span", {}, `Pregunta ${st.i + 1} de ${n}`), h("span", { class: "rn-sec" }, q.section));
       const body = h("div", { class: "rn-body" });
       if (q.passage) body.append(h("div", { class: "rn-passage" }, q.passageTitle ? h("b", {}, q.passageTitle) : null, ...q.passage.split("\n").map(p => h("p", {}, p))));
       if (q.figure) body.append(h("div", { class: "rn-figure", html: q.figure }));
@@ -284,7 +284,7 @@
       box.append(
         h("b", {}, vocational ? "📄 Informe vocacional completo" : "📄 ¿Cuáles respondiste mal?"),
         h("p", {}, vocational
-          ? "Descarga gratis tu informe en PDF: tus áreas de mayor destreza (salud, educación, ingenierías, negocios…), tu perfil con gráficos y porcentajes y las 15 carreras más afines a ti."
+          ? "Descarga gratis tu informe en PDF: tus áreas de mayor destreza (salud, educación, ingenierías, negocios…), tu personalidad, tus valores laborales, tu preparación para decidir con consejos y las 15 carreras más afines a ti."
           : `Descarga gratis tu informe completo en PDF: cada pregunta con tu respuesta, la respuesta correcta y la explicación${r.wrongCount ? ` de tus ${r.wrongCount} errores` : ""}.`),
         form);
       return box;
@@ -296,7 +296,10 @@
           h("span", { class: "rn-small" }, "La carrera que más te conviene"),
           h("div", { class: "rn-topname" }, r.top.name),
           h("span", { class: "rn-sec" }, r.top.area), h("span", { class: "rn-fitbig" }, `${r.top.fit} % de afinidad`))),
-        h("p", { class: "rn-small", style: "margin-top:14px" }, `Analizamos ${r.allCareers} carreras de pregrado que se ofertan en el Ecuador. ${r.message}`),
+        h("p", { class: "rn-small", style: "margin-top:14px" }, `Analizamos ${r.allCareers} carreras de pregrado que se ofertan en el Ecuador según tus intereses, tu forma de ser y lo que buscas en un trabajo. ${r.message}`),
+        h("div", { class: "rn-bars" },
+          h("div", { class: "rn-barrow" }, h("div", { class: "rn-barlbl" }, h("b", {}, "Tu preparación para decidir"), h("span", {}, `${r.readiness} % · ${r.readinessLabel}`)), h("div", { class: "bar" }, h("i", { style: `width:${r.readiness}%` })))),
+        h("p", { class: "rn-small" }, `Lo que más valoras en un trabajo: ${r.topValues.join(", ")}.`),
         h("h3", { class: "rn-h" }, "También van contigo"),
         h("div", { class: "rn-careers" }, r.careers.slice(1, 3).map((c, i) => h("div", { class: "rn-career" }, h("span", { class: "n" }, i + 2), h("div", {}, h("b", {}, c.name), h("span", { class: "rn-small" }, c.area)), h("span", { class: "fit" }, c.fit + " %")))),
         downloadBox(), ctaRow);

@@ -231,7 +231,7 @@
   async function vocational(r, contact) {
     await ensure();
     const doc = newDoc();
-    header(doc, "Informe vocacional", "Test de intereses · modelo RIASEC");
+    header(doc, "Informe vocacional", "Intereses · personalidad · valores · adaptabilidad");
     let y = personBlock(doc, 48, contact.name, `Código vocacional: ${r.code}`);
     // carrera recomendada
     fill(doc, C.navy); doc.roundedRect(M, y, W - 2 * M, 30, 3, 3, "F");
@@ -261,13 +261,32 @@
     y = sectionTitle(doc, y, "Áreas en las que tienes mayor destreza");
     font(doc, 9.5); color(doc, C.mut); doc.text(t("Afinidad promedio con las tres carreras más compatibles de cada área."), M + 5, y + 1);
     y = bars(doc, M, y + 7, W - 2 * M, r.areas.map((a, i) => ({ label: a.area, pct: a.pct, color: i < 3 ? C.navy : [160, 172, 196], note: a.careers.join(" · ") })), { labelW: 58, rowH: 11.5 }) + 4;
-    y = sectionTitle(doc, y, "Tus destrezas principales");
+    y = sectionTitle(doc, y, "Tu forma de ser (personalidad)");
+    font(doc, 9.5); color(doc, C.mut); doc.text(t("Modelo de los cinco grandes factores de la personalidad."), M + 5, y + 1);
+    y = bars(doc, M, y + 7, W - 2 * M, r.personality.map(p => ({ label: p.name, pct: p.pct, color: C.blue, note: p.text })), { labelW: 58, rowH: 11.5 }) + 4;
+
+    doc.addPage(); y = 20;
+    y = sectionTitle(doc, y, "Lo que buscas en tu futuro trabajo");
+    font(doc, 9.5); color(doc, C.mut); doc.text(t("Importancia que le das a cada valor laboral."), M + 5, y + 1);
+    y = bars(doc, M, y + 7, W - 2 * M, r.values.map((v, i) => ({ label: v.name, pct: v.pct, color: i < 3 ? C.navy : [160, 172, 196] })), { labelW: 70, rowH: 8.5 }) + 6;
+    y = sectionTitle(doc, y, "Tu preparación para decidir tu carrera");
+    font(doc, 9.5); color(doc, C.mut); doc.text(t("Adaptabilidad de carrera según el modelo NEFELE (Life Design, Savickas)."), M + 5, y + 1);
+    tile(doc, M, y + 6, 62, 26, "Nivel de preparación", `${r.readiness}%`, levelColor(r.readiness));
+    font(doc, 10, "bold"); color(doc, C.navy); doc.text(t(r.readinessLabel), M + 68, y + 16, { maxWidth: W - 2 * M - 70 });
+    y = bars(doc, M, y + 38, W - 2 * M, r.adaptability.map(a => ({ label: a.name, pct: a.pct, note: a.desc })), { labelW: 66, rowH: 11.5 }) + 2;
+    y = table(doc, y, {
+      head: [["Dimensión", "Cómo fortalecerla"]],
+      body: r.adaptability.slice().sort((a, b) => a.pct - b.pct).map(a => [{ content: `${a.name} (${a.pct}%)`, styles: { fontStyle: "bold" } }, a.tip]),
+      columnStyles: { 0: { cellWidth: 62 } },
+    });
+
+    doc.addPage(); y = 20;
+    y = sectionTitle(doc, y, "Tus destrezas principales (tipos RIASEC)");
     y = table(doc, y + 1, {
       head: [["Tipo", "Afinidad", "Destreza", "Qué significa"]],
       body: r.profile.map(p => [{ content: p.name, styles: { fontStyle: "bold" } }, `${p.pct}%`, p.skill, p.desc]),
       columnStyles: { 0: { cellWidth: 28 }, 1: { cellWidth: 18, halign: "center" }, 2: { cellWidth: 48 } },
     });
-    doc.addPage(); y = 20;
     y = sectionTitle(doc, y, `Las 15 carreras más afines (de ${r.allCareers} carreras de pregrado del Ecuador)`);
     y = table(doc, y + 1, {
       head: [["N.°", "Carrera", "Área", "Código", "Afinidad"]],
@@ -283,7 +302,7 @@
     });
     const area = r.areas[0]?.area || r.top.area;
     y = textBox(doc, y, "Recomendaciones", `Tu mayor afinidad está en el área de ${area}. Investiga el pensum de ${r.top.name} y de las otras carreras de tu lista, conversa con profesionales del área y revisa qué examen de admisión necesitas. ${simTip(area)}`);
-    y = textBox(doc, y, "Nota", "Este informe es orientativo: describe tus intereses, no tus capacidades. Úsalo junto con una sesión de orientación vocacional para tomar tu decisión.", C.line);
+    y = textBox(doc, y, "Sobre este test", "Adaptación orientativa de For Winners inspirada en el modelo de orientación NEFELE (Life Design y adaptabilidad de carrera) y en el enfoque de CareerExplorer (intereses RIASEC, personalidad de cinco factores y valores laborales). No es la versión oficial de esos instrumentos: describe tus intereses y preferencias, no tus capacidades. Úsalo junto con una sesión de orientación vocacional.", C.line);
     contactBox(doc, y, "Prepárate para tu examen de admisión con For Winners");
     footer(doc);
     doc.save(fileName("Informe-vocacional", contact.name));

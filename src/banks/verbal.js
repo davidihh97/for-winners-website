@@ -3,10 +3,18 @@ import { options } from "../lib/rand.js";
 
 // Palabra, sinónimo, antónimo. Sirve para preguntas de sinónimos y antónimos con distractores variables.
 const WORDS = [
+  ["abnegado", "sacrificado", "egoísta"], ["ameno", "agradable", "aburrido"], ["bonanza", "prosperidad", "crisis"], ["cauto", "prudente", "imprudente"],
+  ["clemente", "compasivo", "despiadado"], ["contrito", "arrepentido", "impenitente"], ["copioso", "abundante", "escaso", "abu"], ["diestro", "hábil", "torpe", "hab2"],
+  ["discreto", "reservado", "indiscreto"], ["endeble", "débil", "fuerte", "fue"], ["recio", "fuerte", "débil", "fue"], ["enérgico", "vigoroso", "decaído", "ene"],
+  ["lánguido", "decaído", "vigoroso", "ene"], ["erudito", "sabio", "ignorante"], ["fecundo", "fértil", "estéril", "abu"], ["fiable", "confiable", "dudoso"],
+  ["frugal", "sobrio", "glotón", "mod"], ["gélido", "helado", "ardiente"], ["insigne", "ilustre", "desconocido"], ["jovial", "alegre", "sombrío", "luz"],
+  ["lúcido", "claro", "confuso", "cla"], ["nítido", "claro", "borroso", "cla"], ["mendaz", "mentiroso", "sincero"], ["mezquino", "tacaño", "generoso", "gen"],
+  ["onírico", "soñado", "real"], ["perspicaz", "agudo", "torpe", "hab2"], ["pertinaz", "obstinado", "flexible", "ten"], ["plácido", "tranquilo", "agitado", "cal"],
+  ["presto", "rápido", "lento", "rap"], ["raudo", "veloz", "lento", "rap"], ["fastuoso", "lujoso", "modesto"], ["ecuánime", "imparcial", "parcial"],
   ["ufano", "orgulloso", "avergonzado"], ["exhaustivo", "completo", "superficial", "sup"], ["somero", "superficial", "profundo", "sup"],
   ["inicuo", "injusto", "justo"], ["ladino", "astuto", "ingenuo", "ast"], ["conspicuo", "notable", "desconocido"], ["probo", "honrado", "deshonesto"],
   ["deleznable", "despreciable", "admirable"], ["exultante", "eufórico", "abatido"], ["avezado", "experto", "novato"], ["acucioso", "diligente", "negligente"],
-  ["pusilánime", "cobarde", "valeroso", "val"], ["ecuánime", "imparcial", "parcial"], ["prístino", "original", "alterado"], ["procaz", "insolente", "respetuoso"],
+  ["pusilánime", "cobarde", "valeroso", "val"], ["prístino", "original", "alterado"], ["procaz", "insolente", "respetuoso"],
   ["diáfano", "transparente", "opaco", "luz"], ["perenne", "permanente", "temporal", "dur"],
   ["benevolente", "bondadoso", "malvado", "ama"], 
   ["prolijo", "esmerado", "descuidado", "cui"], ["arduo", "difícil", "sencillo"],

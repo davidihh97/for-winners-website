@@ -7,7 +7,7 @@ Sitio web de For Winners (Cloudflare Workers + archivos estáticos + base de dat
 | `diagnostico.html` | Diagnóstico gratuito: se elige el nivel (Escuela, Colegio, Universidad) y **una** materia (Matemática, Física, Química o Lengua); 12 preguntas con desglose por temas. Lleva a **Nivelación**. |
 | `ingles.html#practica` | Práctica de inglés: primero el nivel (A1–C1) y luego la skill (Grammar, Writing, Reading). El resultado se ve sin datos; con datos se descarga el informe completo con cada error explicado. Lleva al **curso de inglés**. |
 | `simuladores.html` | Simuladores de razonamiento para UCE, UPEC y Yachay Tech, y por facultad para la UTN. Llevan al **preuniversitario**. |
-| `test-vocacional.html` | Test vocacional (modelo RIASEC): muestra la carrera más recomendada entre 86 de pregrado del Ecuador; con datos se descarga el informe PDF (áreas de destreza, perfil, 15 carreras afines). |
+| `test-vocacional.html` | Test vocacional en 4 partes (61 preguntas), adaptación orientativa inspirada en **CareerExplorer** (intereses RIASEC, personalidad de cinco factores y valores laborales) y en el modelo **NEFELE** (Life Design y adaptabilidad de carrera de Savickas). Muestra la carrera más recomendada entre 86 de pregrado del Ecuador; con datos se descarga el informe PDF de 5 páginas. |
 | `asesoria.html` | Tips de redacción académica (parte bloqueada) + guía gratis en PDF a cambio de los datos. Lleva a **asesoría**. |
 
 ## Cómo funcionan los simuladores
@@ -16,6 +16,8 @@ Sitio web de For Winners (Cloudflare Workers + archivos estáticos + base de dat
 - Inglés y test vocacional: el resultado se ve al instante; los datos desbloquean el informe completo.
 - **Los informes se descargan en PDF** (generados en el navegador con jsPDF, `public/js/pdf.js`); no se envían por correo ni WhatsApp.
 - Hay dos tipos de preguntas: **bancos** escritos a mano (`src/banks/`) y **generadores** que crean preguntas nuevas con números y datos al azar (`src/gen/`).
+- Ejercicios visuales generados: series gráficas (matrices 3×3, sectores, relojes, figuras con dos cambios) y razonamiento espacial (conteo de cubos en vista isométrica, giro y reflejo de figuras, desarrollos de cubo, cubos pintados).
+- Bancos de respaldo (`src/banks/extra-*.js`) que se suman automáticamente a cada banco original (`BACKUPS` en `src/catalog.js`).
 - Para que no se repitan, el navegador recuerda lo que ya vio el usuario (`localStorage`) y el servidor da prioridad a lo no visto. El orden de las preguntas y de las opciones cambia en cada intento.
 - Cada resultado se guarda en la tabla `assessments` y como contacto en `inquiries`.
 
