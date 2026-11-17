@@ -189,6 +189,12 @@
       columnStyles: { 1: { halign: "center" }, 2: { halign: "center" }, 3: { halign: "center" } },
     });
 
+    if (r.tiers?.length) {
+      y = ensureSpace(doc, y, r.tiers.length * 12 + 20);
+      y = sectionTitle(doc, y, "Básicas vs. avanzadas");
+      y = bars(doc, M, y + 1, W - 2 * M, r.tiers.map(s => ({ label: s.name, pct: s.pct, note: `${s.correct} de ${s.total}` })), { rowH: 12, labelW: 60 }) + 6;
+    }
+
     const items = r.items || r.review || [];
     if (items.length) {
       y = ensureSpace(doc, y, 40);

@@ -161,13 +161,15 @@
 
     function renderQ() {
       const a = st.attempt, q = a.questions[st.i], n = a.questions.length;
+      // Simuladores de admisión: aviso al pasar de las preguntas básicas a las avanzadas.
+      if (a.tiers && q.tier === "hard" && !st.partTwo && st.i > 0 && a.questions[st.i - 1].tier === "easy") return renderPartTwo();
       const answered = Object.keys(st.answers).filter(k => st.answers[k] !== "").length;
       root.innerHTML = "";
       const head = h("div", { class: "rn-head" },
         h("div", {}, h("b", {}, a.title), h("span", {}, a.kind === "vocational" ? "" : " · " + a.label)),
         a.minutes ? h("span", { class: "rn-timer" }, "⏱ " + fmtTime(st.left)) : null);
       const bar = h("div", { class: "bar" }, h("i", { style: `width:${(answered / n) * 100}%` }));
-      const meta = h("div", { class: "rn-meta" }, h("span", {}, `Pregunta ${st.i + 1} de ${n}`), h("span", { class: "rn-sec" }, q.section));
+      const meta = h("div", { class: "rn-meta" }, h("span", {}, `Pregunta ${st.i + 1} de ${n}`), h("span", { class: "rn-tags" }, q.tier ? h("span", { class: "rn-tier " + q.tier }, q.tierLabel) : null, h("span", { class: "rn-sec" }, q.section)));
       const body = h("div", { class: "rn-body" });
       if (q.passage) body.append(h("div", { class: "rn-passage" }, q.passageTitle ? h("b", {}, q.passageTitle) : null, ...q.passage.split("\n").map(p => h("p", {}, p))));
       if (q.figure) body.append(h("div", { class: "rn-figure", html: q.figure }));
@@ -176,13 +178,29 @@
       body.append(answerUI(q));
       const last = st.i === n - 1;
       const nav = h("div", { class: "rn-nav" },
-        h("button", { class: "btn o", disabled: st.i === 0, onclick: () => { st.i--; renderQ(); } }, "Anterior"),
+        h("button", { class: "btn o", disabled: st.i === 0, onclick: () => { st.i--; if (q.tier === "hard" && a.questions[st.i].tier === "easy") st.partTwo = true; renderQ(); } }, "Anterior"),
         h("button", { class: "btn", onclick: () => { if (last) finish(false); else { st.i++; renderQ(); } } }, last ? "Terminar" : "Siguiente"));
       root.append(head, bar, meta, body, nav);
       if (first || root.getBoundingClientRect().top < 0) root.scrollIntoView({ block: "start", behavior: "instant" });
       first = false;
       const focus = root.querySelector(".opt.sel, input, .opt");
       if (focus && document.activeElement && root.contains(document.activeElement)) focus.focus({ preventScroll: true });
+    }
+
+    function renderPartTwo() {
+      const a = st.attempt, nHard = a.questions.filter(x => x.tier === "hard").length;
+      st.partTwo = true;
+      root.innerHTML = "";
+      root.append(
+        h("div", { class: "rn-head" }, h("div", {}, h("b", {}, a.title), h("span", {}, " · " + a.label)), a.minutes ? h("span", { class: "rn-timer" }, "⏱ " + fmtTime(st.left)) : null),
+        h("div", { class: "rn-part" },
+          h("span", { class: "rn-tier hard" }, "Parte 2"),
+          h("h3", {}, "Terminaste las preguntas básicas."),
+          h("p", {}, `Ahora vienen ${nHard} preguntas avanzadas: más pasos, más trampas y más parecidas a las que separan a quienes consiguen el cupo. Lee con calma: el reloj sigue corriendo.`),
+          h("div", { class: "row" },
+            h("button", { class: "btn o", onclick: () => { st.i--; renderQ(); } }, "Volver a la parte 1"),
+            h("button", { class: "btn", onclick: () => renderQ() }, "Empezar la parte 2"))));
+      root.scrollIntoView({ block: "start", behavior: "instant" });
     }
 
     function setAnswer(q, v) { st.answers[q.id] = v; }
@@ -313,6 +331,10 @@
       h("div", { class: "rn-bars" }, (r.topics || r.sections).map(s => h("div", { class: "rn-barrow" },
         h("div", { class: "rn-barlbl" }, h("b", {}, s.name), h("span", {}, `${s.correct}/${s.total} · ${s.advice}`)),
         h("div", { class: "bar" }, h("i", { style: `width:${Math.max(3, s.pct)}%;background:${bandColor(s.pct)}` }))))),
+      r.tiers?.length ? h("h3", { class: "rn-h" }, "Básicas vs. avanzadas") : null,
+      r.tiers?.length ? h("div", { class: "rn-bars" }, r.tiers.map(s => h("div", { class: "rn-barrow" },
+        h("div", { class: "rn-barlbl" }, h("b", {}, s.name), h("span", {}, `${s.correct}/${s.total} · ${s.pct} %`)),
+        h("div", { class: "bar" }, h("i", { style: `width:${Math.max(3, s.pct)}%;background:${bandColor(s.pct)}` }))))) : null,
       r.review?.length ? h("h3", { class: "rn-h" }, "Revisemos algunos errores") : null,
       ...(r.review || []).map(x => h("div", { class: "rn-review" }, h("span", { class: "rn-sec" }, x.section), h("p", {}, h("b", {}, x.prompt)), h("p", {}, "Tu respuesta: ", h("span", { class: "bad" }, x.yours)), h("p", {}, "Correcta: ", h("span", { class: "good" }, x.correct)), x.explain ? h("p", { class: "rn-small" }, x.explain) : null)),
       r.locked ? h("div", { class: "rn-upsell" }, h("b", {}, `🔒 ${r.locked} errores más con su explicación paso a paso`), h("p", {}, upsellText(r))) : null,
