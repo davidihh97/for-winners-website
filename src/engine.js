@@ -3,6 +3,7 @@ import { SOURCES } from "./lib/sources.js";
 import { rng, randomSeed, shuffle } from "./lib/rand.js";
 import { QUIZZES, TOPICS } from "./catalog.js";
 import { scoreVocational, CAREERS } from "./vocational.js";
+import { tierOf, TIER_LABEL } from "./difficulty.js";
 
 const MAX_TRIES = 20;
 
@@ -53,24 +54,38 @@ export function startAttempt(quizId, levelId, { sections: only, seen = [] } = {}
   if (!sections.length) sections = level.sections;
 
   const blocks = [];
-  for (const sec of sections) {
-    const srcs = sec.src.map(norm).filter(s => SOURCES[s.key]);
+  const fill = (sec, srcs, n, tier) => {
     let count = 0, guard = 0;
-    while (count < sec.n && guard++ < sec.n * MAX_TRIES) {
-      const block = pickOne(srcs, seenPos, usedKeys, prompts);
+    while (count < n && guard++ < n * MAX_TRIES) {
+      let block = pickOne(srcs, seenPos, usedKeys, prompts);
       if (!block) break;
-      block.forEach(b => { b.section = sec.group || sec.name; b.group = sec.group || sec.name; });
+      // En los simuladores por partes, una lectura no puede pasarse del cupo de su parte.
+      if (tier && block.length > n - count) block = block.slice(0, n - count);
+      block.forEach(b => { b.section = sec.group || sec.name; b.group = sec.group || sec.name; if (tier) b.tier = tier; });
       blocks.push(block);
       count += block.length;
     }
+  };
+  for (const sec of sections) {
+    const srcs = sec.src.map(norm).filter(s => SOURCES[s.key]);
+    if (!quiz.tiers) { fill(sec, srcs, sec.n); continue; }
+    // Simuladores de admisión: solo preguntas básicas y avanzadas (las de dificultad media no aparecen).
+    const easy = srcs.filter(s => tierOf(s.key) === "easy"), hard = srcs.filter(s => tierOf(s.key) === "hard");
+    let nEasy = Math.ceil(sec.n / 2), nHard = sec.n - nEasy;
+    if (!hard.length) { nEasy = sec.n; nHard = 0; }
+    if (!easy.length) { nHard = sec.n; nEasy = 0; }
+    if (nEasy) fill(sec, easy, nEasy, "easy");
+    if (nHard) fill(sec, hard, nHard, "hard");
   }
   // Test por partes (vocacional): se respeta el orden de las partes y se mezclan las preguntas dentro de cada una.
   let ordered = shuffle(blocks);
   if (quiz.ordered) { const groups = [...new Set(sections.map(s => s.group || s.name))]; ordered = groups.flatMap(g => ordered.filter(b => b[0].group === g)); }
+  // Simuladores de admisión: primero todas las básicas y luego todas las avanzadas.
+  if (quiz.tiers) ordered = ["easy", "hard"].flatMap(t => ordered.filter(b => b[0].tier === t));
   const questions = ordered.flat().map(toClient);
   return {
     quiz: quizId, level: levelId, title: quiz.title, kind: quiz.kind, flow: quiz.flow || "gate", label: level.label,
-    minutes: level.minutes || 0, questions,
+    minutes: level.minutes || 0, questions, tiers: !!quiz.tiers,
   };
 }
 
@@ -124,9 +139,10 @@ function weightedPick(list) {
   return list[list.length - 1].s;
 }
 
-function toClient({ id, q, section }) {
+function toClient({ id, q, section, tier }) {
   const type = q.type || "mc";
   const out = { id, sk: seenKey(id, q), section, type, prompt: q.prompt };
+  if (tier) { out.tier = tier; out.tierLabel = TIER_LABEL[tier]; }
   if (q.passage) { out.passage = q.passage; out.passageTitle = q.passageTitle; }
   if (q.svg) out.svg = q.svg;
   if (q.figure) out.figure = q.figure;
@@ -214,6 +230,13 @@ function scoreResult(base, quiz, level, graded, mode) {
     ...base, correct, total, pct, band: band(pct), sections, weak, strong, wrongCount: wrong.length,
     real: level.real || null, message: scoreMessage(base.quiz, pct, weak),
   };
+  if (quiz.tiers) {
+    out.tiers = ["easy", "hard"].map(t => {
+      const list = graded.filter(g => tierOf(g.id.split("|")[0]) === t);
+      const c = list.filter(g => g.ok).length;
+      return { tier: t, name: t === "easy" ? "Preguntas básicas" : "Preguntas avanzadas", correct: c, total: list.length, pct: list.length ? Math.round((c / list.length) * 100) : 0 };
+    }).filter(t => t.total);
+  }
   if (quiz.pickSections) {
     const by = new Map();
     for (const g of graded) {

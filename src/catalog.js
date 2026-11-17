@@ -116,22 +116,22 @@ export const QUIZZES = {
     levels: englishLevels,
   },
   uce: {
-    kind: "score", title: "Simulador Universidad Central del Ecuador",
+    kind: "score", tiers: true, title: "Simulador Universidad Central del Ecuador",
     cta: { service: "Preuniversitario UCE", text: "Reservar cupo en el preuniversitario", wa: "Hola For Winners, hice el simulador de la Central y quiero el preuniversitario. Resultado: " },
     levels: { general: uniLevel("Razonamiento", { questions: 150, minutes: 120 }, [V(40), N(40), L(35), A(35)]) },
   },
   upec: {
-    kind: "score", title: "Simulador UPEC",
+    kind: "score", tiers: true, title: "Simulador UPEC",
     cta: { service: "Preuniversitario UPEC", text: "Reservar cupo en el preuniversitario", wa: "Hola For Winners, hice el simulador de la UPEC y quiero el preuniversitario. Resultado: " },
     levels: { general: uniLevel("Razonamiento y atención", { questions: 60, minutes: 60 }, [V(15), N(15), L(15), ATENCION(15)]) },
   },
   yachay: {
-    kind: "score", title: "Simulador Yachay Tech",
+    kind: "score", tiers: true, title: "Simulador Yachay Tech",
     cta: { service: "Preuniversitario Yachay Tech", text: "Reservar cupo en el preuniversitario", wa: "Hola For Winners, hice el simulador de Yachay Tech y quiero el preuniversitario. Resultado: " },
     levels: { general: uniLevel("Razonamiento + módulo de matemáticas", { questions: 80, minutes: 90 }, [V(15), N(15), L(12), A(13), YACHAY_EXTRA(25)]) },
   },
   utn: {
-    kind: "score", title: "Simulador Universidad Técnica del Norte",
+    kind: "score", tiers: true, title: "Simulador Universidad Técnica del Norte",
     cta: { service: "Preuniversitario UTN", text: "Reservar cupo en el preuniversitario UTN", wa: "Hola For Winners, hice el simulador UTN y quiero el preuniversitario. Resultado: " },
     levels: {
       ingenierias: uniLevel("FICA · FICAYA (Ingenierías)", { questions: 90, minutes: 120 }, [
@@ -181,10 +181,11 @@ for (const quiz of Object.values(QUIZZES)) for (const level of Object.values(qui
 
 export function publicCatalog() {
   return Object.fromEntries(Object.entries(QUIZZES).map(([id, q]) => [id, {
-    title: q.title, kind: q.kind, flow: q.flow || "gate",
+    title: q.title, kind: q.kind, flow: q.flow || "gate", tiers: !!q.tiers,
     levels: Object.fromEntries(Object.entries(q.levels).map(([k, l]) => [k, {
       label: l.label, minutes: l.minutes || 0, questions: l.sections.reduce((a, s) => a + s.n, 0),
       real: l.real || null, sections: q.kind === "vocational" ? [] : l.sections.map(s => s.name),
+      parts: q.kind === "vocational" ? [] : l.sections.map(s => ({ name: s.name, n: s.n })),
     }])),
   }]));
 }

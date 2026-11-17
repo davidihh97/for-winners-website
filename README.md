@@ -4,6 +4,8 @@ Sitio web de For Winners (Cloudflare Workers + archivos estáticos + base de dat
 ## Páginas
 | Página | Qué hace |
 |---|---|
+| `index.html` | Portada: fondo animado por servicio (o fotos/videos propios) y **un menú interactivo** con los servicios. Al pasar el mouse (o tocar en celular) se ve la vista previa del servicio con una pregunta de muestra; al hacer clic se entra a su página. |
+| `computacion.html` | Computación e IA: módulos desplegables y un ejemplo interactivo de uso de la IA. |
 | `diagnostico.html` | Diagnóstico gratuito: se elige el nivel (Escuela, Colegio, Universidad) y **una** materia (Matemática, Física, Química o Lengua); 12 preguntas con desglose por temas. Lleva a **Nivelación**. |
 | `ingles.html#practica` | Práctica de inglés: primero el nivel (A1–C1) y luego la skill (Grammar, Writing, Reading). El resultado se ve sin datos; con datos se descarga el informe completo con cada error explicado. Lleva al **curso de inglés**. |
 | `simuladores.html` | Simuladores de razonamiento para UCE, UPEC y Yachay Tech, y por facultad para la UTN. Llevan al **preuniversitario**. |
@@ -20,6 +22,19 @@ Sitio web de For Winners (Cloudflare Workers + archivos estáticos + base de dat
 - Bancos de respaldo (`src/banks/extra-*.js`) que se suman automáticamente a cada banco original (`BACKUPS` en `src/catalog.js`).
 - Para que no se repitan, el navegador recuerda lo que ya vio el usuario (`localStorage`) y el servidor da prioridad a lo no visto. El orden de las preguntas y de las opciones cambia en cada intento.
 - Cada resultado se guarda en la tabla `assessments` y como contacto en `inquiries`.
+
+### Dificultad en los simuladores de admisión (UCE, UPEC, Yachay Tech y UTN)
+- Solo hay **preguntas básicas** (Parte 1) y **avanzadas** (Parte 2). Las de dificultad media **no aparecen**.
+- Cada sección se reparte mitad básicas y mitad avanzadas; el simulador muestra primero todas las básicas y, tras un aviso, las avanzadas.
+- El resultado (pantalla y PDF) incluye «Básicas vs. avanzadas».
+- La dificultad de cada fuente está en `src/difficulty.js` (listas `EASY` y `HARD`; lo que no está en ninguna se considera media). Para cambiar una fuente de nivel, muévela de lista.
+- El diagnóstico, el inglés y el test vocacional no cambian.
+
+### Vistas previas
+`public/js/preview.js` agrega en todas las páginas: preguntas de muestra con corrección al instante (`data-demo`), resultados de ejemplo (`data-mock`), ventanas de vista previa (`data-open` + `<dialog class="sheet">`) y pestañas (`data-tabs`). Las preguntas de muestra son originales y **no** salen de los bancos de los simuladores.
+
+### Fotos o videos de la portada
+Sube los archivos a `public/media/` y escribe su ruta en `MEDIA` al inicio del script de `public/index.html` (ej. `sim: "media/simuladores.mp4"`). Los videos deben ser cortos, sin sonido y livianos (ideal < 4 MB, .mp4). Si no hay archivo, se muestra la ilustración animada del servicio.
 
 ### Estructura de cada simulador (25 % de la prueba real)
 Tomada de los simuladores de curso de For Winners. **Ninguna pregunta del material de curso está en el sitio**: el contenido web es original y los generadores evitan reproducir los datos de esas preguntas.
