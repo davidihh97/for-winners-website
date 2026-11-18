@@ -38,4 +38,33 @@ $("#faq-pre").innerHTML=FAQ.map(([q,a])=>`<details><summary>${q}</summary><p>${a
 /* ===== TESTIMONIOS (solo se muestran si agregas alguno) ===== */
 if(TESTI.length){$("#resultados").hidden=false;$("#testi").innerHTML=TESTI.map(t=>`<div class="card"><p style="color:var(--fg)">“${t.t}”</p><b>${t.n}</b><p>${t.c}</p></div>`).join("")}
 
-$("#burger").onclick=()=>$("#links").classList.toggle("open");
+/* ===== MENÚ MÓVIL ===== */
+(function(){
+  const btn=document.getElementById("burger"),links=document.getElementById("links");
+  if(!btn||!links)return;
+  btn.setAttribute("aria-controls","links");btn.setAttribute("aria-expanded","false");
+  const use=btn.querySelector("use");
+  const set=open=>{
+    links.classList.toggle("open",open);document.body.classList.toggle("menu-open",open);
+    btn.setAttribute("aria-expanded",open);btn.setAttribute("aria-label",open?"Cerrar menú":"Abrir menú");
+    if(use)use.setAttribute("href","img/icons.svg#"+(open?"x":"menu"));
+  };
+  btn.onclick=()=>set(!links.classList.contains("open"));
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&links.classList.contains("open")){set(false);btn.focus()}});
+  document.addEventListener("click",e=>{if(links.classList.contains("open")&&!links.contains(e.target)&&!btn.contains(e.target))set(false)});
+  links.addEventListener("click",e=>{if(e.target.closest("a"))set(false)});
+  matchMedia("(min-width:761px)").addEventListener("change",e=>{if(e.matches)set(false)});
+})();
+
+/* ===== BOTÓN DE WHATSAPP =====
+   En celular se oculta mientras un simulador o un formulario está en pantalla, para no tapar sus botones. */
+(function(){
+  const runners=document.querySelectorAll("#runner, .runner");
+  if(!runners.length||!("IntersectionObserver" in window))return;
+  const seen=new Set();
+  const io=new IntersectionObserver(es=>{
+    es.forEach(e=>e.isIntersecting?seen.add(e.target):seen.delete(e.target));
+    document.body.classList.toggle("wa-off",seen.size>0);
+  },{rootMargin:"0px 0px -80px 0px"});
+  runners.forEach(r=>io.observe(r));
+})();

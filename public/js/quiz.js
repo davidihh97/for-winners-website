@@ -22,6 +22,8 @@
     for (const kid of kids.flat()) if (kid != null && kid !== false) el.append(kid.nodeType ? kid : document.createTextNode(kid));
     return el;
   };
+  // Icono del set img/icons.svg (decorativo: los textos ya dicen lo mismo).
+  const ico = id => h("span", { class: "ico", "aria-hidden": "true", html: `<svg class="i"><use href="img/icons.svg#${id}"></use></svg>` });
   const post = async (url, data) => {
     const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
     const out = await res.json().catch(() => ({}));
@@ -39,7 +41,12 @@
     const ok = { name: false, phone: false, email: false, consent: false };
     let emailSeq = 0, emailTimer = null;
     const hint = (k, text, good) => { const el = form.querySelector(`[data-hint="${k}"]`); el.textContent = text; el.className = "rn-hint2 " + (good ? "good" : text ? "bad" : ""); };
-    const refresh = () => { btn.disabled = !Object.values(ok).every(Boolean); };
+    const NEED = { name: "tu nombre y apellido", phone: "un celular válido", email: "un correo verificado", consent: "aceptar el uso de tus datos" };
+    const refresh = () => {
+      const miss = Object.keys(ok).filter(k => !ok[k]).map(k => NEED[k]);
+      btn.disabled = miss.length > 0;
+      need.textContent = miss.length ? "Para continuar falta: " + miss.join(", ") + "." : "";
+    };
     const nameIn = h("input", { name: "name", autocomplete: "name", maxlength: 80, value: c.name || "", placeholder: "Ej.: María Pérez",
       oninput: e => { const v = e.target.value.trim(); ok.name = v.split(/\s+/).filter(w => w.length >= 2).length >= 2; hint("name", v && !ok.name ? "Escribe tu nombre y tu apellido" : "", false); refresh(); } });
     const phoneIn = h("input", { name: "phone", type: "tel", inputmode: "numeric", autocomplete: "tel", maxlength: 10, placeholder: "09XXXXXXXX", value: c.phone || "",
@@ -74,7 +81,8 @@
     }
     const consentIn = h("input", { type: "checkbox", name: "consent", onchange: e => { ok.consent = e.target.checked; refresh(); } });
     const msg = h("p", { class: "rn-err", role: "alert" });
-    const btn = h("button", { class: "btn", type: "submit", disabled: true }, button);
+    const btn = h("button", { class: "btn", type: "submit", disabled: true, "aria-describedby": "rn-need" }, button);
+    const need = h("p", { class: "rn-need", id: "rn-need", "aria-live": "polite" });
     const form = h("form", { class: "rn-form", novalidate: true, onsubmit: async e => {
       e.preventDefault();
       if (btn.disabled) return;
@@ -94,7 +102,8 @@
       ...extra,
       h("input", { name: "website", class: "hp", tabindex: "-1", autocomplete: "off", "aria-hidden": "true" }),
       h("label", { class: "rn-check" }, consentIn, "Acepto que For Winners use mis datos para contactarme sobre sus cursos, de acuerdo con la Ley Orgánica de Protección de Datos Personales."),
-      msg, btn);
+      msg, btn, need);
+    refresh();
     // Valida los datos guardados de un intento anterior.
     [nameIn, phoneIn].forEach(i => i.value && i.dispatchEvent(new Event("input")));
     if (emailIn.value) checkEmail();
@@ -148,7 +157,7 @@
       st.timer = setInterval(() => {
         st.left--;
         const t = root.querySelector(".rn-timer");
-        if (t) { t.textContent = "⏱ " + fmtTime(Math.max(0, st.left)); t.classList.toggle("low", st.left <= 60); }
+        if (t) { t.textContent = fmtTime(Math.max(0, st.left)); t.classList.toggle("low", st.left <= 60); }
         if (st.left <= 0) { clearInterval(st.timer); finish(true); }
       }, 1000);
     }
@@ -167,7 +176,7 @@
       root.innerHTML = "";
       const head = h("div", { class: "rn-head" },
         h("div", {}, h("b", {}, a.title), h("span", {}, a.kind === "vocational" ? "" : " · " + a.label)),
-        a.minutes ? h("span", { class: "rn-timer" }, "⏱ " + fmtTime(st.left)) : null);
+        a.minutes ? h("span", { class: "rn-timer" }, fmtTime(st.left)) : null);
       const bar = h("div", { class: "bar" }, h("i", { style: `width:${(answered / n) * 100}%` }));
       const meta = h("div", { class: "rn-meta" }, h("span", {}, `Pregunta ${st.i + 1} de ${n}`), h("span", { class: "rn-tags" }, q.tier ? h("span", { class: "rn-tier " + q.tier }, q.tierLabel) : null, h("span", { class: "rn-sec" }, q.section)));
       const body = h("div", { class: "rn-body" });
@@ -192,7 +201,7 @@
       st.partTwo = true;
       root.innerHTML = "";
       root.append(
-        h("div", { class: "rn-head" }, h("div", {}, h("b", {}, a.title), h("span", {}, " · " + a.label)), a.minutes ? h("span", { class: "rn-timer" }, "⏱ " + fmtTime(st.left)) : null),
+        h("div", { class: "rn-head" }, h("div", {}, h("b", {}, a.title), h("span", {}, " · " + a.label)), a.minutes ? h("span", { class: "rn-timer" }, fmtTime(st.left)) : null),
         h("div", { class: "rn-part" },
           h("span", { class: "rn-tier hard" }, "Parte 2"),
           h("h3", {}, "Terminaste las preguntas básicas."),
@@ -251,7 +260,7 @@
         renderResult(root, out, { ...ctx, contact });
       } });
       root.append(h("div", { class: "rn-gate" },
-        h("div", { class: "rn-lock", "aria-hidden": "true" }, h("div", { class: "blur" }, "87 %"), h("span", {}, "🔒")),
+        h("div", { class: "rn-lock", "aria-hidden": "true" }, h("div", { class: "blur" }, "87 %"), h("span", {}, ico("lock"))),
         h("h3", {}, timeUp ? "¡Se acabó el tiempo!" : "¡Terminaste! Tu resultado está listo."),
         h("p", { class: "rn-small" }, `Respondiste ${answered} de ${n} preguntas. Completa tus datos para ver tu resultado y descargar tu informe en PDF.`),
         form,
@@ -289,7 +298,7 @@
     const downloadBox = () => {
       if (!unlock) {
         const b = h("button", { class: "btn", onclick: async () => { b.disabled = true; b.textContent = "Generando PDF…"; try { await FWPdf.score(r, contact); b.textContent = "✓ Informe descargado"; } catch (e) { b.textContent = "Reintentar descarga"; } b.disabled = false; } }, "Descargar mi informe (PDF)");
-        return h("div", { class: "rn-download" }, h("b", {}, "📄 Tu informe en PDF"), h("p", {}, "Con tus gráficos, el detalle por sección y tu plan de mejora."), b);
+        return h("div", { class: "rn-download" }, h("b", {}, ico("file"), " Tu informe en PDF"), h("p", {}, "Con tus gráficos, el detalle por sección y tu plan de mejora."), b);
       }
       const box = h("div", { class: "rn-download" });
       const vocational = r.kind === "vocational";
@@ -300,7 +309,7 @@
           h("button", { class: "linkbtn", onclick: () => unlock(c) }, "Descargar otra vez"));
       } });
       box.append(
-        h("b", {}, vocational ? "📄 Informe vocacional completo" : "📄 ¿Cuáles respondiste mal?"),
+        h("b", {}, ico("file"), vocational ? " Informe vocacional completo" : " ¿Cuáles respondiste mal?"),
         h("p", {}, vocational
           ? "Descarga gratis tu informe en PDF: tus áreas de mayor destreza (salud, educación, ingenierías, negocios…), tu personalidad, tus valores laborales, tu preparación para decidir con consejos y las 15 carreras más afines a ti."
           : `Descarga gratis tu informe completo en PDF: cada pregunta con tu respuesta, la respuesta correcta y la explicación${r.wrongCount ? ` de tus ${r.wrongCount} errores` : ""}.`),
@@ -337,7 +346,7 @@
         h("div", { class: "bar" }, h("i", { style: `width:${Math.max(3, s.pct)}%;background:${bandColor(s.pct)}` }))))) : null,
       r.review?.length ? h("h3", { class: "rn-h" }, "Revisemos algunos errores") : null,
       ...(r.review || []).map(x => h("div", { class: "rn-review" }, h("span", { class: "rn-sec" }, x.section), h("p", {}, h("b", {}, x.prompt)), h("p", {}, "Tu respuesta: ", h("span", { class: "bad" }, x.yours)), h("p", {}, "Correcta: ", h("span", { class: "good" }, x.correct)), x.explain ? h("p", { class: "rn-small" }, x.explain) : null)),
-      r.locked ? h("div", { class: "rn-upsell" }, h("b", {}, `🔒 ${r.locked} errores más con su explicación paso a paso`), h("p", {}, upsellText(r))) : null,
+      r.locked ? h("div", { class: "rn-upsell" }, h("b", {}, ico("lock"), ` ${r.locked} errores más con su explicación paso a paso`), h("p", {}, upsellText(r))) : null,
       downloadBox(), ctaRow);
   }
 
