@@ -423,3 +423,25 @@ body.home::before{background:#06132A}
 .demo-switch button{white-space:nowrap}
 @media(max-width:420px){.demo-switch button{font-size:13px;padding:7px 11px}}
 @media(min-width:901px) and (max-height:880px){.stage h1{font-size:clamp(34px,4.4vw,54px)}.svc-menu{margin-top:16px}.svc-menu a{padding:7px 14px}.svc-menu .t{font-size:19px}.stage-in{padding-top:calc(76px + env(safe-area-inset-top,0px))}}
+
+/* ===== correcciones de la auditoría ===== */
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+/* tarjetas blancas sobre fondo blanco: sin contorno no parecían tocables */
+section:not(.alt):not(.dark) .card:not(.big){background:var(--bg2)}
+.m-only{display:none}
+.burger{width:44px;height:44px;display:none;place-items:center;margin-right:-8px;cursor:pointer}
+.linkbtn{padding:8px 4px;min-height:40px}
+.linkbtn.inline{min-height:0}
+@media(max-width:760px){
+  .burger{display:grid}
+  .links .m-only{display:block}
+  footer a{display:inline-block;padding:8px 0}
+  .hero h1 br{display:none}
+  .wa{width:52px;height:52px}.wa svg{width:27px;height:27px}
+  .card p a{display:inline-block;padding:8px 0}
+}
+.hlinks a:not(.btn){padding:10px 4px}
+/* el botón flotante de WhatsApp tapaba «Siguiente» en el simulador y las ventanas de vista previa */
+body:has(.runner .rn-q) .wa,body:has(dialog[open]) .wa{opacity:0;pointer-events:none;transform:scale(.6)}
+.wa{transition:transform .2s,opacity .2s}
+.stage-foot a{display:inline-block;padding:8px 0}
