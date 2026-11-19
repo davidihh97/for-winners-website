@@ -6,7 +6,9 @@
   "compatibility_date": "2026-10-26",
   "assets": {
     "directory": "./public",
-    "binding": "ASSETS"
+    "binding": "ASSETS",
+    // Las páginas pasan por el Worker para recibir el contenido del panel; css, js e imágenes no.
+    "run_worker_first": ["/*", "!/css/*", "!/js/*", "!/img/*", "!/data/*", "!/media/*", "!/favicon.ico", "!/robots.txt", "!/site.webmanifest"]
   },
   "d1_databases": [
     {

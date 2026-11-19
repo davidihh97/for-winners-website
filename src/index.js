@@ -3,6 +3,7 @@ import { publicCatalog, QUIZZES } from "./catalog.js";
 import { sendEmail, normalizePhone, summaryLine, waLink, adminHtml } from "./notify.js";
 import { checkEmail } from "./email-check.js";
 import { practiceCatalog, practiceSet } from "./practice.js";
+import { withContent, media, publishedWa } from "./content.js";
 
 const DEFAULT_WA = "593999769785";
 const json = (data, status = 200) => new Response(JSON.stringify(data), { status, headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store", "X-Robots-Tag": "noindex, nofollow" } });
@@ -14,7 +15,8 @@ const tooMany = () => json({ error: "Demasiados envíos seguidos. Intenta en uno
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
-    if (!url.pathname.startsWith("/api/")) return env.ASSETS.fetch(request);
+    if (url.pathname.startsWith("/m/")) return media(env, url.pathname.slice(3));
+    if (!url.pathname.startsWith("/api/")) return withContent(await env.ASSETS.fetch(request), env, url);
     try {
       return await api(request, env, ctx, url);
     } catch (e) {
@@ -115,7 +117,7 @@ async function api(request, env, ctx, url) {
 }
 
 const answersOf = b => (Array.isArray(b.answers) ? b.answers.filter(x => x && typeof x.id === "string") : []);
-const waFor = (env, result) => waLink(env.WA_NUMBER || DEFAULT_WA, result.cta.wa + summaryLine(result));
+const waFor = (env, result) => waLink(publishedWa() || env.WA_NUMBER || DEFAULT_WA, result.cta.wa + summaryLine(result));
 
 async function limited(env, request, action) {
   if (!env.DB) return false;

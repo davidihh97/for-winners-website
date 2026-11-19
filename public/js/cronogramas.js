@@ -155,6 +155,9 @@ window.FWCrono = (function () {
     presencial: { unis: ["UTN", "UCE", "UPEC", "YACHAY"], lugar: "Ibarra", precio: "", inicio: "", horario: "" },
     virtual: { precio: "", inicio: "", horario: "", porModulo: "" },
   };
+  // Precio, inicio y horario también se pueden poner desde el panel (admin.forwinnersec.com).
+  const FWCUR = (window.FW_CONTENT || {}).cursos || {};
+  for (const k of ["presencial", "virtual"]) for (const f of ["precio", "inicio", "horario", "porModulo", "lugar"]) if (FWCUR[k] && FWCUR[k][f]) CURSOS[k][f] = String(FWCUR[k][f]);
   const esPresencial = s => CURSOS.presencial.unis.includes(s);
 
   // Módulos del curso virtual: se detectan en el temario de cada universidad.
