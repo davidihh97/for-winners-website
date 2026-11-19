@@ -1,5 +1,8 @@
 const WA_NUMBER="593999769785"; // ← pon aquí el WhatsApp de For Winners (código de país + número)
 const WA_MSG="Hola For Winners, quiero información.";
+// Canal de WhatsApp con avisos de fechas de admisión (gratis). Pega aquí el enlace del canal cuando lo crees,
+// por ejemplo "https://whatsapp.com/channel/XXXX". Vacío: los botones «Avísame las fechas» abren un chat normal.
+window.CANAL_WA="";
 const NIVELACION=[["Primaria",6],["Bachillerato",7],["Universidad",8]];
 const UNIS={
  "UTN":{t:"Universidad Técnica del Norte",d:["Un curso por facultad: FICA-FICAYA (Ingenierías), FECYT-FACAE y Ciencias de la Salud.","Modalidad intensiva o regular, según el tiempo que tengas.","Temario y simulacros según tu carrera."]},
@@ -24,7 +27,8 @@ const chips=$("#chips"),panel=$("#panel"),SIM={UTN:"utn",Central:"uce",UPEC:"upe
 function showUni(k){
   chips.querySelectorAll(".chip").forEach(c=>c.classList.toggle("on",c.textContent===k));
   const u=UNIS[k];
-  panel.innerHTML=`<h3>${u.t}</h3><ul>${u.d.map(x=>`<li>${x}</li>`).join("")}</ul><div style="margin-top:22px"><a class="btn" target="_blank" rel="noopener" href="${wa("Hola, quiero información del preuniversitario para "+k+".")}">Consultar precio y horario</a> <a class="btn o" href="simuladores.html?u=${SIM[k]}">Probar simulador gratis</a></div>`;
+  panel.innerHTML=`<h3>${u.t}</h3><p class="pv-h" style="margin-top:16px">Tu curso en For Winners</p><ul>${u.d.map(x=>`<li>${x}</li>`).join("")}</ul><div class="row" style="justify-content:flex-start;margin-top:18px"><a class="btn" target="_blank" rel="noopener" href="${wa("Hola, quiero información del preuniversitario para "+k+".")}">Consultar precio y horario</a></div>`;
+  if(window.FWCrono){const d=document.createElement("div");panel.append(d);FWCrono.mountUni(d,SIM[k])}
 }
 Object.keys(UNIS).forEach(k=>{const b=document.createElement("button");b.className="chip";b.textContent=k;b.onclick=()=>showUni(k);chips.append(b)});
 if(chips.isConnected)showUni("UTN");
@@ -67,4 +71,18 @@ if(TESTI.length){$("#resultados").hidden=false;$("#testi").innerHTML=TESTI.map(t
     document.body.classList.toggle("wa-off",seen.size>0);
   },{rootMargin:"0px 0px -80px 0px"});
   runners.forEach(r=>io.observe(r));
+})();
+
+/* ===== AVISO DEL REGISTRO NACIONAL =====
+   Barra superior en todas las páginas (menos la portada) hasta que cierre el Registro Nacional.
+   Al cambiar las fechas, actualiza también REGISTRO en js/cronogramas.js. */
+const AVISO={hasta:new Date(2026,10,28,23,59),texto:"Registro Nacional 2027: del 24 al 28 de noviembre. Es gratis y obligatorio.",link:"preuniversitario.html#fechas",id:"aviso-rn-2027"};
+(function(){
+  const nav=document.querySelector("body>nav");
+  let off=false;try{off=localStorage.getItem(AVISO.id)==="1"}catch{}
+  if(!nav||off||new Date()>AVISO.hasta)return;
+  const bar=document.createElement("div");bar.className="notice";bar.setAttribute("role","note");
+  bar.innerHTML=`<div class="wrap"><span>${AVISO.texto}</span><a href="${AVISO.link}">Ver fechas y cómo hacerlo</a><button type="button" aria-label="Cerrar aviso">✕</button></div>`;
+  bar.querySelector("button").onclick=()=>{bar.remove();try{localStorage.setItem(AVISO.id,"1")}catch{}};
+  nav.before(bar);
 })();

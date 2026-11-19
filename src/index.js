@@ -2,11 +2,12 @@ import { startAttempt, gradeAttempt } from "./engine.js";
 import { publicCatalog, QUIZZES } from "./catalog.js";
 import { sendEmail, normalizePhone, summaryLine, waLink, adminHtml } from "./notify.js";
 import { checkEmail } from "./email-check.js";
+import { practiceCatalog, practiceSet } from "./practice.js";
 
 const DEFAULT_WA = "593999769785";
 const json = (data, status = 200) => new Response(JSON.stringify(data), { status, headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store", "X-Robots-Tag": "noindex, nofollow" } });
 // Intentos permitidos por IP: evita que alguien automatice la descarga de los bancos de preguntas.
-const LIMITS = { start: [[3600, 15], [86400, 40]], submit: [[3600, 20]], lead: [[3600, 10]], check: [[3600, 60]] };
+const LIMITS = { practice: [[3600, 120], [86400, 400]], start: [[3600, 15], [86400, 40]], submit: [[3600, 20]], lead: [[3600, 10]], check: [[3600, 60]] };
 const bad = msg => json({ error: msg }, 400);
 const tooMany = () => json({ error: "Demasiados envíos seguidos. Intenta en unos minutos." }, 429);
 
@@ -41,6 +42,15 @@ async function api(request, env, ctx, url) {
   const p = url.pathname;
   await ensureSchema(env);
   if (p === "/api/catalog" && request.method === "GET") return json(publicCatalog());
+
+  // Práctica gratuita por tema: preguntas generadas con respuesta y explicación (sin datos de contacto).
+  if (p === "/api/practice" && request.method === "GET") return json(practiceCatalog());
+  if (p === "/api/practice" && request.method === "POST") {
+    if (await limited(env, request, "practice")) return tooMany();
+    const b = await body(request);
+    const set = practiceSet(String(b.topic || ""), 5);
+    return set ? json(set) : bad("Tema no encontrado");
+  }
 
   // Verificación del correo mientras el usuario escribe (formato, dominio con correo y desechables).
   if (p === "/api/check-email" && request.method === "GET") {
