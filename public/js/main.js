@@ -49,6 +49,8 @@ if(TESTI.length){$("#resultados").hidden=false;$("#testi").innerHTML=TESTI.map(t
   btn.setAttribute("aria-controls","links");btn.setAttribute("aria-expanded","false");
   const use=btn.querySelector("use");
   const set=open=>{
+    // El menú ocupa solo el alto visible bajo la barra y se desplaza si no cabe (11 opciones en celulares pequeños).
+    if(open){const nav=btn.closest("nav");links.style.maxHeight=Math.max(200,innerHeight-(nav?nav.getBoundingClientRect().bottom:64))+"px";links.scrollTop=0}
     links.classList.toggle("open",open);document.body.classList.toggle("menu-open",open);
     btn.setAttribute("aria-expanded",open);btn.setAttribute("aria-label",open?"Cerrar menú":"Abrir menú");
     if(use)use.setAttribute("href","img/icons.svg#"+(open?"x":"menu"));
