@@ -5,6 +5,9 @@ Sitio web de For Winners (Cloudflare Workers + archivos estáticos + base de dat
 | Página | Qué hace |
 |---|---|
 | `index.html` | Portada: fondo animado por servicio (o fotos/videos propios) y **un menú interactivo** con los servicios. Al pasar el mouse (o tocar en celular) se ve la vista previa del servicio con una pregunta de muestra; al hacer clic se entra a su página. |
+| `preuniversitario.html` | Presencial en Ibarra (UTN, UCE, UPEC, Yachay) y virtual por módulos (resto). Registro Nacional, proceso de admisión, buscador de las 34 instituciones públicas con ficha completa (examen, temario, fechas, calculadora, módulos del curso) y avisos de fechas por WhatsApp. Enlace directo a una ficha: `preuniversitario.html#u-espe`. |
+| `practica.html` | Práctica gratuita por tema (53 temas): repaso corto + 5 preguntas generadas con respuesta y explicación. Solo usa generadores, nunca los bancos protegidos (`src/practice.js`, `/api/practice`). |
+| `guias.html` | Guías de admisión: proceso, Registro Nacional, contraseña, Registro Social, tipos de examen, universidades cerca de Ibarra, Medicina, calculadora y puntaje. |
 | `computacion.html` | Computación e IA: módulos desplegables y un ejemplo interactivo de uso de la IA. |
 | `diagnostico.html` | Diagnóstico gratuito: se elige el nivel (Escuela, Colegio, Universidad) y **una** materia (Matemática, Física, Química o Lengua); 12 preguntas con desglose por temas. Lleva a **Nivelación**. |
 | `ingles.html#practica` | Práctica de inglés: primero el nivel (A1–C1) y luego la skill (Grammar, Writing, Reading). El resultado se ve sin datos; con datos se descarga el informe completo con cada error explicado. Lleva al **curso de inglés**. |
@@ -32,6 +35,14 @@ Sitio web de For Winners (Cloudflare Workers + archivos estáticos + base de dat
 
 ### Vistas previas
 `public/js/preview.js` agrega en todas las páginas: preguntas de muestra con corrección al instante (`data-demo`), resultados de ejemplo (`data-mock`), ventanas de vista previa (`data-open` + `<dialog class="sheet">`) y pestañas (`data-tabs`). Las preguntas de muestra son originales y **no** salen de los bancos de los simuladores.
+
+### Universidades, fechas y cursos (`public/js/cronogramas.js`)
+- `REVISADO`, `REGISTRO`: fecha de revisión y fechas del Registro Nacional (también en `AVISO`, al final de `public/js/main.js`).
+- `UNIS`: una fila por institución (fechas `i`/`e`, tipo `t`, modalidad `m`, ciudad `c`, `med`, `calc`, enlaces oficiales).
+- `CURSOS`: qué universidades son presenciales y, cuando existan, precio, inicio y horario de cada modalidad (vacío = «Consultar»).
+- Temarios: `public/data/temarios.json` (se carga solo al abrir una ficha).
+- Canal de avisos: pega el enlace de tu canal de WhatsApp en `window.CANAL_WA` (inicio de `public/js/main.js`).
+- Al publicar las guías, `guias.html` se generó con estos datos: si cambian, actualiza también sus listas.
 
 ### Fotos o videos de la portada
 Sube los archivos a `public/media/` y escribe su ruta en `MEDIA` al inicio del script de `public/index.html` (ej. `sim: "media/simuladores.mp4"`). Los videos deben ser cortos, sin sonido y livianos (ideal < 4 MB, .mp4). Si no hay archivo, se muestra la ilustración animada del servicio.

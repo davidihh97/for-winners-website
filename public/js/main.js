@@ -1,5 +1,8 @@
 const WA_NUMBER="593999769785"; // ← pon aquí el WhatsApp de For Winners (código de país + número)
 const WA_MSG="Hola For Winners, quiero información.";
+// Canal de WhatsApp con avisos de fechas de admisión (gratis). Pega aquí el enlace del canal cuando lo crees,
+// por ejemplo "https://whatsapp.com/channel/XXXX". Vacío: los botones «Avísame las fechas» abren un chat normal.
+window.CANAL_WA="";
 const NIVELACION=[["Primaria",6],["Bachillerato",7],["Universidad",8]];
 const UNIS={
  "UTN":{t:"Universidad Técnica del Norte",d:["Un curso por facultad: FICA-FICAYA (Ingenierías), FECYT-FACAE y Ciencias de la Salud.","Modalidad intensiva o regular, según el tiempo que tengas.","Temario y simulacros según tu carrera."]},
