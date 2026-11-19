@@ -158,13 +158,16 @@
       <div class="rn-res-head"><div class="rn-ring" style="--p:${m.pct};--c:${color(m.pct)}"><b>${m.pct}%</b><span>de aciertos</span></div><div><span class="rn-small">${m.title}</span><div class="rn-band">${m.band}</div><p class="rn-small">${m.msg}</p></div></div>
       <div class="rn-bars">${m.bars.map(bar).join("")}</div>
       ${m.tiers ? `<h3 class="rn-h">Básicas vs. avanzadas</h3><div class="rn-bars">${m.tiers.map(bar).join("")}</div>` : ""}
-      <div class="mock-pdf"><span>📄</span><div><b>Informe en PDF</b><p class="rn-small">Gráficos, detalle por ${k === "diagnostico" ? "tema" : "sección"} y plan de mejora.</p></div></div>`;
+      <div class="mock-pdf"><span aria-hidden="true"><svg class="i"><use href="img/icons.svg#file"></use></svg></span><div><b>Informe en PDF</b><p class="rn-small">Gráficos, detalle por ${k === "diagnostico" ? "tema" : "sección"} y plan de mejora.</p></div></div>`;
   }
 
   // ---------- ventanas de vista previa ----------
   function sheets() {
     document.querySelectorAll("dialog.sheet").forEach(d => {
-      if (!d.querySelector(".sheet-x")) d.insertAdjacentHTML("afterbegin", '<button type="button" class="sheet-x" aria-label="Cerrar vista previa">✕</button>');
+      if (!d.querySelector(".sheet-x")) d.insertAdjacentHTML("afterbegin", '<button type="button" class="sheet-x" aria-label="Cerrar vista previa"><svg class="i" aria-hidden="true"><use href="img/icons.svg#x"></use></svg></button>');
+      // Nombre accesible de la ventana: su propio título.
+      const t = d.querySelector("h2, h3");
+      if (t && !d.hasAttribute("aria-labelledby")) { t.id = t.id || d.id + "-t"; d.setAttribute("aria-labelledby", t.id); }
       d.querySelector(".sheet-x").onclick = () => d.close();
       d.addEventListener("click", e => { if (e.target === d || e.target.closest("[data-close]")) d.close(); });
     });
@@ -179,13 +182,29 @@
   }
 
   // ---------- pestañas ----------
+  let tabSeq = 0;
   function tabs(root) {
     const btns = [...root.querySelectorAll("[data-tab]")], panels = [...root.querySelectorAll("[data-panel]")];
-    const show = k => {
-      btns.forEach(b => { const on = b.dataset.tab === k; b.classList.toggle("on", on); b.setAttribute("aria-selected", on); });
+    const uid = "tb" + ++tabSeq;
+    const list = btns[0] && btns[0].parentElement;
+    if (list) list.setAttribute("role", "tablist");
+    const show = (k, focus) => {
+      btns.forEach(b => { const on = b.dataset.tab === k; b.classList.toggle("on", on); b.setAttribute("aria-selected", on); b.tabIndex = on ? 0 : -1; if (on && focus) b.focus(); });
       panels.forEach(p => { p.hidden = p.dataset.panel !== k; });
     };
-    btns.forEach(b => { b.setAttribute("role", "tab"); b.onclick = () => show(b.dataset.tab); });
+    panels.forEach(p => { p.id = p.id || `${uid}-p-${p.dataset.panel}`; p.setAttribute("role", "tabpanel"); });
+    btns.forEach((b, i) => {
+      b.type = "button"; b.setAttribute("role", "tab"); b.id = b.id || `${uid}-t-${b.dataset.tab}`;
+      const p = panels.find(x => x.dataset.panel === b.dataset.tab);
+      if (p) { b.setAttribute("aria-controls", p.id); p.setAttribute("aria-labelledby", b.id); }
+      b.onclick = () => show(b.dataset.tab);
+      // Flechas, Inicio y Fin mueven entre pestañas (patrón ARIA de pestañas).
+      b.onkeydown = e => {
+        const n = btns.length, j = { ArrowRight: i + 1, ArrowLeft: i - 1 + n, Home: 0, End: n - 1 }[e.key];
+        if (j == null) return;
+        e.preventDefault(); show(btns[j % n].dataset.tab, true);
+      };
+    });
     const first = btns.find(b => b.classList.contains("on")) || btns[0];
     if (first) show(first.dataset.tab);
   }
