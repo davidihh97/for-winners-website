@@ -74,9 +74,18 @@ En `src/catalog.js`:
 - `uniLevel(…, { questions: 100, minutes: 120 }, …)` → tamaño y duración de la prueba **real** de cada universidad (**verificar con los simuladores oficiales**).
 - Los pesos de cada sección (verbal, numérico, etc.) y las materias por facultad de la UTN.
 
+## Panel de administración (admin.forwinnersec.com)
+Los textos, botones, imágenes, precios, preguntas frecuentes, testimonios, aviso superior, WhatsApp y SEO se editan desde el panel (repositorio `admin-forwinners`), que usa esta misma base D1.
+- `migrations/0004_admin_panel.sql`: tablas del panel (contenido, usuarios, imágenes, notas, pagos a profesores) y columnas nuevas para estudiantes, grupos, pagos e interesados.
+- `src/content.js`: inyecta lo publicado en cada página como `window.FW_CONTENT` (y el título/descripción de Google), sirve las imágenes subidas en `/m/<id>` y solo deja que el panel muestre la web dentro de un marco (`frame-ancestors`).
+- `public/js/fw-content.js` (va antes de `main.js` en todas las páginas): aplica los cambios de textos, enlaces, imágenes, orden y botones ocultos; agrega las secciones nuevas; y en el modo edición del panel (`?fw-edit=1`) marca lo que se puede editar.
+- `main.js`, `cronogramas.js` e `index.html` usan los valores del panel si existen; si no, los de siempre. **Sin contenido publicado, la web se ve exactamente igual.**
+- Las páginas pasan por el Worker (`run_worker_first` en `wrangler.jsonc`); css, js e imágenes se sirven directo.
+- Lo publicado tarda hasta 30 segundos en verse (caché en memoria del Worker).
+
 ## Puesta en marcha
 ```bash
-npx wrangler d1 migrations apply for-winners-db --remote   # aplica 0002 y 0003
+npx wrangler d1 migrations apply for-winners-db --remote   # aplica 0002, 0003 y 0004
 npx wrangler deploy
 ```
 
