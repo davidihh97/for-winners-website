@@ -29,7 +29,7 @@
   const PANELS = [
     ["#menu, #preview, .svc-preview", "portada"], [".bgs", "portada"],
     ["#nivel-plans", "nivelacion"], ["#faq-pre", "faq"], ["#testi, #resultados", "testimonios"],
-    ["#chips, #panel", "unis"], [".notice", "aviso"], [".wa, .wal", "contacto"],
+    ["#chips, #panel", "unis"], [".notice", "aviso"], [".wa", "contacto"],
     ["#registro, #cronogramas, .uni-sheet, [data-crono]", "cursos"],
   ];
   const panelOf = el => { for (const [sel, id] of PANELS) if (el.closest(sel)) return id; return null; };
@@ -58,17 +58,74 @@
     if (big) big.textContent = " " + text + " ";
   }
 
+  /* ---------- estilos permitidos (todo valor se valida: no se acepta CSS libre) ---------- */
+  const okColor = v => /^#[0-9a-f]{3,8}$/i.test(String(v || ""));
+  const num = (v, lo, hi) => { const n = Number(v); return v !== "" && v != null && Number.isFinite(n) && n >= lo && n <= hi ? n : null; };
+  const STYLE = {
+    size: ["font-size", v => { const n = num(v, 8, 160); return n == null ? null : n > 22 ? `clamp(${Math.round(n * 0.62)}px, ${(n / 14.4).toFixed(2)}vw, ${n}px)` : `${n}px`; }],
+    color: ["color", v => (okColor(v) ? v : null)],
+    bg: ["background-color", v => (okColor(v) ? v : null)],
+    weight: ["font-weight", v => (["400", "500", "600", "700", "800", "900"].includes(String(v)) ? String(v) : null)],
+    italic: ["font-style", v => (v === true || v === "true" ? "italic" : v === false || v === "false" ? "normal" : null)],
+    align: ["text-align", v => (["left", "center", "right"].includes(v) ? v : null)],
+    transform: ["text-transform", v => (["none", "uppercase"].includes(v) ? v : null)],
+    mt: ["margin-top", v => { const n = num(v, -40, 240); return n == null ? null : `${n}px`; }],
+    mb: ["margin-bottom", v => { const n = num(v, -40, 240); return n == null ? null : `${n}px`; }],
+    pad: ["padding", v => { const n = num(v, 0, 80); return n == null ? null : `${n}px`; }],
+    radius: ["border-radius", v => { const n = num(v, 0, 80); return n == null ? null : `${n}px`; }],
+    width: ["max-width", v => { const n = num(v, 10, 100); return n == null ? null : `${n}%`; }],
+    spacing: ["letter-spacing", v => { const n = num(v, -3, 12); return n == null ? null : `${n}px`; }],
+    lh: ["line-height", v => { const n = num(v, 0.8, 3); return n == null ? null : String(n); }],
+  };
+  const baseCss = document.createElement("style");
+  baseCss.textContent = '@media(max-width:760px){[data-fw-only="desktop"]{display:none!important}}@media(min-width:761px){[data-fw-only="mobile"]{display:none!important}}';
+  document.head.append(baseCss);
+
+  /* ---------- colores y letras de toda la web ---------- */
+  const FONTS = { Inter: "sans-serif", Poppins: "sans-serif", Montserrat: "sans-serif", Nunito: "sans-serif", "DM Sans": "sans-serif", Raleway: "sans-serif", "Playfair Display": "serif", Lora: "serif", Merriweather: "serif" };
+  function applyTheme() {
+    const t = C.theme || {};
+    let st = document.getElementById("fw-theme");
+    if (!st) { st = document.createElement("style"); st.id = "fw-theme"; document.head.append(st); }
+    const v = [], dark = [];
+    if (okColor(t.primary)) v.push(`--brand:${t.primary};--cta:${t.primary};--primary-hover:${t.primary}`);
+    if (okColor(t.secondary)) v.push(`--primary:${t.secondary};--cta-hover:${t.secondary}`);
+    if (okColor(t.highlight)) v.push(`--hero-em:${t.highlight};--primary-2:${t.highlight}`);
+    if (okColor(t.gold)) {
+      v.push(`--gold:${t.gold};--gold-2:color-mix(in srgb,${t.gold} 55%,#fff)`);
+      dark.push(`--cta:${t.gold};--cta-hover:color-mix(in srgb,${t.gold} 55%,#fff)`);
+    }
+    const links = [];
+    for (const [key, vars] of [["headFont", ["--font-head", "--font-display"]], ["bodyFont", ["--font-body"]]]) {
+      const f = t[key];
+      if (!FONTS[f]) continue;
+      for (const name of vars) v.push(`${name}:"${f}",system-ui,${FONTS[f]}`);
+      links.push(f);
+    }
+    const size = num(t.baseSize, 14, 22);
+    st.textContent = `:root{${v.join(";")}}${dark.length ? `.dark,.big,.home{${dark.join(";")}}` : ""}${size ? `body{font-size:${size}px}` : ""}`;
+    document.querySelectorAll("link[data-fw-font]").forEach(l => l.remove());
+    for (const f of links) {
+      const l = document.createElement("link");
+      l.rel = "stylesheet"; l.dataset.fwFont = "";
+      l.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(f).replace(/%20/g, "+")}:ital,wght@0,400;0,500;0,600;0,700;0,800;1,800;1,900&display=swap`;
+      document.head.append(l);
+    }
+  }
+
   /* ---------- aplicar cambios a la página ---------- */
   const originals = new Map(); // elemento → estado original (para el modo edición)
   function remember(el) {
-    if (!originals.has(el)) originals.set(el, { html: el.innerHTML, href: el.getAttribute("href"), src: el.getAttribute("src"), display: el.style.display, parent: el.parentNode, next: el.nextSibling });
+    if (!originals.has(el)) originals.set(el, { html: el.innerHTML, href: el.getAttribute("href"), src: el.getAttribute("src"), style: el.getAttribute("style"), cls: el.className, parent: el.parentNode, next: el.nextSibling });
   }
   function revertAll() {
     for (const [el, o] of originals) {
       el.innerHTML = o.html;
       o.href == null ? el.removeAttribute("href") : el.setAttribute("href", o.href);
       if (o.src != null) el.setAttribute("src", o.src);
-      el.style.display = o.display;
+      o.style == null ? el.removeAttribute("style") : el.setAttribute("style", o.style);
+      el.className = o.cls;
+      el.removeAttribute("data-fw-only");
       if (o.parent && el.parentNode === o.parent) o.parent.insertBefore(el, o.next && o.next.parentNode === o.parent ? o.next : null);
     }
     originals.clear();
@@ -89,7 +146,14 @@
       if (o.text != null && o.text !== "") setText(el, o.text);
       if (o.href && el.tagName === "A" && okUrl(o.href)) { el.setAttribute("href", o.href); if (/^https?:/.test(o.href)) { el.target = "_blank"; el.rel = "noopener"; } }
       if (o.src && el.tagName === "IMG" && okUrl(o.src)) { el.setAttribute("src", o.src); el.removeAttribute("srcset"); }
-      el.style.display = o.hidden ? "none" : originals.get(el).display;
+      for (const [k, val] of Object.entries(o.style || {})) {
+        const def = STYLE[k];
+        const css = def && def[1](val);
+        if (css) el.style.setProperty(def[0], css, "important");
+      }
+      if (o.variant && el.classList.contains("btn")) el.classList.toggle("o", o.variant === "outline");
+      if (o.show === "desktop" || o.show === "mobile") el.setAttribute("data-fw-only", o.show);
+      if (o.hidden) el.style.setProperty("display", "none", "important");
     }
     // Cambios de orden al final, cuando todos los selectores ya se resolvieron.
     for (const [o, el] of found) {
@@ -132,6 +196,7 @@
       el.dataset.fwSec = s.id;
       if (s.anchor) el.id = s.anchor;
       if (!s.visible) el.style.opacity = ".35";
+      if (s.show === "desktop" || s.show === "mobile") el.setAttribute("data-fw-only", s.show);
       el.innerHTML = RENDER[s.type](s);
       const first = main.querySelector(":scope > section");
       if (s.position === "top" && first) first.after(el);
@@ -139,10 +204,12 @@
     }
   }
 
+  applyTheme();
   applyOverrides();
   renderSections();
 
   /* ---------- modo edición (solo dentro del panel) ---------- */
+  const hex = c => { const m = String(c).match(/\d+(\.\d+)?/g); if (!m || (m.length > 3 && +m[3] === 0)) return ""; return "#" + m.slice(0, 3).map(x => (+x).toString(16).padStart(2, "0")).join(""); };
   if (!EDIT) return;
   let admin = null;
   const CAND = "h1,h2,h3,h4,h5,p,li,a,button,summary,label,img,small,figcaption,.eyebrow,.tag";
@@ -188,6 +255,8 @@
       href: el.getAttribute("href"), src: el.getAttribute("src"),
       textEditable: el.tagName !== "IMG" && (simple(el) || [...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim())),
       siblings: el.parentNode ? el.parentNode.children.length : 1,
+      isBtn: el.classList.contains("btn"), outline: el.classList.contains("o"), isWa: el.classList.contains("wal"),
+      cur: (() => { const cs = getComputedStyle(el); return { size: Math.round(parseFloat(cs.fontSize)), color: hex(cs.color), bg: hex(cs.backgroundColor), weight: cs.fontWeight, align: cs.textAlign === "start" ? "left" : cs.textAlign }; })(),
       index: el.parentNode ? [...el.parentNode.children].indexOf(el) : 0,
     } });
   }, true);
@@ -207,7 +276,7 @@
       }
       Object.keys(C).forEach(k => delete C[k]);
       Object.assign(C, d.fwDraft);
-      revertAll(); applyOverrides(); renderSections();
+      applyTheme(); revertAll(); applyOverrides(); renderSections();
       post({ fwBroken: broken.slice() });
     }
     if (d.fwHello) post({ fwReady: { page: PAGE, title: document.title, description: (document.querySelector('meta[name="description"]') || {}).content || "", broken: broken.slice() } });
