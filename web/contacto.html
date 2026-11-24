@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Contacto | For Winners</title>
+<meta name="description" content="Escríbenos por WhatsApp y te ayudamos a elegir tu curso en For Winners, Ibarra.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="For Winners">
+<meta property="og:locale" content="es_EC">
+<meta property="og:title" content="Contacto | For Winners">
+<meta property="og:description" content="Escríbenos por WhatsApp y te ayudamos a elegir tu curso en For Winners, Ibarra.">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="/img/fw-icon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="apple-touch-icon" href="/img/fw-180.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#ffffff">
+<script type="module" src="/src/main.jsx"></script>
+</head>
+<body>
+<a class="skip" href="#main">Saltar al contenido</a>
+<!--@nav-->
+<main id="main">
+
+  <section class="hero"><div class="wrap"><h1>Hablemos.</h1><p class="lead">Cuéntanos qué necesitas y te respondemos por WhatsApp.</p>
+    <div class="row"><a class="btn wal" href="#">Abrir WhatsApp</a></div></div></section>
+  <section class="alt"><div class="wrap"><h2 class="sr-only">Datos de contacto</h2><div class="g g3" style="margin-top:0">
+    <a class="card" href="https://www.google.com/maps/search/?api=1&query=For+Winners+Av.+Teodoro+G%C3%B3mez+de+la+Torre+746+y+Calixto+Miranda+Ibarra+Ecuador" target="_blank" rel="noopener"><span class="ic" aria-hidden="true"><svg class="i"><use href="/img/icons.svg#pin"></use></svg></span><h3>Ubicación</h3><p>Av. Teodoro Gómez de la Torre 746 y Calixto Miranda<br>Ibarra, Imbabura, Ecuador.</p><span class="more">Cómo llegar ›</span></a>
+    <a class="card wal" href="#"><span class="ic" aria-hidden="true"><svg class="i"><use href="/img/icons.svg#clock"></use></svg></span><h3>Horario</h3><p>Lunes a sábado<br>de 9:00 a 20:00.</p><span class="more">Escribir ahora ›</span></a>
+    <div class="card"><span class="ic" aria-hidden="true"><svg class="i"><use href="/img/icons.svg#phone"></use></svg></span><h3>Redes</h3><p>Síguenos como <b>@forwinnersec</b>.</p><p><a href="https://www.instagram.com/forwinnersec" target="_blank" rel="noopener" style="color:var(--brand)">Instagram ›</a><a href="https://www.tiktok.com/@forwinnersec" target="_blank" rel="noopener" style="color:var(--brand)">TikTok ›</a></p></div>
+  </div></div></section>
+
+  <section><div class="wrap">
+    <h2>Escríbenos en 10 segundos.</h2>
+    <p class="lead">Elige qué te interesa y te abrimos WhatsApp con el mensaje listo.</p>
+    <form class="msgbox" id="msg" style="margin-top:36px">
+      <div class="rn-form">
+        <label>Me interesa<select name="svc">
+          <option>el preuniversitario</option><option>los simuladores de admisión</option><option>el test vocacional</option><option>el diagnóstico académico</option><option>los cursos de inglés</option><option>la nivelación o tareas dirigidas</option><option>la asesoría académica</option><option>computación e IA</option><option>otra cosa</option></select></label>
+        <label>Tu nombre (opcional)<input name="name" maxlength="60" placeholder="Ej.: María"></label>
+        <label>Cuéntanos algo más (opcional)<textarea name="txt" rows="3" maxlength="300" placeholder="Ej.: quiero entrar a Medicina en la UTN"></textarea></label>
+        <button class="btn" type="submit">Abrir WhatsApp</button>
+      </div>
+    </form>
+  </div></section>
+
+  <section class="alt"><div class="wrap">
+    <h2>Cómo llegar.</h2>
+    <iframe class="map" style="margin-top:36px" title="Mapa de For Winners en Ibarra" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=Av.%20Teodoro%20G%C3%B3mez%20de%20la%20Torre%20746%20y%20Calixto%20Miranda%2C%20Ibarra%2C%20Ecuador&z=16&output=embed"></iframe>
+    <div class="row"><a class="btn o" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=For+Winners+Av.+Teodoro+G%C3%B3mez+de+la+Torre+746+y+Calixto+Miranda+Ibarra+Ecuador">Abrir en Google Maps</a></div>
+  </div></section>
+</main>
+<!--@footer-->
+<script src="/js/fw-content.js"></script>
+<script src="/js/main.js"></script>
+<script>
+document.getElementById("msg").onsubmit=e=>{e.preventDefault();const d=Object.fromEntries(new FormData(e.target));
+  const m=`Hola For Winners${d.name.trim()?", soy "+d.name.trim():""}. Me interesa ${d.svc}.${d.txt.trim()?" "+d.txt.trim():""}`;
+  window.open(wa(m),"_blank","noopener")};
+</script>
+</body>
+</html>

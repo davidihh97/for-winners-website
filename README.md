@@ -74,6 +74,23 @@ En `src/catalog.js`:
 - `uniLevel(…, { questions: 100, minutes: 120 }, …)` → tamaño y duración de la prueba **real** de cada universidad (**verificar con los simuladores oficiales**).
 - Los pesos de cada sección (verbal, numérico, etc.) y las materias por facultad de la UTN.
 
+## Diseño (noviembre de 2026): minimalista con React
+- **Vite + React**, con varias páginas: cada ruta sigue siendo su propio `.html` (mismas direcciones, contenido legible por Google y editable desde el panel).
+- `web/*.html`: las páginas. `<!--@nav-->` y `<!--@footer-->` se reemplazan al compilar por `web/partials/nav.html` y `footer.html`.
+- `web/src/styles/site.css`: todo el diseño (tinta azul marino sobre blanco, líneas finas, fotos en blanco y negro, letra Inter). Las variables `--brand`, `--cta`, `--font-*`, etc. siguen respondiendo al panel.
+- `web/src/main.jsx` + `web/src/islands/`: partes animadas con **React Bits** (`web/src/reactbits/`, licencia MIT): `RotatingText` (titular de la portada), `FlowingMenu` (servicios) y `CountUp`. Usan **motion**.
+- `public/`: se copia tal cual. El motor de simuladores (`js/quiz.js`), los PDF (`js/pdf.js`), fechas y universidades (`js/cronogramas.js`), vistas previas (`js/preview.js`), práctica (`js/practica.js`), `js/main.js` y `js/fw-content.js` (panel) no cambiaron de funcionamiento.
+- Comandos: `npm run dev` (diseño, con recarga al instante; el API se toma de `wrangler dev` en el puerto 8787), `npm run build` (genera `dist/`), `npm run deploy` (compila y publica).
+
+### Fotos (carpeta `public/media/`)
+| Archivo | Dónde aparece |
+|---|---|
+| `portada.jpg` | Portada, foto ancha bajo el titular |
+| `preuniversitario.jpg` | Portada (vertical) y Preuniversitario (ancha) |
+| `simuladores.jpg`, `test-vocacional.jpg`, `diagnostico.jpg`, `ingles.jpg`, `nivelacion.jpg`, `asesoria.jpg`, `computacion.jpg` | Franja del menú de servicios de la portada |
+
+JPG en blanco y negro (el sitio igual las pasa a escala de grises), **2400 × 1600 px** (3:2), menos de 400 KB cada una. Mientras falte una foto se ve un recuadro gris. También se pueden poner desde el panel (Portada → fotos), que tiene prioridad.
+
 ## Panel de administración (admin.forwinnersec.com)
 Los textos, botones, imágenes, precios, preguntas frecuentes, testimonios, aviso superior, WhatsApp y SEO se editan desde el panel (repositorio `admin-forwinners`), que usa esta misma base D1.
 - `migrations/0004_admin_panel.sql`: tablas del panel (contenido, usuarios, imágenes, notas, pagos a profesores) y columnas nuevas para estudiantes, grupos, pagos e interesados.

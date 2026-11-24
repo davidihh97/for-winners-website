@@ -90,7 +90,7 @@ if(FWC.aviso){const a=FWC.aviso;AVISO=a.enabled&&a.texto?{hasta:a.hasta?new Date
   const nav=document.querySelector("body>nav");
   if(!AVISO)return;
   let off=false;try{off=localStorage.getItem(AVISO.id)==="1"}catch{}
-  if(!nav||off||new Date()>AVISO.hasta)return;
+  if(!nav||off||new Date()>AVISO.hasta||document.getElementById("registro-strip"))return;
   const bar=document.createElement("div");bar.className="notice";bar.setAttribute("role","note");
   bar.innerHTML=`<div class="wrap"><span>${fwEsc(AVISO.texto)}</span>${AVISO.link?`<a href="${fwEsc(AVISO.link)}">${fwEsc(AVISO.linkLabel)}</a>`:""}<button type="button" aria-label="Cerrar aviso">✕</button></div>`;
   bar.querySelector("button").onclick=()=>{bar.remove();try{localStorage.setItem(AVISO.id,"1")}catch{}};
