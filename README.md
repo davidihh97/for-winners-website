@@ -123,3 +123,20 @@ Secreto: `npx wrangler secret put RESEND_API_KEY`.
 
 ## Datos de For Winners
 Av. Teodoro Gómez de la Torre 746 y Calixto Miranda, Ibarra, Ecuador · Lunes a sábado, de 9:00 a 20:00 · TikTok e Instagram: @forwinnersec
+
+## Temáticas de temporada (Navidad, fiestas, días de la educación…)
+
+La web cambia de adornos sola según la fecha, sin tocar código: `web/src/season/`.
+
+- `calendar.js`: las 32 temáticas (fechas de Ecuador, mundiales, de educación y de marketing), con fechas fijas o calculadas
+  (Carnaval y Semana Santa según la Pascua, Día de la Madre 2.º domingo de mayo, del Padre 3.er domingo de junio, Black Friday…).
+  Cada temática tiene 1 a 3 estilos que rotan cada año. Si dos coinciden gana la de más prioridad y luego la más corta.
+- `effects.js` (se descarga solo si hay temática): pocas partículas en un canvas que no recibe clics y no se dibuja sobre
+  botones, campos ni el menú; una cinta fina bajo el menú (luces en Navidad); un saludo pequeño una vez al día;
+  el botón ✦ abajo a la izquierda quita o vuelve a poner los adornos (se recuerda en el navegador).
+  Se pausa con la pestaña oculta, no hay partículas con «reducir movimiento» y respeta el modo oscuro.
+- Control desde el panel (Editor de la web → «Temática de temporada»): automática / una fija / apagada, cantidad de adornos,
+  saludo, y por temática: activar, estilo, fechas propias (día/mes), saludo y cantidad. Se guarda en `FW_CONTENT.temporada`.
+- Para probar: `?fw-season=halloween&fw-variant=0` o `?fw-date=2027-02-14`.
+- Black Friday y Semana Santa vienen apagadas (actívalas en el panel). Navidad va del 24 de noviembre al 6 de enero.
+- Si agregas una temática en `calendar.js`, copia el archivo a `admin-forwinners/src/site/seasonCalendar.js`.

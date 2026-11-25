@@ -5,6 +5,7 @@ import { createRoot } from "react-dom/client";
 import { createElement, lazy, Suspense } from "react";
 import { initFocus, initScrollLinks } from "./focus.js";
 import { initNav } from "./nav.js";
+import { initSeason } from "./season/index.js";
 
 const ISLANDS = {
   Services: lazy(() => import("./islands/Services.jsx")),
@@ -25,3 +26,4 @@ for (const el of document.querySelectorAll("[data-island]")) {
 initNav();
 initScrollLinks();
 initFocus();
+initSeason();
