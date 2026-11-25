@@ -1,17 +1,64 @@
 <nav class="site-nav" aria-label="Principal"><div class="wrap">
   <a class="logo" href="index.html" aria-label="For Winners, ir al inicio"><img class="logo-light" src="/img/fw-logo.svg" alt="For Winners" width="184" height="30"><img class="logo-dark" src="/img/fw-logo-neg.svg" alt="For Winners" width="184" height="30"></a>
   <div class="links" id="links">
-    <a href="preuniversitario.html" data-n="preuniversitario">Preuniversitario</a>
-    <a href="simuladores.html" data-n="simuladores">Simuladores</a>
-    <a href="practica.html" data-n="practica">Práctica</a>
-    <a href="ingles.html" data-n="ingles">Inglés</a>
-    <a href="nivelacion.html" data-n="nivelacion">Nivelación</a>
-    <a href="asesoria.html" data-n="asesoria">Asesoría</a>
-    <a href="diagnostico.html" class="m-only">Diagnóstico gratis</a>
-    <a href="test-vocacional.html" class="m-only">Test vocacional</a>
-    <a href="computacion.html" class="m-only">Computación e IA</a>
-    <a href="guias.html" data-n="guias">Guías</a>
-    <a href="contacto.html" data-n="contacto">Contacto</a>
+
+    <div class="nav-item" data-group="pre">
+      <a class="nav-top" href="preuniversitario.html" data-n="preuniversitario">Preuniversitario</a>
+      <button type="button" class="sub-toggle" aria-expanded="false" aria-label="Opciones de Preuniversitario"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+      <div class="sub"><div class="sub-in">
+        <a href="preuniversitario.html#universidad"><b>Cursos presenciales</b><span>UTN, Central, UPEC y Yachay en Ibarra</span></a>
+        <a href="preuniversitario.html#cronogramas"><b>Cursos virtuales</b><span>Temario y fechas de 34 universidades</span></a>
+        <a href="simuladores.html"><b>Simuladores de admisión</b><span>Gratis, con preguntas básicas y avanzadas</span></a>
+        <a href="test-vocacional.html"><b>Test vocacional</b><span>La carrera que va contigo, en 10 minutos</span></a>
+        <a href="preuniversitario.html#fechas"><b>Fechas de admisión 2027</b><span>Registro Nacional y proceso paso a paso</span></a>
+        <a href="guias.html"><b>Guías de admisión</b><span>Registro Social, tipos de examen y cupos</span></a>
+      </div></div>
+    </div>
+
+    <div class="nav-item" data-group="niv">
+      <a class="nav-top" href="nivelacion.html" data-n="nivelacion">Nivelación</a>
+      <button type="button" class="sub-toggle" aria-expanded="false" aria-label="Opciones de Nivelación"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+      <div class="sub"><div class="sub-in">
+        <a href="nivelacion.html#planes"><b>Planes y precios</b><span>Clases individuales desde $6 la hora</span></a>
+        <a href="nivelacion.html#temas"><b>Qué trabajamos</b><span>Primaria, bachillerato y universidad</span></a>
+        <a href="diagnostico.html"><b>Diagnóstico gratis</b><span>Descubre qué temas reforzar</span></a>
+        <a href="practica.html"><b>Práctica por tema</b><span>53 temas con repaso y explicación</span></a>
+      </div></div>
+    </div>
+
+    <div class="nav-item" data-group="eng">
+      <a class="nav-top" href="ingles.html" data-n="ingles">Inglés</a>
+      <button type="button" class="sub-toggle" aria-expanded="false" aria-label="Opciones de Inglés"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+      <div class="sub"><div class="sub-in">
+        <a href="ingles.html#niveles"><b>Niveles A1 a C1</b><span>Qué aprendes en cada nivel</span></a>
+        <a href="ingles.html#practica"><b>Practicar gratis</b><span>Grammar, writing y reading</span></a>
+        <a href="ingles.html#prueba"><b>Prueba de nivel</b><span>Te ubicamos en el grupo correcto</span></a>
+      </div></div>
+    </div>
+
+    <div class="nav-item" data-group="ase">
+      <a class="nav-top" href="asesoria.html" data-n="asesoria">Asesoría</a>
+      <button type="button" class="sub-toggle" aria-expanded="false" aria-label="Opciones de Asesoría"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+      <div class="sub"><div class="sub-in">
+        <a href="asesoria.html#etapas"><b>Acompañamiento por etapas</b><span>Del tema a la defensa</span></a>
+        <a href="asesoria.html#tips"><b>Tips de redacción</b><span>Tesis, ensayo, artículo y APA 7</span></a>
+        <a href="asesoria.html#guia"><b>Guía gratis en PDF</b><span>6 pasos para empezar bien</span></a>
+        <a href="asesoria.html#preguntas"><b>Preguntas frecuentes</b><span>Modalidad, costos y universidades</span></a>
+      </div></div>
+    </div>
+
+    <div class="nav-item" data-group="comp">
+      <a class="nav-top" href="computacion.html" data-n="computacion">Computación e IA</a>
+      <button type="button" class="sub-toggle" aria-expanded="false" aria-label="Opciones de Computación e IA"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+      <div class="sub"><div class="sub-in">
+        <a href="computacion.html#modulos"><b>Módulos</b><span>Word, Excel, Google, Canva e IA</span></a>
+        <a href="computacion.html#ejemplo"><b>IA para estudiar</b><span>Cómo pedirle bien las cosas</span></a>
+      </div></div>
+    </div>
+
+    <div class="nav-item">
+      <a class="nav-top" href="contacto.html" data-n="contacto">Contacto</a>
+    </div>
   </div>
   <a class="btn navcta wal" href="contacto.html">Escríbenos</a>
   <button type="button" class="burger" id="burger" aria-label="Abrir menú"><svg class="i" aria-hidden="true"><use href="/img/icons.svg#menu"></use></svg></button>

@@ -17,7 +17,7 @@ export default function HeroRandom() {
   const h = useMemo(pick, []);
   const still = useReducedMotion();
   const enter = i => (still ? {} : {
-    initial: { opacity: 0, filter: "blur(14px)", y: 16 },
+    initial: { opacity: 0, filter: "blur(10px)", y: 16 },
     animate: { opacity: 1, filter: "blur(0px)", y: 0 },
     transition: { duration: .9, delay: .08 * i, ease: [.2, .8, .2, 1] },
   });
@@ -34,7 +34,7 @@ export default function HeroRandom() {
         </motion.div>
       </div>
       <motion.figure className="ph hero-ph" data-ph={h.img}
-        {...(still ? {} : { initial: { opacity: 0, filter: "blur(20px)", scale: 1.04 }, animate: { opacity: 1, filter: "blur(0px)", scale: 1 }, transition: { duration: 1.2, ease: [.2, .8, .2, 1] } })}>
+        {...(still ? {} : { initial: { opacity: 0, filter: "blur(14px)", scale: 1.04 }, animate: { opacity: 1, filter: "blur(0px)", scale: 1 }, transition: { duration: 1.2, ease: [.2, .8, .2, 1] } })}>
         <img src={"/" + h.img} alt={h.alt_img} onError={e => e.currentTarget.remove()} />
       </motion.figure>
     </div>
