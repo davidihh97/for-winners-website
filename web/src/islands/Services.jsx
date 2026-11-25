@@ -1,17 +1,35 @@
 // Índice de servicios de la portada (React Bits · FlowingMenu): al pasar el mouse,
 // una franja muestra la foto y el nombre del servicio. Textos, orden, ocultos y fotos
 // se pueden cambiar desde el panel (window.FW_CONTENT.portada).
+import { useEffect, useState } from "react";
 import FlowingMenu from "../reactbits/FlowingMenu.jsx";
 
+// Colores tomados de las variables del tema (claro u oscuro, según el ajuste del sistema).
+function palette() {
+  const css = getComputedStyle(document.documentElement), v = n => css.getPropertyValue(n).trim();
+  return { ink: v("--ink"), paper: v("--paper"), line: v("--line") };
+}
+function usePalette() {
+  const [p, setP] = useState(palette);
+  useEffect(() => {
+    const mq = matchMedia("(prefers-color-scheme: dark)");
+    const on = () => setP(palette());
+    mq.addEventListener("change", on);
+    return () => mq.removeEventListener("change", on);
+  }, []);
+  return p;
+}
+
 const BASE = [
-  { k: "pre", link: "preuniversitario.html", text: "Preuniversitario", d: "UTN · Central · UPEC · Yachay", img: "media/preuniversitario.jpg" },
-  { k: "sim", link: "simuladores.html", text: "Simuladores", d: "Gratis", img: "media/simuladores.jpg" },
-  { k: "voc", link: "test-vocacional.html", text: "Test vocacional", d: "86 carreras", img: "media/test-vocacional.jpg" },
-  { k: "diag", link: "diagnostico.html", text: "Diagnóstico", d: "Gratis", img: "media/diagnostico.jpg" },
-  { k: "eng", link: "ingles.html", text: "Inglés", d: "A1 a C1", img: "media/ingles.jpg" },
-  { k: "niv", link: "nivelacion.html", text: "Nivelación", d: "Desde $6 la hora", img: "media/nivelacion.jpg" },
-  { k: "ase", link: "asesoria.html", text: "Asesoría de tesis", d: "Del tema a la defensa", img: "media/asesoria.jpg" },
-  { k: "comp", link: "computacion.html", text: "Computación e IA", d: "Office · IA", img: "media/computacion.jpg" },
+  { k: "pre", link: "preuniversitario.html", text: "Preuniversitario", d: "UTN · Central · UPEC · Yachay · Virtual", img: "media/preuniversitario.jpg" },
+  { k: "sim", link: "simuladores.html", text: "Simuladores", d: "Gratis · Cronometrado · PDF", img: "media/simuladores.jpg" },
+  { k: "voc", link: "test-vocacional.html", text: "Test vocacional", d: "86 carreras · 10 minutos", img: "media/test-vocacional.jpg" },
+  { k: "diag", link: "diagnostico.html", text: "Diagnóstico", d: "Matemática · Física · Química · Lengua", img: "media/diagnostico.jpg" },
+  { k: "prac", link: "practica.html", text: "Práctica", d: "53 temas · Sin registro", img: "media/simuladores.jpg" },
+  { k: "eng", link: "ingles.html", text: "Inglés", d: "A1–C1 · Cambridge", img: "media/ingles.jpg" },
+  { k: "niv", link: "nivelacion.html", text: "Nivelación", d: "Primaria · Colegio · Universidad", img: "media/nivelacion.jpg" },
+  { k: "ase", link: "asesoria.html", text: "Asesoría de tesis", d: "Tesis · APA 7 · Defensa", img: "media/asesoria.jpg" },
+  { k: "comp", link: "computacion.html", text: "Computación e IA", d: "Office · Google · IA", img: "media/computacion.jpg" },
 ];
 
 function services() {
@@ -27,15 +45,16 @@ function services() {
 
 export default function Services() {
   const list = services();
+  const c = usePalette();
   return (
     <div className="services" style={{ "--rows": list.length }}>
       <FlowingMenu
         items={list.map(s => ({ link: s.link, text: s.text, image: s.img, meta: s.d }))}
-        textColor="#0d1b2e"
-        bgColor="#ffffff"
-        marqueeBgColor="#0d1b2e"
-        marqueeTextColor="#ffffff"
-        borderColor="#e5e7eb"
+        textColor={c.ink}
+        bgColor={c.paper}
+        marqueeBgColor={c.ink}
+        marqueeTextColor={c.paper}
+        borderColor={c.line}
         align="left"
         showArrow
         imageShape="rounded"

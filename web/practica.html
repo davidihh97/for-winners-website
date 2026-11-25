@@ -15,7 +15,8 @@
 <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
 <link rel="apple-touch-icon" href="/img/fw-180.png">
 <link rel="manifest" href="/site.webmanifest">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a111c" media="(prefers-color-scheme: dark)">
 <script type="module" src="/src/main.jsx"></script>
 </head>
 <body>
@@ -23,9 +24,13 @@
 <!--@nav-->
 <main id="main">
   <section class="hero"><div class="wrap">
-    <h1>Practica gratis <br><em>por tema.</em></h1>
-    <p class="lead">Elige un tema, lee el repaso y resuelve 5 preguntas. Ves al instante si acertaste y por qué. Las preguntas cambian en cada ronda.</p>
-    <div class="facts"><span>Sin registro</span><span>53 temas</span><span>Explicación de cada respuesta</span></div>
+      <div class="hero-text">
+        <p class="label">Práctica gratis</p>
+        <h1>Aprende un tema en 5 preguntas.</h1>
+        <p class="lead">Elige un tema, lee el repaso y resuelve 5 preguntas. Ves al instante si acertaste y por qué. Las preguntas cambian en cada ronda.</p>
+        <ul class="kp"><li>53 temas de razonamiento, matemática, física, química y estadística</li><li>Sin registrarte</li><li>Explicación de cada respuesta</li></ul>
+        <div class="row"><a class="btn" href="#practica" data-scroll="#practica">Elegir un tema</a><a class="btn o" href="simuladores.html">Hacer un simulador</a></div>
+      </div>
   </div></section>
 
   <section class="alt" id="practica"><div class="wrap">
@@ -42,6 +47,7 @@
     <p class="lead">Cuando domines los temas, haz un simulador con la estructura real de tu examen, o refuerza con un profesor.</p>
     <div class="row"><a class="btn" href="simuladores.html">Hacer un simulador</a><a class="btn o" href="nivelacion.html">Ver nivelación</a><a class="btn o" href="preuniversitario.html#cronogramas">Temario de mi universidad</a></div>
   </div></section>
+
 </main>
 <!--@footer-->
 <script src="/js/fw-content.js"></script>

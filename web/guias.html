@@ -15,7 +15,8 @@
 <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
 <link rel="apple-touch-icon" href="/img/fw-180.png">
 <link rel="manifest" href="/site.webmanifest">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a111c" media="(prefers-color-scheme: dark)">
 <script type="module" src="/src/main.jsx"></script>
 </head>
 <body>
@@ -23,11 +24,14 @@
 <!--@nav-->
 <main id="main">
   <section class="hero"><div class="wrap">
-    <h1>Guías de <br><em>admisión.</em></h1>
-    <p class="lead">Todo lo que necesitas saber para entrar a una universidad pública del Ecuador, explicado paso a paso.</p>
-    <div class="toc" role="navigation" aria-label="Contenido de la guía">
-      <a href="#proceso">Cómo entrar a la universidad</a><a href="#registro-nacional">Registro Nacional</a><a href="#contrasena">Recuperar tu contraseña</a><a href="#registro-social">Registro Social</a><a href="#examenes">Tipos de examen</a><a href="#ibarra">Universidades cerca de Ibarra</a><a href="#medicina">Dónde estudiar Medicina</a><a href="#calculadora">¿Puedo usar calculadora?</a><a href="#puntaje">Puntaje y cupos</a>
-    </div>
+      <div class="hero-text">
+        <p class="label">Guías de admisión</p>
+        <h1>Todo el proceso, explicado paso a paso.</h1>
+        <p class="lead">Lo que necesitas saber para entrar a una universidad pública del Ecuador: trámites, tipos de examen, cupos y dónde estudiar.</p>
+        <ul class="kp"><li>Registro Nacional y Registro Social</li><li>Tipos de examen y calculadora</li><li>Universidades cerca de Ibarra y Medicina</li></ul>
+        <div class="row"><a class="btn" href="#proceso" data-scroll="#proceso">Empezar a leer</a><a class="btn o" href="preuniversitario.html#cronogramas">Temario de mi universidad</a></div>
+        <div class="toc" role="navigation" aria-label="Contenido de la guía"><a href="#proceso" data-scroll="#proceso">Cómo entrar a la universidad</a><a href="#registro-nacional" data-scroll="#registro-nacional">Registro Nacional</a><a href="#contrasena" data-scroll="#contrasena">Recuperar tu contraseña</a><a href="#registro-social" data-scroll="#registro-social">Registro Social</a><a href="#examenes" data-scroll="#examenes">Tipos de examen</a><a href="#ibarra" data-scroll="#ibarra">Universidades cerca de Ibarra</a><a href="#medicina" data-scroll="#medicina">Dónde estudiar Medicina</a><a href="#calculadora" data-scroll="#calculadora">¿Puedo usar calculadora?</a><a href="#puntaje" data-scroll="#puntaje">Puntaje y cupos</a></div>
+      </div>
   </div></section>
 
   <section class="alt"><div class="wrap guide">
@@ -152,6 +156,7 @@
 
     <p class="rn-small c" style="margin-top:40px">Revisado el 19 de noviembre de 2026. Basado en la información publicada por las universidades y el portal oficial de admisión. Confirma siempre en las fuentes oficiales: <a class="lk" href="https://admision.educacion.gob.ec/" target="_blank" rel="noopener">admision.educacion.gob.ec</a>.</p>
   </div></section>
+
 </main>
 <!--@footer-->
 <script src="/js/fw-content.js"></script>

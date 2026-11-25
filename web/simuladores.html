@@ -15,18 +15,25 @@
 <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
 <link rel="apple-touch-icon" href="/img/fw-180.png">
 <link rel="manifest" href="/site.webmanifest">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a111c" media="(prefers-color-scheme: dark)">
 <script type="module" src="/src/main.jsx"></script>
 </head>
 <body>
 <a class="skip" href="#main">Saltar al contenido</a>
 <!--@nav-->
 <main id="main">
-<section class="hero"><div class="wrap">
-    <h1>Simuladores de <br><em>admisión.</em></h1>
-    <p class="lead">Practica con preguntas tipo examen, con la misma estructura y el mismo ritmo de la prueba real, y descubre cuánto te falta para conseguir tu cupo.</p>
-    <div class="facts"><span>25 % de la prueba real</span><span>Cronometrado</span><span>Parte 1: básicas · Parte 2: avanzadas</span><span>Preguntas nuevas en cada intento</span></div>
-    <div class="row"><a class="btn" href="#elegir">Elegir mi universidad</a><button type="button" class="btn o" data-open="pv-como"><svg class="i" aria-hidden="true"><use href="/img/icons.svg#eye"></use></svg> ¿Cómo es el simulador?</button></div>
+  <section class="hero split"><div class="wrap">
+    <div class="hero-grid">
+      <div class="hero-text">
+        <p class="label">Simuladores de admisión · gratis</p>
+        <h1>¿Cuánto te falta para tu cupo?</h1>
+        <p class="lead">Mídete en 30 minutos con la estructura y el ritmo del examen real de la Central, la UPEC, Yachay Tech o la UTN.</p>
+        <ul class="kp"><li>25 % de la prueba real, cronometrado</li><li>Primero básicas, después avanzadas</li><li>Resultado por sección e informe en PDF</li></ul>
+        <div class="row"><a class="btn" href="#elegir" data-scroll="#elegir">Elegir mi universidad</a><a class="btn o" href="#" data-open="pv-como">¿Cómo es el simulador?</a></div>
+      </div>
+      <figure class="ph hero-ph" data-ph="media/simuladores.jpg"><img src="/media/simuladores.jpg" alt="Cronómetro sobre una hoja de examen" width="1600" height="2000" onerror="this.remove()"></figure>
+    </div>
   </div></section>
 
   <section class="alt" id="elegir"><div class="wrap">
@@ -95,6 +102,12 @@
     </div>
   </div></section>
 
+  <section class="alt"><div class="wrap">
+    <h2>El simulador es solo el comienzo.</h2>
+    <p class="lead">En el preuniversitario haces simulacros completos, cronometrados y con la explicación de cada pregunta.</p>
+    <div class="row"><a class="btn" href="preuniversitario.html">Ver preuniversitario</a><a class="btn o" href="practica.html">Practicar gratis por tema</a><a class="btn o" href="test-vocacional.html">¿No sabes qué carrera elegir?</a></div>
+  </div></section>
+
   <dialog class="sheet" id="pv-como"><h3>¿Cómo es el simulador?</h3>
     <p>Es una versión corta (25 %) de la prueba real de tu universidad, con el mismo reparto de secciones y el mismo ritmo.</p>
     <ul><li><b>Parte 1 · Básicas:</b> preguntas directas para asegurar puntos.</li><li><b>Parte 2 · Avanzadas:</b> preguntas de varios pasos, como las que deciden el cupo.</li><li>No hay preguntas de dificultad media: practicas lo esencial y lo más exigente.</li><li>Cronómetro, preguntas nuevas en cada intento e informe en PDF.</li></ul>
@@ -112,11 +125,6 @@
     </div>
     <div class="row"><a class="btn" href="simuladores.html?u=utn#elegir" data-close>Hacer el simulador UTN</a></div></dialog>
 
-  <section class="alt"><div class="wrap">
-    <h2>El simulador es solo el comienzo.</h2>
-    <p class="lead">En el preuniversitario haces simulacros completos, cronometrados y con la explicación de cada pregunta.</p>
-    <div class="row"><a class="btn" href="preuniversitario.html">Ver preuniversitario</a><a class="btn o" href="practica.html">Practicar gratis por tema</a><a class="btn o" href="test-vocacional.html">¿No sabes qué carrera elegir?</a></div>
-  </div></section>
 </main>
 <!--@footer-->
 <script src="/js/fw-content.js"></script>

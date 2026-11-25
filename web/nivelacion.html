@@ -15,16 +15,27 @@
 <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
 <link rel="apple-touch-icon" href="/img/fw-180.png">
 <link rel="manifest" href="/site.webmanifest">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a111c" media="(prefers-color-scheme: dark)">
 <script type="module" src="/src/main.jsx"></script>
 </head>
 <body>
 <a class="skip" href="#main">Saltar al contenido</a>
 <!--@nav-->
 <main id="main">
+  <section class="hero split"><div class="wrap">
+    <div class="hero-grid">
+      <div class="hero-text">
+        <p class="label">Nivelación y tareas dirigidas</p>
+        <h1>Ponte al día, a tu ritmo.</h1>
+        <p class="lead">Matemáticas, Física e Inglés con un profesor solo para ti, en primaria, bachillerato y universidad.</p>
+        <ul class="kp"><li>Clases individuales desde $6 la hora</li><li>Trabajamos justo los temas donde fallas</li><li>Paquetes de horas y tareas dirigidas</li></ul>
+        <div class="row"><a class="btn" href="#planes" data-scroll="#planes">Ver precios</a><a class="btn o" class="wal" href="contacto.html">Reservar una clase</a></div>
+      </div>
+      <figure class="ph hero-ph" data-ph="media/nivelacion.jpg"><img src="/media/nivelacion.jpg" alt="Tutor explicando un ejercicio de matemáticas" width="1600" height="2000" onerror="this.remove()"></figure>
+    </div>
+  </div></section>
 
-  <section class="hero"><div class="wrap"><h1>Nivelación.</h1><p class="lead">Refuerza Matemáticas, Física e Inglés con atención personalizada. Ideal también para tareas dirigidas.</p>
-    <div class="row"><a class="btn" href="#planes">Ver precios</a><a class="btn o" href="#temas">Ver qué trabajamos</a></div></div></section>
   <section class="alt" id="planes"><div class="wrap">
     <h2 class="sr-only">Planes y precios</h2>
     <div class="g g3" id="nivel-plans" style="margin-top:0"></div>
@@ -61,6 +72,7 @@
     </div>
     <div class="row"><a class="btn wal" href="#">Reservar una clase</a><a class="btn o" href="practica.html?area=matematica">Repasar gratis: Matemática desde cero</a></div>
   </div></section>
+
 </main>
 <!--@footer-->
 <script src="/js/fw-content.js"></script>
