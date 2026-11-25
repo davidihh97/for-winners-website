@@ -50,7 +50,12 @@
 
   /* ---------- texto: respeta íconos y formato ---------- */
   const INLINE = new Set(["EM", "B", "STRONG", "I", "BR", "SMALL", "SPAN"]);
-  const simple = el => [...el.children].every(c => INLINE.has(c.tagName) && !c.children.length);
+  const ownText = el => [...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim());
+  // Elementos armados con partes (p. ej. un enlace con <b>título</b><span>detalle</span>):
+  // se edita cada parte por separado para no perder el diseño.
+  const structured = el => !ownText(el) && [...el.children].filter(c => c.tagName !== "BR").length >= 2
+    && [...el.children].every(c => INLINE.has(c.tagName) && !c.children.length);
+  const simple = el => !structured(el) && [...el.children].every(c => INLINE.has(c.tagName) && !c.children.length);
   function setText(el, text) {
     if (simple(el)) { el.innerHTML = lite(text); return; }
     const nodes = [...el.childNodes].filter(n => n.nodeType === 3 && n.textContent.trim());
@@ -247,7 +252,8 @@
     if (sec) return { el: sec, kind: "section" };
     const panel = panelOf(e.target);
     if (panel) return { el: e.target.closest(PANELS.find(([, id]) => id === panel)[0]) || e.target, kind: "panel", panel };
-    const el = (e.target.matches("video[data-fw-video]") && e.target.previousElementSibling) || e.target.closest(CAND);
+    let el = (e.target.matches("video[data-fw-video]") && e.target.previousElementSibling) || e.target.closest(CAND);
+    if (el && el !== e.target && e.target.parentElement === el && structured(el)) el = e.target;
     return el && el.closest("main, nav, header, footer, body") ? { el, kind: "el" } : null;
   };
   let hovered = null;
@@ -271,7 +277,7 @@
       sel: selectorOf(el), tag: el.tagName.toLowerCase(),
       orig: norm(tmp.textContent), text: norm(el.textContent),
       href: el.getAttribute("href"), src: el.getAttribute("src"),
-      textEditable: el.tagName !== "IMG" && (simple(el) || [...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim())),
+      textEditable: el.tagName !== "IMG" && !structured(el) && (simple(el) || ownText(el)),
       siblings: el.parentNode ? el.parentNode.children.length : 1,
       isBtn: el.classList.contains("btn"), outline: el.classList.contains("o"), isWa: el.classList.contains("wal"),
       cur: (() => { const cs = getComputedStyle(el); return { size: Math.round(parseFloat(cs.fontSize)), color: hex(cs.color), bg: hex(cs.backgroundColor), weight: cs.fontWeight, align: cs.textAlign === "start" ? "left" : cs.textAlign }; })(),
