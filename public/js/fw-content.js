@@ -301,8 +301,10 @@
       Object.keys(C).forEach(k => delete C[k]);
       Object.assign(C, d.fwDraft);
       applyTheme(); revertAll(); applyOverrides(); renderSections();
+      window.dispatchEvent(new Event("fw:content"));
       post({ fwBroken: broken.slice() });
     }
+    if ("fwSeasonPreview" in d) window.dispatchEvent(new CustomEvent("fw:season-preview", { detail: d.fwSeasonPreview || {} }));
     if (d.fwHello) post({ fwReady: { page: PAGE, title: document.title, description: (document.querySelector('meta[name="description"]') || {}).content || "", broken: broken.slice() } });
     if (d.fwScrollTo) { const s = document.querySelector(`[data-fw-sec="${CSS.escape(d.fwScrollTo)}"]`); if (s) s.scrollIntoView({ behavior: "smooth", block: "center" }); }
   });
