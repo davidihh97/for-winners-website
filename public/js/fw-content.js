@@ -27,7 +27,7 @@
 
   // Zonas que se generan con datos (se editan con formularios del panel, no a mano).
   const PANELS = [
-    ["#menu, #preview, .svc-preview", "portada"], [".bgs", "portada"],
+    ["#menu, #preview, .svc-preview", "portada"], [".bgs", "portada"], ['[data-island="HeroRandom"]', "portada"],
     ["#nivel-plans", "nivelacion"], ["#faq-pre", "faq"], ["#testi, #resultados", "testimonios"],
     ["#chips, #panel", "unis"], [".notice", "aviso"], [".wa", "contacto"],
     ["#registro, #cronogramas, .uni-sheet, [data-crono]", "cursos"],
@@ -119,6 +119,7 @@
     if (!originals.has(el)) originals.set(el, { html: el.innerHTML, href: el.getAttribute("href"), src: el.getAttribute("src"), style: el.getAttribute("style"), cls: el.className, parent: el.parentNode, next: el.nextSibling });
   }
   function revertAll() {
+    document.querySelectorAll("video[data-fw-video]").forEach(v => v.remove());
     for (const [el, o] of originals) {
       el.innerHTML = o.html;
       o.href == null ? el.removeAttribute("href") : el.setAttribute("href", o.href);
@@ -130,6 +131,20 @@
     }
     originals.clear();
   }
+
+  // Si en lugar de una foto se elige un video, se muestra el video en su lugar (la foto queda oculta).
+  const isVideo = u => /\.(mp4|webm|mov)(\?|$)/i.test(String(u || ""));
+  function showVideo(img, src) {
+    const v = document.createElement("video");
+    Object.assign(v, { src, autoplay: true, muted: true, loop: true, playsInline: true });
+    v.setAttribute("muted", ""); v.setAttribute("playsinline", ""); v.dataset.fwVideo = "";
+    v.className = img.className;
+    v.setAttribute("aria-label", img.getAttribute("alt") || "");
+    v.style.cssText = "width:100%;height:100%;object-fit:cover;display:block";
+    img.style.setProperty("display", "none", "important");
+    img.after(v);
+  }
+  window.FW.isVideo = isVideo;
 
   const broken = [];
   function applyOverrides() {
@@ -145,7 +160,10 @@
       remember(el);
       if (o.text != null && o.text !== "") setText(el, o.text);
       if (o.href && el.tagName === "A" && okUrl(o.href)) { el.setAttribute("href", o.href); if (/^https?:/.test(o.href)) { el.target = "_blank"; el.rel = "noopener"; } }
-      if (o.src && el.tagName === "IMG" && okUrl(o.src)) { el.setAttribute("src", o.src); el.removeAttribute("srcset"); }
+      if (o.src && el.tagName === "IMG" && okUrl(o.src)) {
+        if (isVideo(o.src)) showVideo(el, o.src);
+        else { el.setAttribute("src", o.src); el.removeAttribute("srcset"); }
+      }
       for (const [k, val] of Object.entries(o.style || {})) {
         const def = STYLE[k];
         const css = def && def[1](val);
@@ -229,7 +247,7 @@
     if (sec) return { el: sec, kind: "section" };
     const panel = panelOf(e.target);
     if (panel) return { el: e.target.closest(PANELS.find(([, id]) => id === panel)[0]) || e.target, kind: "panel", panel };
-    const el = e.target.closest(CAND);
+    const el = (e.target.matches("video[data-fw-video]") && e.target.previousElementSibling) || e.target.closest(CAND);
     return el && el.closest("main, nav, header, footer, body") ? { el, kind: "el" } : null;
   };
   let hovered = null;

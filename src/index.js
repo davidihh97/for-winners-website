@@ -15,7 +15,7 @@ const tooMany = () => json({ error: "Demasiados envíos seguidos. Intenta en uno
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
-    if (url.pathname.startsWith("/m/")) return media(env, url.pathname.slice(3));
+    if (url.pathname.startsWith("/m/")) return media(env, url.pathname.slice(3), request);
     if (!url.pathname.startsWith("/api/")) return withContent(await env.ASSETS.fetch(request), env, url);
     try {
       return await api(request, env, ctx, url);
