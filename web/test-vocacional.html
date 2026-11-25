@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Test vocacional gratis | For Winners</title>
+<meta name="description" content="Descubre qué carreras de pregrado del Ecuador van con tu perfil. Test vocacional gratuito basado en intereses.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="For Winners">
+<meta property="og:locale" content="es_EC">
+<meta property="og:title" content="Test vocacional gratis | For Winners">
+<meta property="og:description" content="Descubre qué carreras de pregrado del Ecuador van con tu perfil. Test vocacional gratuito basado en intereses.">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="/img/fw-icon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="apple-touch-icon" href="/img/fw-180.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#ffffff">
+<script type="module" src="/src/main.jsx"></script>
+</head>
+<body>
+<a class="skip" href="#main">Saltar al contenido</a>
+<!--@nav-->
+<main id="main">
+<section class="hero"><div class="wrap">
+    <h1>¿Qué carrera <br><em>es para ti?</em></h1>
+    <p class="lead">Descubre qué carrera de pregrado del Ecuador va contigo según tus intereses, tu forma de ser, lo que buscas en un trabajo y qué tan preparado estás para decidir.</p>
+    <div class="facts"><span>61 preguntas · unos 10 minutos</span><span>Inspirado en NEFELE y CareerExplorer</span><span>86 carreras del Ecuador</span></div>
+    <div class="row"><a class="btn" href="#test" id="go-top">Empezar el test</a><a class="btn o" href="#test">Ver una pregunta de ejemplo</a></div>
+  </div></section>
+  <section class="alt" id="test"><div class="wrap">
+    <div id="picker">
+      <h2>Mira cómo es antes de empezar.</h2>
+      <p class="lead">El test tiene 4 partes. Toca cada una para ver una pregunta de ejemplo: no hay respuestas buenas ni malas.</p>
+      <div data-tabs>
+        <div class="tabs"><button data-tab="i" class="on">1 · Intereses</button><button data-tab="p">2 · Personalidad</button><button data-tab="v">3 · Valores</button><button data-tab="a">4 · Adaptabilidad</button></div>
+        <div class="pv" style="max-width:920px;margin-left:auto;margin-right:auto">
+          <div>
+            <div data-panel="i"><p class="pv-h">Intereses · modelo RIASEC</p><p class="rn-small">Qué actividades disfrutas: Realista, Investigador, Artístico, Social, Emprendedor y Convencional.</p><div data-demo="voc-intereses" style="margin-top:14px"></div></div>
+            <div data-panel="p" hidden><p class="pv-h">Personalidad · cinco factores</p><p class="rn-small">Cómo eres: apertura, responsabilidad, extraversión, amabilidad y estabilidad emocional.</p><div data-demo="voc-personalidad" style="margin-top:14px"></div></div>
+            <div data-panel="v" hidden><p class="pv-h">Valores laborales</p><p class="rn-small">Lo que necesitas de un trabajo: ayudar, crear, ganar bien, estabilidad, liderar…</p><div data-demo="voc-valores" style="margin-top:14px"></div></div>
+            <div data-panel="a" hidden><p class="pv-h">Adaptabilidad · modelo NEFELE</p><p class="rn-small">Qué tan preparado estás para decidir y qué te falta averiguar.</p><div data-demo="voc-adaptabilidad" style="margin-top:14px"></div></div>
+          </div>
+          <div><p class="pv-h">Lo que obtienes al final</p><div data-mock="vocacional"></div></div>
+        </div>
+      </div>
+      <div class="facts"><span><svg class="i" aria-hidden="true"><use href="/img/icons.svg#chat"></use></svg> Responde con sinceridad</span><span><svg class="i" aria-hidden="true"><use href="/img/icons.svg#grad"></use></svg> 86 carreras de pregrado</span><span><svg class="i" aria-hidden="true"><use href="/img/icons.svg#file"></use></svg> Informe PDF de 5 páginas</span></div>
+      <div class="startbar"><button class="btn" id="go">Empezar el test</button></div>
+    </div>
+    <div id="runner" hidden></div>
+  </div></section>
+  <section><div class="wrap">
+    <h2>Elegiste carrera. Ahora, el cupo.</h2>
+    <p class="lead">Prepárate para el examen de admisión con simulacros y grupos reducidos.</p>
+    <div class="row"><a class="btn" href="simuladores.html">Probar un simulador</a><a class="btn o" href="preuniversitario.html">Ver preuniversitario</a></div>
+  </div></section>
+</main>
+<!--@footer-->
+<script src="/js/fw-content.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/preview.js"></script>
+<script src="/js/quiz.js"></script>
+<script src="/js/pdf.js"></script>
+<script>
+document.getElementById("go-top").addEventListener("click",()=>document.getElementById("go").click());
+document.getElementById("go").onclick=()=>{const p=document.getElementById("picker"),r=document.getElementById("runner");p.hidden=true;r.hidden=false;
+  FWQuiz.mount(r,{quiz:"vocacional",level:"general",onExit:()=>{r.hidden=true;p.hidden=false}})};
+</script>
+</body>
+</html>

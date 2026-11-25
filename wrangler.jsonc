@@ -3,12 +3,14 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "for-winners-website",
   "main": "src/index.js",
+  // El sitio se compila con Vite (web/ → dist/) antes de cada `wrangler deploy` y `wrangler dev`.
+  "build": { "command": "npm run build" },
   "compatibility_date": "2026-10-26",
   "assets": {
-    "directory": "./public",
+    "directory": "./dist",
     "binding": "ASSETS",
     // Las páginas pasan por el Worker para recibir el contenido del panel; css, js e imágenes no.
-    "run_worker_first": ["/*", "!/css/*", "!/js/*", "!/img/*", "!/data/*", "!/media/*", "!/favicon.ico", "!/robots.txt", "!/site.webmanifest"]
+    "run_worker_first": ["/*", "!/assets/*", "!/js/*", "!/img/*", "!/data/*", "!/media/*", "!/favicon.ico", "!/robots.txt", "!/site.webmanifest"]
   },
   "d1_databases": [
     {
