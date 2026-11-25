@@ -3,8 +3,8 @@
    desenfoca y atenúa al entrar o salir por arriba o por abajo. Se desactiva si el usuario
    pidió menos movimiento en su sistema. */
 const SEL = "main > section > .wrap > *, main > section > .wrap > .head > *, [data-focus]";
-const SKIP = ".head, dialog, .services, .cue, #runner, #pr-run, .runner, [data-nofocus]";
-const MAX_BLUR = 7;    // px
+const SKIP = ".head, dialog, .cue, #runner, #pr-run, .runner, [data-nofocus]";
+const MAX_BLUR = 4.9;  // px (30 % menos que antes)
 const MIN_OPACITY = .25;
 
 export function initFocus() {
