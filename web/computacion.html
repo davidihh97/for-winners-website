@@ -15,19 +15,27 @@
 <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
 <link rel="apple-touch-icon" href="/img/fw-180.png">
 <link rel="manifest" href="/site.webmanifest">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a111c" media="(prefers-color-scheme: dark)">
 <script type="module" src="/src/main.jsx"></script>
 </head>
 <body>
 <a class="skip" href="#main">Saltar al contenido</a>
 <!--@nav-->
 <main id="main">
-  <section class="hero"><div class="wrap">
-    <h1>Computación e <br><em>inteligencia artificial.</em></h1>
-    <p class="lead">Aprende a usar la tecnología a tu favor: para tus tareas, tu tesis, tu trabajo o tu emprendimiento.</p>
-    <div class="facts"><span>Niños, jóvenes y adultos</span><span>Clases prácticas</span><span>Presencial en Ibarra</span></div>
-    <div class="row"><a class="btn wal" href="#">Preguntar por horarios</a><a class="btn o" href="#modulos">Ver módulos</a></div>
+  <section class="hero split"><div class="wrap">
+    <div class="hero-grid">
+      <div class="hero-text">
+        <p class="label">Computación e IA</p>
+        <h1>La tecnología, a tu favor.</h1>
+        <p class="lead">Word, Excel, Google y herramientas de inteligencia artificial para tus tareas, tu tesis, tu trabajo o tu emprendimiento.</p>
+        <ul class="kp"><li>Niños, jóvenes y adultos</li><li>Clases prácticas en Ibarra</li><li>Uso responsable de la IA</li></ul>
+        <div class="row"><a class="btn" href="#modulos" data-scroll="#modulos">Ver módulos</a><a class="btn o" class="wal" href="contacto.html">Preguntar por horarios</a></div>
+      </div>
+      <figure class="ph hero-ph" data-ph="media/computacion.jpg"><img src="/media/computacion.jpg" alt="Manos escribiendo en una laptop" width="1600" height="2000" onerror="this.remove()"></figure>
+    </div>
   </div></section>
+
   <section class="alt" id="modulos"><div class="wrap">
     <h2>Módulos.</h2>
     <p class="lead">Abre cada módulo para ver lo que aprendes. Puedes tomar uno o combinarlos.</p>
@@ -49,6 +57,7 @@
     <p class="lead">Escríbenos y te contamos los horarios y el módulo ideal para ti.</p>
     <div class="row"><a class="btn wal" href="#">Escribir por WhatsApp</a><a class="btn o" href="asesoria.html">Asesoría para tu tesis</a></div>
   </div></section>
+
 </main>
 <!--@footer-->
 <script src="/js/fw-content.js"></script>

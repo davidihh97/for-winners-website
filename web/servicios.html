@@ -15,16 +15,25 @@
 <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
 <link rel="apple-touch-icon" href="/img/fw-180.png">
 <link rel="manifest" href="/site.webmanifest">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a111c" media="(prefers-color-scheme: dark)">
 <script type="module" src="/src/main.jsx"></script>
 </head>
 <body>
 <a class="skip" href="#main">Saltar al contenido</a>
 <!--@nav-->
 <main id="main">
+  <section class="hero"><div class="wrap">
+      <div class="hero-text">
+        <p class="label">Servicios</p>
+        <h1>Todo lo que hacemos, en un solo lugar.</h1>
+        <p class="lead">Cursos presenciales en Ibarra, cursos virtuales para todo el país y herramientas gratis para medir tu nivel.</p>
+        <ul class="kp"><li>Preuniversitario, inglés, nivelación, asesoría y computación</li><li>Simuladores, diagnóstico, test vocacional y práctica gratis</li><li>Lunes a sábado, de 9:00 a 20:00</li></ul>
+        <div class="row"><a class="btn" href="#todos" data-scroll="#todos">Ver servicios</a><a class="btn o" class="wal" href="contacto.html">Escríbenos</a></div>
+      </div>
+  </div></section>
 
-  <section class="hero"><div class="wrap"><h1>Servicios.</h1><p class="lead">Elige el que necesitas. Si dudas, empieza por el diagnóstico.</p></div></section>
-  <section class="alt"><div class="wrap"><h2 class="sr-only">Todos los servicios</h2><div class="g g3" style="margin-top:0">
+  <section id="todos"><div class="wrap"><h2 class="sr-only">Todos los servicios</h2><div class="g g3" style="margin-top:0">
     <a class="card" href="preuniversitario.html"><span class="ic" aria-hidden="true"><svg class="i"><use href="/img/icons.svg#grad"></use></svg></span><h3>Preuniversitario</h3><p>UTN, Central, UPEC y Yachay.</p><span class="more">Ver ›</span></a>
     <a class="card" href="ingles.html"><span class="ic" aria-hidden="true"><svg class="i"><use href="/img/icons.svg#globe"></use></svg></span><h3>Cursos de inglés</h3><p>A1 a C1, con enfoque Cambridge y práctica gratis.</p><span class="more">Ver ›</span></a>
     <a class="card" href="nivelacion.html"><span class="ic" aria-hidden="true"><svg class="i"><use href="/img/icons.svg#ruler"></use></svg></span><h3>Nivelación</h3><p>Primaria, bachillerato y universidad.</p><span class="more">Ver ›</span></a>
@@ -35,6 +44,26 @@
     <a class="card" href="simuladores.html"><span class="ic" aria-hidden="true"><svg class="i"><use href="/img/icons.svg#timer"></use></svg></span><h3>Simuladores de admisión</h3><p>UCE, UPEC, Yachay Tech y UTN.</p><span class="more">Practicar ›</span></a>
     <a class="card" href="test-vocacional.html"><span class="ic" aria-hidden="true"><svg class="i"><use href="/img/icons.svg#compass"></use></svg></span><h3>Test vocacional</h3><p>Carreras que van con tu perfil.</p><span class="more">Hacer el test ›</span></a>
   </div></div></section>
+  <section id="gratis"><div class="wrap">
+    <div class="head"><h2>Empieza gratis, hoy.</h2><p class="lead">Mide tu nivel antes de pagar nada. Ves tu resultado al instante y lo descargas en PDF.</p></div>
+    <ul class="rows">
+      <li><a class="rowlink" href="simuladores.html"><h3>Simuladores de admisión</h3><p>Central, UPEC, Yachay Tech y la UTN por facultad. Primero preguntas básicas, después avanzadas.</p><span class="arrow" aria-hidden="true"></span></a></li>
+      <li><a class="rowlink" href="diagnostico.html"><h3>Diagnóstico académico</h3><p>Matemática, Física, Química o Lengua. Sabes qué temas reforzar en 10 minutos.</p><span class="arrow" aria-hidden="true"></span></a></li>
+      <li><a class="rowlink" href="test-vocacional.html"><h3>Test vocacional</h3><p>Intereses, personalidad y valores: la carrera del Ecuador que más va contigo.</p><span class="arrow" aria-hidden="true"></span></a></li>
+      <li><a class="rowlink" href="practica.html"><h3>Práctica por tema</h3><p>53 temas con repaso y la explicación de cada respuesta. Sin registrarte.</p><span class="arrow" aria-hidden="true"></span></a></li>
+      <li><a class="rowlink" href="guias.html"><h3>Guías de admisión</h3><p>Registro Nacional, Registro Social, tipos de examen y cómo se asignan los cupos.</p><span class="arrow" aria-hidden="true"></span></a></li>
+    </ul>
+  </div></section>
+
+  <section id="como"><div class="wrap">
+    <div class="head"><h2>Así empiezas.</h2><p class="lead">Tres pasos, sin compromiso.</p></div>
+    <div class="steps">
+      <div><h3>Mide tu nivel</h3><p>Haz el diagnóstico o un simulador gratis y mira dónde estás.</p></div>
+      <div><h3>Elige tu horario</h3><p>Presencial en Ibarra o virtual. Mañana, tarde o fin de semana.</p></div>
+      <div><h3>Practica con seguimiento</h3><p>Clases, simulacros cronometrados y revisión de cada error hasta tu examen.</p></div>
+    </div>
+  </div></section>
+
 </main>
 <!--@footer-->
 <script src="/js/fw-content.js"></script>

@@ -15,18 +15,25 @@
 <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
 <link rel="apple-touch-icon" href="/img/fw-180.png">
 <link rel="manifest" href="/site.webmanifest">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a111c" media="(prefers-color-scheme: dark)">
 <script type="module" src="/src/main.jsx"></script>
 </head>
 <body>
 <a class="skip" href="#main">Saltar al contenido</a>
 <!--@nav-->
 <main id="main">
-<section class="hero"><div class="wrap">
-    <h1>¿En qué materia <br><em>necesitas ayuda?</em></h1>
-    <p class="lead">Haz el diagnóstico gratis y en pocos minutos sabrás qué reforzar en Matemática, Física, Química o Lengua.</p>
-    <div class="facts"><span>12 preguntas por materia</span><span>Preguntas distintas cada vez</span><span>Informe en PDF</span></div>
-    <div class="row"><a class="btn" href="#empezar">Empezar ahora</a><button type="button" class="btn o" data-open="pv-informe"><svg class="i" aria-hidden="true"><use href="/img/icons.svg#eye"></use></svg> Ver un informe de ejemplo</button></div>
+  <section class="hero split"><div class="wrap">
+    <div class="hero-grid">
+      <div class="hero-text">
+        <p class="label">Diagnóstico académico · gratis</p>
+        <h1>Descubre qué te falta reforzar.</h1>
+        <p class="lead">Matemática, Física, Química o Lengua: en 12 preguntas ves tu nivel tema por tema y descargas tu informe en PDF.</p>
+        <ul class="kp"><li>Escuela, colegio o universidad</li><li>Preguntas distintas en cada intento</li><li>Resultado por tema y plan de refuerzo</li></ul>
+        <div class="row"><a class="btn" href="#empezar" data-scroll="#empezar">Empezar ahora</a><a class="btn o" href="#" data-open="pv-informe">Ver un informe de ejemplo</a></div>
+      </div>
+      <figure class="ph hero-ph" data-ph="media/diagnostico.jpg"><img src="/media/diagnostico.jpg" alt="Estudiante resolviendo un ejercicio con regla" width="1600" height="2000" onerror="this.remove()"></figure>
+    </div>
   </div></section>
 
   <section class="alt" id="empezar"><div class="wrap">
@@ -67,6 +74,7 @@
   <dialog class="sheet" id="pv-informe"><h3>Así se ve tu resultado</h3><p>Tu puntaje general, cada tema con su nivel (buen dominio, refuerzo recomendado o necesita apoyo) y tu informe descargable en PDF.</p>
     <div data-mock="diagnostico"></div>
     <div class="row"><a class="btn" href="#empezar" data-close>Hacer mi diagnóstico</a></div></dialog>
+
 </main>
 <!--@footer-->
 <script src="/js/fw-content.js"></script>

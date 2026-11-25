@@ -15,41 +15,33 @@
 <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
 <link rel="apple-touch-icon" href="/img/fw-180.png">
 <link rel="manifest" href="/site.webmanifest">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a111c" media="(prefers-color-scheme: dark)">
 <script type="module" src="/src/main.jsx"></script>
 </head>
 <body>
 <a class="skip" href="#main">Saltar al contenido</a>
 <!--@nav-->
 <main id="main">
-<section class="hero"><div class="wrap"><h1>Inglés.</h1><p class="lead">Del primer saludo a la certificación. Avanza por niveles con práctica en cada clase.</p>
-    <div class="row"><a class="btn wal" href="#">Agendar prueba de nivel</a><a class="btn o" href="#practica">Practicar gratis</a></div></div></section>
+  <section class="hero split"><div class="wrap">
+    <div class="hero-grid">
+      <div class="hero-text">
+        <p class="label">Inglés · A1 a C1</p>
+        <h1>Del primer saludo a la certificación.</h1>
+        <p class="lead">Clases por niveles con enfoque Cambridge. Antes de inscribirte, practica gratis grammar, writing y reading y mira tu resultado al instante.</p>
+        <ul class="kp"><li>5 niveles: A1, A2, B1, B2 y C1</li><li>Preparación para exámenes Cambridge</li><li>Prueba de nivel para ubicarte</li></ul>
+        <div class="row"><a class="btn" href="#practica" data-scroll="#practica">Practicar gratis</a><a class="btn o" class="wal" href="contacto.html">Agendar prueba de nivel</a></div>
+      </div>
+      <figure class="ph hero-ph" data-ph="media/ingles.jpg"><img src="/media/ingles.jpg" alt="Dos jóvenes conversando en inglés" width="1600" height="2000" onerror="this.remove()"></figure>
+    </div>
+  </div></section>
+
   <section class="alt"><div class="wrap">
     <h2>Elige tu nivel.</h2>
     <p class="lead">Toca un nivel para ver lo que aprendes y probar una pregunta.</p>
     <div class="g g3 g5"><button type="button" class="card" data-open="pv-a1"><h3>A1 <span class="rn-small" style="font-weight:500">· Principiante</span></h3><p>Primeras frases, vocabulario básico y pronunciación.</p><span class="peek">Ver temas y pregunta de muestra</span></button><button type="button" class="card" data-open="pv-a2"><h3>A2 <span class="rn-small" style="font-weight:500">· Básico</span></h3><p>Conversaciones cotidianas y comprensión de textos simples.</p><span class="peek">Ver temas y pregunta de muestra</span></button><button type="button" class="card" data-open="pv-b1"><h3>B1 <span class="rn-small" style="font-weight:500">· Intermedio</span></h3><p>Expresa ideas con soltura y entiende conversaciones reales.</p><span class="peek">Ver temas y pregunta de muestra</span></button><button type="button" class="card" data-open="pv-b2"><h3>B2 <span class="rn-small" style="font-weight:500">· Intermedio alto</span></h3><p>Nivel avanzado para estudiar, trabajar y rendir exámenes Cambridge.</p><span class="peek">Ver temas y pregunta de muestra</span></button><button type="button" class="card" data-open="pv-c1"><h3>C1 <span class="rn-small" style="font-weight:500">· Avanzado</span></h3><p>Dominio para la universidad, el trabajo y certificaciones internacionales.</p><span class="peek">Ver temas y pregunta de muestra</span></button></div>
   </div></section>
 
-  <dialog class="sheet" id="pv-a1"><h3>Nivel A1 · Principiante</h3><p>Primeras frases, vocabulario básico y pronunciación.</p>
-    <p class="pv-h" style="margin-top:18px">Lo que aprendes</p><div class="topics"><span>Verbo to be</span><span>Presente simple</span><span>Artículos y plurales</span><span>Saludos y presentaciones</span><span>Números, horas y fechas</span></div>
-    <div data-demo="en-a1"></div>
-    <div class="row"><a class="btn" href="#practica" data-close data-lv="a1">Practicar A1 gratis</a><a class="btn o wal" href="#">Preguntar por el curso</a></div></dialog>
-  <dialog class="sheet" id="pv-a2"><h3>Nivel A2 · Básico</h3><p>Conversaciones cotidianas y comprensión de textos simples.</p>
-    <p class="pv-h" style="margin-top:18px">Lo que aprendes</p><div class="topics"><span>Pasado simple</span><span>Comparativos y superlativos</span><span>Futuro con going to</span><span>Rutinas y viajes</span><span>Textos cortos</span></div>
-    <div data-demo="en-a2"></div>
-    <div class="row"><a class="btn" href="#practica" data-close data-lv="a2">Practicar A2 gratis</a><a class="btn o wal" href="#">Preguntar por el curso</a></div></dialog>
-  <dialog class="sheet" id="pv-b1"><h3>Nivel B1 · Intermedio</h3><p>Expresa ideas con soltura y entiende conversaciones reales.</p>
-    <p class="pv-h" style="margin-top:18px">Lo que aprendes</p><div class="topics"><span>Present perfect</span><span>Condicional 1 y 2</span><span>Voz pasiva</span><span>Opiniones y experiencias</span><span>Correos y relatos</span></div>
-    <div data-demo="en-b1"></div>
-    <div class="row"><a class="btn" href="#practica" data-close data-lv="b1">Practicar B1 gratis</a><a class="btn o wal" href="#">Preguntar por el curso</a></div></dialog>
-  <dialog class="sheet" id="pv-b2"><h3>Nivel B2 · Intermedio alto</h3><p>Nivel avanzado para estudiar, trabajar y rendir exámenes Cambridge.</p>
-    <p class="pv-h" style="margin-top:18px">Lo que aprendes</p><div class="topics"><span>Condicional 3 y mixtos</span><span>Reported speech</span><span>Pasiva avanzada</span><span>Ensayos y debates</span><span>Preparación B2 First</span></div>
-    <div data-demo="en-b2"></div>
-    <div class="row"><a class="btn" href="#practica" data-close data-lv="b2">Practicar B2 gratis</a><a class="btn o wal" href="#">Preguntar por el curso</a></div></dialog>
-  <dialog class="sheet" id="pv-c1"><h3>Nivel C1 · Avanzado</h3><p>Dominio para la universidad, el trabajo y certificaciones internacionales.</p>
-    <p class="pv-h" style="margin-top:18px">Lo que aprendes</p><div class="topics"><span>Inversión y énfasis</span><span>Subjuntivo</span><span>Registro formal</span><span>Textos académicos</span><span>Preparación C1 Advanced</span></div>
-    <div data-demo="en-c1"></div>
-    <div class="row"><a class="btn" href="#practica" data-close data-lv="c1">Practicar C1 gratis</a><a class="btn o wal" href="#">Preguntar por el curso</a></div></dialog>
   <section id="practica"><div class="wrap">
     <div id="picker">
       <h2>Practica gratis.</h2>
@@ -74,6 +66,27 @@
   </div></section>
 
   <section class="alt"><div class="wrap"><h2>¿No sabes tu nivel?</h2><p class="lead">Agenda una prueba de nivel y te ubicamos en el grupo correcto.</p><div class="row"><a class="btn wal" href="#">Escribir por WhatsApp</a></div></div></section>
+
+  <dialog class="sheet" id="pv-a1"><h3>Nivel A1 · Principiante</h3><p>Primeras frases, vocabulario básico y pronunciación.</p>
+    <p class="pv-h" style="margin-top:18px">Lo que aprendes</p><div class="topics"><span>Verbo to be</span><span>Presente simple</span><span>Artículos y plurales</span><span>Saludos y presentaciones</span><span>Números, horas y fechas</span></div>
+    <div data-demo="en-a1"></div>
+    <div class="row"><a class="btn" href="#practica" data-close data-lv="a1">Practicar A1 gratis</a><a class="btn o wal" href="#">Preguntar por el curso</a></div></dialog>
+  <dialog class="sheet" id="pv-a2"><h3>Nivel A2 · Básico</h3><p>Conversaciones cotidianas y comprensión de textos simples.</p>
+    <p class="pv-h" style="margin-top:18px">Lo que aprendes</p><div class="topics"><span>Pasado simple</span><span>Comparativos y superlativos</span><span>Futuro con going to</span><span>Rutinas y viajes</span><span>Textos cortos</span></div>
+    <div data-demo="en-a2"></div>
+    <div class="row"><a class="btn" href="#practica" data-close data-lv="a2">Practicar A2 gratis</a><a class="btn o wal" href="#">Preguntar por el curso</a></div></dialog>
+  <dialog class="sheet" id="pv-b1"><h3>Nivel B1 · Intermedio</h3><p>Expresa ideas con soltura y entiende conversaciones reales.</p>
+    <p class="pv-h" style="margin-top:18px">Lo que aprendes</p><div class="topics"><span>Present perfect</span><span>Condicional 1 y 2</span><span>Voz pasiva</span><span>Opiniones y experiencias</span><span>Correos y relatos</span></div>
+    <div data-demo="en-b1"></div>
+    <div class="row"><a class="btn" href="#practica" data-close data-lv="b1">Practicar B1 gratis</a><a class="btn o wal" href="#">Preguntar por el curso</a></div></dialog>
+  <dialog class="sheet" id="pv-b2"><h3>Nivel B2 · Intermedio alto</h3><p>Nivel avanzado para estudiar, trabajar y rendir exámenes Cambridge.</p>
+    <p class="pv-h" style="margin-top:18px">Lo que aprendes</p><div class="topics"><span>Condicional 3 y mixtos</span><span>Reported speech</span><span>Pasiva avanzada</span><span>Ensayos y debates</span><span>Preparación B2 First</span></div>
+    <div data-demo="en-b2"></div>
+    <div class="row"><a class="btn" href="#practica" data-close data-lv="b2">Practicar B2 gratis</a><a class="btn o wal" href="#">Preguntar por el curso</a></div></dialog>
+  <dialog class="sheet" id="pv-c1"><h3>Nivel C1 · Avanzado</h3><p>Dominio para la universidad, el trabajo y certificaciones internacionales.</p>
+    <p class="pv-h" style="margin-top:18px">Lo que aprendes</p><div class="topics"><span>Inversión y énfasis</span><span>Subjuntivo</span><span>Registro formal</span><span>Textos académicos</span><span>Preparación C1 Advanced</span></div>
+    <div data-demo="en-c1"></div>
+    <div class="row"><a class="btn" href="#practica" data-close data-lv="c1">Practicar C1 gratis</a><a class="btn o wal" href="#">Preguntar por el curso</a></div></dialog>
 </main>
 <!--@footer-->
 <script src="/js/fw-content.js"></script>

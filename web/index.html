@@ -15,7 +15,8 @@
 <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
 <link rel="apple-touch-icon" href="/img/fw-180.png">
 <link rel="manifest" href="/site.webmanifest">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a111c" media="(prefers-color-scheme: dark)">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"EducationalOrganization","name":"For Winners","description":"Centro de tutorías, preuniversitario, inglés y asesoría académica en Ibarra.","telephone":"+593999769785",
 "address":{"@type":"PostalAddress","streetAddress":"Av. Teodoro Gómez de la Torre 746 y Calixto Miranda","addressLocality":"Ibarra","addressRegion":"Imbabura","addressCountry":"EC"},
@@ -29,74 +30,35 @@
 <!--@nav-->
 <main id="main">
 
-  <section class="hero home-hero"><div class="wrap">
-    <p class="label">Centro de tutorías en Ibarra</p>
-    <h1>Prepárate para entrar a <span class="rot" data-island="Rotate" data-props='{"texts":["la UTN.","la Central.","Yachay Tech.","la UPEC.","tu universidad."]}'>tu universidad.</span></h1>
-    <p class="lead">Preuniversitario presencial en Ibarra, cursos virtuales para todas las universidades públicas, inglés, nivelación y asesoría de tesis.</p>
-    <div class="row"><a class="btn" href="preuniversitario.html">Ver cursos</a><a class="btn o" href="simuladores.html">Probar un simulador gratis</a></div>
-    <figure class="ph wide" data-ph="media/portada.jpg"><img src="/media/portada.jpg" alt="Estudiante preparándose para su examen de admisión" width="2400" height="1028" onerror="this.remove()"></figure>
-  </div></section>
-
-  <section class="strip" id="registro-strip" hidden><div class="wrap"><a href="preuniversitario.html#fechas"><span class="state"></span><span><b>Registro Nacional 2027:</b> <span data-rango></span>. Es gratis y obligatorio.</span><span class="arrow">Cómo hacerlo</span></a></div></section>
-
-  <section id="servicios"><div class="wrap">
-    <div class="head"><h2>Servicios</h2><p class="lead">Elige por dónde empezar. Cada servicio tiene su página con precios, horarios y una vista previa.</p></div>
-    <div id="menu" data-island="Services">
-      <ul class="services-fallback">
-        <li><a href="preuniversitario.html">Preuniversitario <small>UTN · Central · UPEC · Yachay</small></a></li>
-        <li><a href="simuladores.html">Simuladores <small>Gratis</small></a></li>
-        <li><a href="test-vocacional.html">Test vocacional <small>86 carreras</small></a></li>
-        <li><a href="diagnostico.html">Diagnóstico <small>Gratis</small></a></li>
-        <li><a href="ingles.html">Inglés <small>A1 a C1</small></a></li>
-        <li><a href="nivelacion.html">Nivelación <small>Desde $6 la hora</small></a></li>
-        <li><a href="asesoria.html">Asesoría de tesis <small>Del tema a la defensa</small></a></li>
-        <li><a href="computacion.html">Computación e IA <small>Office · IA</small></a></li>
-      </ul>
-    </div>
-  </div></section>
-
-  <section id="gratis"><div class="wrap">
-    <div class="head"><h2>Empieza gratis, hoy.</h2><p class="lead">Mide tu nivel antes de pagar nada. Ves tu resultado al instante y lo descargas en PDF.</p></div>
-    <ul class="rows">
-      <li><a class="rowlink" href="simuladores.html"><h3>Simuladores de admisión</h3><p>Central, UPEC, Yachay Tech y la UTN por facultad. Primero preguntas básicas, después avanzadas.</p><span class="arrow" aria-hidden="true"></span></a></li>
-      <li><a class="rowlink" href="diagnostico.html"><h3>Diagnóstico académico</h3><p>Matemática, Física, Química o Lengua. Sabes qué temas reforzar en 10 minutos.</p><span class="arrow" aria-hidden="true"></span></a></li>
-      <li><a class="rowlink" href="test-vocacional.html"><h3>Test vocacional</h3><p>Intereses, personalidad y valores: la carrera del Ecuador que más va contigo.</p><span class="arrow" aria-hidden="true"></span></a></li>
-      <li><a class="rowlink" href="practica.html"><h3>Práctica por tema</h3><p>53 temas con repaso y la explicación de cada respuesta. Sin registrarte.</p><span class="arrow" aria-hidden="true"></span></a></li>
-      <li><a class="rowlink" href="guias.html"><h3>Guías de admisión</h3><p>Registro Nacional, Registro Social, tipos de examen y cómo se asignan los cupos.</p><span class="arrow" aria-hidden="true"></span></a></li>
-    </ul>
-  </div></section>
-
-  <section id="presencial"><div class="wrap">
-    <div class="g g2" style="margin-top:0;align-items:center;gap:clamp(32px,6vw,80px)">
-      <figure class="ph tall" data-ph="media/preuniversitario.jpg"><img src="/media/preuniversitario.jpg" alt="Clase del preuniversitario en Ibarra" width="1600" height="2000" loading="lazy" onerror="this.remove()"></figure>
-      <div>
-        <p class="label">Preuniversitario</p>
-        <h2>Presencial en Ibarra. Virtual para todo el país.</h2>
-        <p class="lead">Clases en grupos reducidos para la UTN, la Central, la UPEC y Yachay Tech. Para las demás universidades públicas, módulos virtuales con el temario de tu examen.</p>
-        <p class="lead" style="margin-top:28px;color:var(--ink)"><span data-island="Count" data-props='{"to":34}'>34</span> instituciones públicas con su temario y sus fechas.</p>
-        <div class="row"><a class="btn" href="preuniversitario.html">Buscar mi universidad</a><a class="btn o" href="preuniversitario.html#fechas">Fechas 2027</a></div>
+  <section class="hero landing" id="inicio"><div class="wrap">
+    <div data-island="HeroRandom">
+      <div class="hero-grid">
+        <div class="hero-text">
+          <p class="label">Preuniversitario 2027</p>
+          <h1>Tu cupo empieza hoy.</h1>
+          <p class="lead">Presencial en Ibarra para la UTN, la Central, la UPEC y Yachay Tech. Virtual para todas las universidades públicas del Ecuador.</p>
+          <ul class="kp"><li>Grupos reducidos</li><li>Simulacros con el formato real</li><li>Registro Nacional: 24 al 28 de noviembre</li></ul>
+          <div class="row"><a class="btn" href="preuniversitario.html">Ver cursos</a><a class="btn o" href="preuniversitario.html#cronogramas">Buscar mi universidad</a></div>
+        </div>
+        <figure class="ph hero-ph" data-ph="media/preuniversitario.jpg"><img src="/media/preuniversitario.jpg" alt="Estudiantes rindiendo un examen" onerror="this.remove()"></figure>
       </div>
     </div>
+    <a class="cue" href="#servicios" data-scroll="#servicios"><span>Desliza para ver todos los servicios</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
   </div></section>
 
-  <section id="como"><div class="wrap">
-    <div class="head"><h2>Así empiezas.</h2><p class="lead">Tres pasos, sin compromiso.</p></div>
-    <div class="steps">
-      <div><h3>Mide tu nivel</h3><p>Haz el diagnóstico o un simulador gratis y mira dónde estás.</p></div>
-      <div><h3>Elige tu horario</h3><p>Presencial en Ibarra o virtual. Mañana, tarde o fin de semana.</p></div>
-      <div><h3>Practica con seguimiento</h3><p>Clases, simulacros cronometrados y revisión de cada error hasta tu examen.</p></div>
-    </div>
-  </div></section>
-
-  <section class="alt" id="resultados" hidden><div class="wrap"><h2>Ya lo lograron.</h2><div class="g g3" id="testi"></div></div></section>
-
-  <section id="visitanos"><div class="wrap">
-    <div class="g g2" style="margin-top:0;gap:clamp(32px,6vw,80px)">
-      <div><h2>Visítanos o escríbenos.</h2><p class="lead">Te ayudamos a elegir el curso que mejor se ajusta a ti.</p><div class="row"><a class="btn wal" href="contacto.html">Escribir por WhatsApp</a><a class="btn o" href="contacto.html">Cómo llegar</a></div></div>
-      <ul class="info">
-        <li><span>Dirección</span><div>Av. Teodoro Gómez de la Torre 746 y Calixto Miranda, Ibarra</div></li>
-        <li><span>Horario</span><div>Lunes a sábado, de 9:00 a 20:00</div></li>
-        <li><span>Redes</span><div><a class="lk" href="https://www.instagram.com/forwinnersec" target="_blank" rel="noopener">Instagram</a> · <a class="lk" href="https://www.tiktok.com/@forwinnersec" target="_blank" rel="noopener">TikTok</a> · @forwinnersec</div></li>
+  <section class="landing-services" id="servicios"><div class="wrap">
+    <h2 class="sr-only">Servicios</h2>
+    <div id="menu" data-island="Services">
+      <ul class="services-fallback">
+        <li><a href="preuniversitario.html">Preuniversitario <small>UTN · Central · UPEC · Yachay · Virtual</small></a></li>
+        <li><a href="simuladores.html">Simuladores <small>Gratis · Cronometrado · PDF</small></a></li>
+        <li><a href="test-vocacional.html">Test vocacional <small>86 carreras · 10 minutos</small></a></li>
+        <li><a href="diagnostico.html">Diagnóstico <small>Matemática · Física · Química · Lengua</small></a></li>
+        <li><a href="practica.html">Práctica <small>53 temas · Sin registro</small></a></li>
+        <li><a href="ingles.html">Inglés <small>A1–C1 · Cambridge</small></a></li>
+        <li><a href="nivelacion.html">Nivelación <small>Primaria · Colegio · Universidad</small></a></li>
+        <li><a href="asesoria.html">Asesoría de tesis <small>Tesis · APA 7 · Defensa</small></a></li>
+        <li><a href="computacion.html">Computación e IA <small>Office · Google · IA</small></a></li>
       </ul>
     </div>
   </div></section>
@@ -104,20 +66,7 @@
 </main>
 <!--@footer-->
 <script src="/js/fw-content.js"></script>
-<script src="/js/cronogramas.js"></script>
 <script src="/js/main.js"></script>
-<script>
-// Franja del Registro Nacional: solo mientras falta poco o está abierto.
-(function(){
-  if(!window.FWCrono)return;
-  const r=FWCrono.registro(),R=FWCrono.REGISTRO,strip=document.getElementById("registro-strip");
-  if(r.estado==="cerrado")return;
-  const d=s=>{const[y,m,x]=s.split("-").map(Number);return new Date(y,m-1,x)},a=d(R.desde),b=d(R.hasta);
-  const mes=b.toLocaleDateString("es-EC",{month:"long"});
-  strip.querySelector("[data-rango]").textContent=a.getMonth()===b.getMonth()?`del ${a.getDate()} al ${b.getDate()} de ${mes}`:`del ${a.toLocaleDateString("es-EC",{day:"numeric",month:"long"})} al ${b.getDate()} de ${mes}`;
-  const st=strip.querySelector(".state");st.textContent=r.txt;st.classList.add(r.estado);
-  strip.hidden=false;
-})();
-</script>
+
 </body>
 </html>
