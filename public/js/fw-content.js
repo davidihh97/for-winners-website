@@ -27,7 +27,7 @@
 
   // Zonas que se generan con datos (se editan con formularios del panel, no a mano).
   const PANELS = [
-    ["#menu, #preview, .svc-preview", "portada"], [".bgs", "portada"], ['[data-island="HeroRandom"]', "portada"],
+    ["#menu, #preview, .svc-preview", "portada"], [".bgs", "portada"], ['[data-island="HeroRandom"]', "portada"], [".fw-season, .fw-ribbon", "temporada"],
     ["#nivel-plans", "nivelacion"], ["#faq-pre", "faq"], ["#testi, #resultados", "testimonios"],
     ["#chips, #panel", "unis"], [".notice", "aviso"], [".wa", "contacto"],
     ["#registro, #cronogramas, .uni-sheet, [data-crono]", "cursos"],
