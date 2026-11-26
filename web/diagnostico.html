@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Diagnóstico académico gratis | For Winners</title>
-<meta name="description" content="Descubre gratis en qué materias necesitas ayuda: Matemática, Física, Química y Lengua. Informe personalizado por WhatsApp o correo.">
+<meta name="description" content="Descubre gratis qué temas reforzar en Matemática, Física, Química, Biología, Lengua, Inglés, Historia, Filosofía, Estadística y más, de escuela, colegio o universidad.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="For Winners">
 <meta property="og:locale" content="es_EC">
 <meta property="og:title" content="Diagnóstico académico gratis | For Winners">
-<meta property="og:description" content="Descubre gratis en qué materias necesitas ayuda: Matemática, Física, Química y Lengua. Informe personalizado por WhatsApp o correo.">
+<meta property="og:description" content="Descubre gratis qué temas reforzar en Matemática, Física, Química, Biología, Lengua, Inglés, Historia, Filosofía, Estadística y más, de escuela, colegio o universidad.">
 <meta name="twitter:card" content="summary">
 <link rel="icon" href="/img/fw-icon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
@@ -28,8 +28,8 @@
       <div class="hero-text">
         <p class="label">Diagnóstico académico · gratis</p>
         <h1>Descubre qué te falta reforzar.</h1>
-        <p class="lead">Matemática, Física, Química o Lengua: en 12 preguntas ves tu nivel tema por tema y descargas tu informe en PDF.</p>
-        <ul class="kp"><li>Escuela, colegio o universidad</li><li>Preguntas distintas en cada intento</li><li>Resultado por tema y plan de refuerzo</li></ul>
+        <p class="lead">Matemática, Física, Química, Biología, Lengua, Inglés, Historia, Filosofía y más: en 12 preguntas ves tu nivel tema por tema y descargas tu informe en PDF.</p>
+        <ul class="kp"><li>21 materias de escuela, colegio y universidad</li><li>Preguntas distintas en cada intento</li><li>Resultado por tema y plan de refuerzo</li></ul>
         <div class="row"><a class="btn" href="#empezar" data-scroll="#empezar">Empezar ahora</a><a class="btn o" href="#" data-open="pv-informe">Ver un informe de ejemplo</a></div>
       </div>
       <figure class="ph hero-ph" data-ph="media/diagnostico.jpg"><img src="/media/diagnostico.jpg" alt="Estudiante resolviendo un ejercicio con regla" width="1600" height="2000" onerror="this.remove()"></figure>
@@ -84,13 +84,16 @@
 <script src="/js/pdf.js"></script>
 <script>
 (function(){
-  const SUB={egb:["Matemática","Lengua y Literatura","Ciencias Naturales"],bach:["Matemática","Física","Química","Lengua y Literatura"],uni:["Matemática","Física","Química","Lengua y Redacción"]};
-  const ICON={"Matemática":"ruler","Física":"atom","Química":"flask","Lengua y Literatura":"library","Lengua y Redacción":"pen","Ciencias Naturales":"leaf"};
-  const DEMO={"Matemática":"matematica","Física":"fisica","Química":"quimica","Lengua y Literatura":"lenguaje","Lengua y Redacción":"lenguaje","Ciencias Naturales":"biologia"};
+  // Materias del currículo del Ministerio de Educación con más dificultad (deben coincidir con src/catalog.js).
+  const SUB={egb:["Matemática","Lengua y Literatura","Ciencias Naturales","Estudios Sociales","Inglés"],
+    bach:["Matemática","Física","Química","Biología","Lengua y Literatura","Historia","Filosofía","Inglés"],
+    uni:["Matemática (Cálculo)","Física","Química","Estadística","Biología y Anatomía","Contabilidad y Matemática financiera","Lengua y Redacción","Inglés"]};
+  const ICON={"Matemática":"ruler","Matemática (Cálculo)":"calculator","Física":"atom","Química":"flask","Biología":"microscope","Biología y Anatomía":"microscope","Lengua y Literatura":"library","Lengua y Redacción":"pen","Ciencias Naturales":"leaf","Estudios Sociales":"globe","Historia":"landmark","Filosofía":"bulb","Inglés":"chat","Estadística":"chart","Contabilidad y Matemática financiera":"scale"};
+  const DEMO={"Matemática":"matematica","Matemática (Cálculo)":"matematica","Física":"fisica","Química":"quimica","Biología":"biologia","Biología y Anatomía":"biologia,anatomia","Lengua y Literatura":"lenguaje","Lengua y Redacción":"lenguaje","Ciencias Naturales":"biologia","Estudios Sociales":"sociales","Historia":"historia","Filosofía":"filosofia","Inglés":"en-a2,en-b1","Estadística":"estadistica","Contabilidad y Matemática financiera":"finanzas"};
   const TOPICS={
-    egb:{"Matemática":["Operaciones combinadas","Fracciones","Porcentajes","Áreas y perímetros","Problemas de la vida diaria"],"Lengua y Literatura":["Ortografía","Gramática","Sinónimos","Analogías","Término excluido"],"Ciencias Naturales":["La célula","Cuerpo humano","Seres vivos","Unidades de medida","Tabla periódica"]},
-    bach:{"Matemática":["Ecuaciones lineales","Potenciación","Funciones","Sistemas de ecuaciones","Geometría analítica","Inecuaciones","Pitágoras","Progresiones","Trigonometría"],"Física":["MRU y MRUV","Leyes de Newton","Trabajo y energía","Electricidad","Densidad","Lanzamiento vertical","Movimiento circular","Notación científica"],"Química":["Química general","Tabla periódica","Reacciones y nomenclatura","Moles","Masa molar"],"Lengua y Literatura":["Gramática","Argumentación","Ortografía","Sinónimos y antónimos","Comprensión lectora"]},
-    uni:{"Matemática":["Ecuaciones cuadráticas","Derivadas","Logaritmos","Trigonometría","Límites","Integrales","Matrices y determinantes"],"Física":["MRUV y caída libre","Trabajo, energía y potencia","Electricidad","Impulso","Movimiento circular"],"Química":["Química general","Tabla periódica","Reacciones y nomenclatura","Estequiometría","Masa molar"],"Lengua y Redacción":["Gramática","Argumentación","Oraciones incompletas","Analogías","Comprensión lectora"]}};
+    egb:{"Matemática":["Operaciones combinadas","Fracciones","Porcentajes","Áreas y perímetros","Problemas de la vida diaria","Ecuaciones","Potencias"],"Lengua y Literatura":["Ortografía","Acentuación","Gramática","Sinónimos y antónimos","Analogías","Comprensión lectora"],"Ciencias Naturales":["La célula","Cuerpo humano","Seres vivos","Unidades de medida","Densidad","Tabla periódica"],"Estudios Sociales":["Geografía del Ecuador","Provincias y capitales","Símbolos patrios","Ciudadanía","Historia del Ecuador"],"Inglés":["Verb to be","Articles","Present simple","Past simple","Comparatives","Vocabulario A1–A2"]},
+    bach:{"Matemática":["Ecuaciones","Potenciación","Funciones","Sistemas de ecuaciones","Cuadráticas","Geometría analítica","Inecuaciones","Pitágoras","Progresiones","Trigonometría","Logaritmos"],"Física":["MRU y MRUV","Caída libre","Leyes de Newton","Trabajo y energía","Electricidad","Densidad","Lanzamiento vertical","Movimiento circular","Notación científica"],"Química":["Tabla periódica","Nomenclatura inorgánica","Números de oxidación","Balanceo de ecuaciones","Moles y masa molar","Molaridad y % en masa","Ácidos, bases y pH","Leyes de los gases"],"Biología":["La célula","Genética de Mendel","ADN y ARN","Evolución","Ecología","Cuerpo humano"],"Lengua y Literatura":["Gramática","Acentuación","Argumentación","Ortografía","Sinónimos y antónimos","Comprensión lectora"],"Historia":["Independencia y República","Revolución Liberal","Siglo XX en Ecuador","Historia universal","Cronología"],"Filosofía":["Presocráticos","Sócrates, Platón y Aristóteles","Racionalismo y empirismo","Ética","Falacias","Lógica proposicional","Silogismos"],"Inglés":["Past simple","Present perfect","Comparatives","Conditionals","Passive voice","Reading A2–B1"]},
+    uni:{"Matemática (Cálculo)":["Ecuaciones cuadráticas","Derivadas","Logaritmos","Trigonometría","Límites","Integrales","Matrices y determinantes"],"Física":["MRUV y caída libre","Trabajo, energía y potencia","Electricidad","Impulso","Movimiento circular"],"Química":["Estequiometría","Nomenclatura","Balanceo","Soluciones","pH","Gases"],"Estadística":["Media, mediana y moda","Varianza","Probabilidad","Tablas de frecuencia"],"Biología y Anatomía":["Anatomía humana","Sistema óseo","Sistema endocrino","Genética","ADN y ARN"],"Contabilidad y Matemática financiera":["Ecuación contable","Cuentas y estados financieros","Interés simple y compuesto","IVA","Depreciación","Punto de equilibrio"],"Lengua y Redacción":["Gramática","Acentuación","Argumentación","Oraciones incompletas","Analogías","Comprensión lectora"],"Inglés":["Present perfect","Conditionals","Passive voice","Grammar B1–B2","Reading B1–B2"]}};
   let level=null,subject=null;
   const subj=document.getElementById("subjects"),go=document.getElementById("go");
   document.querySelectorAll("#levels button").forEach(b=>b.onclick=()=>{

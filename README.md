@@ -140,3 +140,17 @@ La web cambia de adornos sola según la fecha, sin tocar código: `web/src/seaso
 - Para probar: `?fw-season=halloween&fw-variant=0` o `?fw-date=2027-02-14`.
 - Black Friday y Semana Santa vienen apagadas (actívalas en el panel). Navidad va del 24 de noviembre al 6 de enero.
 - Si agregas una temática en `calendar.js`, copia el archivo a `admin-forwinners/src/site/seasonCalendar.js`.
+
+## Diagnóstico, práctica y prueba de nivel de inglés
+
+- **Diagnóstico** (`src/catalog.js` → `diagnostico`): 21 materias con más dificultad según el currículo del Ministerio de Educación.
+  - Escuela: Matemática, Lengua, Ciencias Naturales, Estudios Sociales e Inglés.
+  - Colegio: Matemática, Física, Química, Biología, Lengua, Historia, Filosofía e Inglés.
+  - Universidad: Cálculo, Física, Química, Estadística, Biología y Anatomía, Contabilidad y Matemática financiera, Redacción e Inglés.
+
+  Las preguntas nuevas están en `src/banks/subjects.js`. La lista de materias de `web/diagnostico.html` debe coincidir con el catálogo.
+- **Práctica** (`src/practice.js`): 73 temas. Solo usa generadores (preguntas con datos al azar), así se pueden mostrar las respuestas.
+- **Prueba de nivel de inglés** (`nivel-ingles`, en `ingles.html#prueba`): tipo Cambridge, de A2 a C1, en 60 minutos.
+  - Partes: Reading 12, Use of English 12, Writing 8 y Listening 12.
+  - El resultado solo se ve después de dejar los datos, y solo muestra el puntaje por sección y el nivel estimado. No muestra correcciones ni explicaciones.
+  - Listening y Writing (transformaciones) están en `src/banks/placement.js`. Los audios van en `public/media/audio/<id>.mp3`; los guiones y las indicaciones están en `docs/audios-listening.md`. Sin audio, el navegador lee el guion con voz sintética.

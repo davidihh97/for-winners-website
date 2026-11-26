@@ -29,8 +29,8 @@
         <p class="label">Inglés · A1 a C1</p>
         <h1>Del primer saludo a la certificación.</h1>
         <p class="lead">Clases por niveles con enfoque Cambridge. Antes de inscribirte, practica gratis grammar, writing y reading y mira tu resultado al instante.</p>
-        <ul class="kp"><li>5 niveles: A1, A2, B1, B2 y C1</li><li>Preparación para exámenes Cambridge</li><li>Prueba de nivel para ubicarte</li></ul>
-        <div class="row"><a class="btn" href="#practica" data-scroll="#practica">Practicar gratis</a><a class="btn o" class="wal" href="contacto.html">Agendar prueba de nivel</a></div>
+        <ul class="kp"><li>5 niveles: A1, A2, B1, B2 y C1</li><li>Preparación para exámenes Cambridge</li><li>Prueba de nivel gratis: reading, writing y listening</li></ul>
+        <div class="row"><a class="btn" href="#practica" data-scroll="#practica">Practicar gratis</a><a class="btn o" href="#prueba" data-scroll="#prueba">Prueba de nivel tipo Cambridge</a></div>
       </div>
       <figure class="ph hero-ph" data-ph="media/ingles.jpg"><img src="/media/ingles.jpg" alt="Dos jóvenes conversando en inglés" width="1600" height="2000" onerror="this.remove()"></figure>
     </div>
@@ -65,7 +65,22 @@
     <div id="runner" hidden></div>
   </div></section>
 
-  <section class="alt" id="prueba"><div class="wrap"><h2>¿No sabes tu nivel?</h2><p class="lead">Agenda una prueba de nivel y te ubicamos en el grupo correcto.</p><div class="row"><a class="btn wal" href="#">Escribir por WhatsApp</a></div></div></section>
+  <section class="alt" id="prueba"><div class="wrap">
+    <div id="nv-picker">
+      <p class="label">Gratis · 60 minutos</p>
+      <h2>Prueba de nivel tipo Cambridge.</h2>
+      <p class="lead">Cuatro partes que van de A2 a C1, como en los exámenes de Cambridge. Al terminar ves tu puntaje en cada sección y tu nivel estimado.</p>
+      <div class="pick nv-parts">
+        <div class="nv-part"><span class="ic" aria-hidden="true"><svg class="i"><use href="/img/icons.svg#book-open"></use></svg></span><b>Reading</b><span>12 preguntas · avisos, artículos y textos académicos</span></div>
+        <div class="nv-part"><span class="ic" aria-hidden="true"><svg class="i"><use href="/img/icons.svg#puzzle"></use></svg></span><b>Use of English</b><span>12 preguntas · gramática y vocabulario</span></div>
+        <div class="nv-part"><span class="ic" aria-hidden="true"><svg class="i"><use href="/img/icons.svg#pen"></use></svg></span><b>Writing</b><span>8 ejercicios · ordenar, corregir y transformar oraciones</span></div>
+        <div class="nv-part"><span class="ic" aria-hidden="true"><svg class="i"><use href="/img/icons.svg#chat"></use></svg></span><b>Listening</b><span>12 preguntas · diálogos, anuncios y entrevistas</span></div>
+      </div>
+      <ul class="kp nv-notes"><li>Usa audífonos: cada audio se escucha máximo 2 veces.</li><li>Las preguntas van de lo más fácil a lo más difícil: responde todo lo que puedas.</li><li>Para ver tu resultado te pedimos tu nombre, celular y correo.</li></ul>
+      <div class="startbar"><button class="btn" id="nv-go">Empezar la prueba</button></div>
+    </div>
+    <div id="nv-runner" hidden></div>
+  </div></section>
 
   <dialog class="sheet" id="pv-a1"><h3>Nivel A1 · Principiante</h3><p>Primeras frases, vocabulario básico y pronunciación.</p>
     <p class="pv-h" style="margin-top:18px">Lo que aprendes</p><div class="topics"><span>Verbo to be</span><span>Presente simple</span><span>Artículos y plurales</span><span>Saludos y presentaciones</span><span>Números, horas y fechas</span></div>
@@ -108,6 +123,9 @@
   document.querySelectorAll("[data-lv]").forEach(a=>a.addEventListener("click",()=>{const c=[...lvBox.querySelectorAll(".chip")].find(x=>x.textContent.toLowerCase()===a.dataset.lv);if(c)c.click()}));
   const picker=document.getElementById("picker"),runner=document.getElementById("runner");
   go.onclick=()=>{picker.hidden=true;runner.hidden=false;FWQuiz.mount(runner,{quiz:"ingles",level:lv+"."+skill,onExit:()=>{runner.hidden=true;picker.hidden=false}})};
+  // Prueba de nivel tipo Cambridge (resultado solo con datos de contacto).
+  const nvPick=document.getElementById("nv-picker"),nvRun=document.getElementById("nv-runner");
+  document.getElementById("nv-go").onclick=()=>{nvPick.hidden=true;nvRun.hidden=false;FWQuiz.mount(nvRun,{quiz:"nivel-ingles",level:"general",onExit:()=>{nvRun.hidden=true;nvPick.hidden=false}})};
 })();
 </script>
 </body>

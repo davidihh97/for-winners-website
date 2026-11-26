@@ -169,6 +169,7 @@
     }
 
     function renderQ() {
+      stopAudio();
       const a = st.attempt, q = a.questions[st.i], n = a.questions.length;
       // Simuladores de admisión: aviso al pasar de las preguntas básicas a las avanzadas.
       if (a.tiers && q.tier === "hard" && !st.partTwo && st.i > 0 && a.questions[st.i - 1].tier === "easy") return renderPartTwo();
@@ -183,7 +184,11 @@
       if (q.passage) body.append(h("div", { class: "rn-passage" }, q.passageTitle ? h("b", {}, q.passageTitle) : null, ...q.passage.split("\n").map(p => h("p", {}, p))));
       if (q.figure) body.append(h("div", { class: "rn-figure", html: q.figure }));
       if (q.svg) body.append(h("div", { class: "rn-seq" }, ...q.svg.map(s => h("div", { class: "rn-fig", html: s })), h("div", { class: "rn-fig q" }, "?")));
-      body.append(h("div", { class: "rn-q" }, q.prompt));
+      if (q.audio) body.append(audioUI(q.audio));
+      // «Instrucción\n\nPregunta»: la instrucción va en letra pequeña.
+      const cut = q.prompt.indexOf("\n\n");
+      if (cut > 0) body.append(h("p", { class: "rn-inst" }, q.prompt.slice(0, cut)));
+      body.append(h("div", { class: "rn-q" }, cut > 0 ? q.prompt.slice(cut + 2) : q.prompt));
       body.append(answerUI(q));
       const last = st.i === n - 1;
       const nav = h("div", { class: "rn-nav" },
@@ -213,6 +218,68 @@
     }
 
     function setAnswer(q, v) { st.answers[q.id] = v; }
+
+    // ---------- Listening: el audio se escucha máximo 2 veces (como en Cambridge) ----------
+    // Se usa /media/audio/<id>.mp3; si aún no existe, el navegador lee el guion con voz sintética en inglés.
+    const MAX_PLAYS = 2;
+    st.plays = {};
+    let stopCurrent = null;
+    function stopAudio() { if (stopCurrent) { stopCurrent(); stopCurrent = null; } }
+    function audioUI(au) {
+      const left = () => MAX_PLAYS - (st.plays[au.id] || 0);
+      const status = h("span", { class: "rn-audio-st", "aria-live": "polite" });
+      const btn = h("button", { type: "button", class: "btn rn-audio-btn" });
+      const paint = (playing) => {
+        btn.disabled = playing || left() <= 0;
+        btn.innerHTML = "";
+        btn.append(h("span", { "aria-hidden": "true", html: playing ? "&#9632;" : "&#9654;" }), playing ? " Escuchando…" : left() > 0 ? ` Escuchar el audio` : " Ya escuchaste el audio 2 veces");
+        status.textContent = playing ? "" : left() > 0 ? `Puedes escucharlo ${left() === 2 ? "2 veces" : "1 vez más"}.` : "";
+      };
+      btn.onclick = () => {
+        if (left() <= 0) return;
+        st.plays[au.id] = (st.plays[au.id] || 0) + 1;
+        paint(true);
+        stopCurrent = playAudio(au, () => { stopCurrent = null; if (btn.isConnected) paint(false); }, msg => { status.textContent = msg; });
+      };
+      paint(false);
+      return h("div", { class: "rn-audio" }, h("div", {}, h("span", { class: "rn-sec" }, "Listening"), h("b", {}, " " + au.title)), h("div", { class: "row" }, btn, status));
+    }
+    function playAudio(au, done, warn) {
+      let over = false, fell = false;
+      const end = () => { if (!over) { over = true; done(); } };
+      const el = new Audio(`/media/audio/${au.id}.mp3`);
+      const fallback = () => {
+        if (fell || over) return;
+        fell = true;
+        if (!("speechSynthesis" in window)) { warn("Tu navegador no puede reproducir este audio. Prueba con Chrome o Safari."); return end(); }
+        speak(au.lines, end);
+        // Por si la voz del navegador no avisa que terminó: se libera el botón después del tiempo estimado.
+        const words = au.lines.reduce((n, l) => n + l[1].split(/\s+/).length, 0);
+        guard = setTimeout(end, (words / 2.3) * 1000 * 1.4 + 3000);
+      };
+      let guard = 0;
+      el.addEventListener("ended", end);
+      el.addEventListener("error", fallback);
+      el.play().catch(fallback);
+      return () => { over = true; clearTimeout(guard); el.pause(); try { speechSynthesis.cancel(); } catch {} };
+    }
+    function speak(lines, end) {
+      const all = speechSynthesis.getVoices().filter(v => /^en[-_]/i.test(v.lang));
+      const pref = all.filter(v => /GB/i.test(v.lang)).concat(all);
+      const fem = /female|samantha|karen|serena|kate|susan|hazel|libby|sonia|moira|tessa|fiona|victoria|zira|aria|jenny|emma/i;
+      const male = /male|daniel|george|ryan|thomas|alex|fred|oliver|arthur|guy|david|mark/i;
+      const voice = { W: pref.find(v => fem.test(v.name) && !/female/i.test(v.name) || /female/i.test(v.name)) || pref[0], M: pref.find(v => male.test(v.name) && !/female/i.test(v.name)) || pref[1] || pref[0] };
+      voice.N = voice.W;
+      speechSynthesis.cancel();
+      lines.forEach(([who, text], i) => {
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = "en-GB"; u.rate = 0.92;
+        if (voice[who]) u.voice = voice[who];
+        if (voice.W === voice.M) u.pitch = who === "M" ? 0.75 : 1.15;
+        if (i === lines.length - 1) { u.onend = end; u.onerror = end; }
+        speechSynthesis.speak(u);
+      });
+    }
 
     function answerUI(q) {
       const cur = st.answers[q.id] ?? "";
@@ -287,6 +354,8 @@
   // ---------- Resultados ----------
   function renderResult(root, out, { contact, onRetry, onExit, unlock } = {}) {
     const r = out.result;
+    // append() escribiría «null» como texto: se omiten los bloques vacíos.
+    const put = (...kids) => root.append(...kids.filter(k => k != null && k !== false));
     root.classList.add("runner");
     root.innerHTML = "";
     const ctaRow = h("div", { class: "row" },
@@ -298,7 +367,7 @@
     const downloadBox = () => {
       if (!unlock) {
         const b = h("button", { class: "btn", onclick: async () => { b.disabled = true; b.textContent = "Generando PDF…"; try { await FWPdf.score(r, contact); b.textContent = "✓ Informe descargado"; } catch (e) { b.textContent = "Reintentar descarga"; } b.disabled = false; } }, "Descargar mi informe (PDF)");
-        return h("div", { class: "rn-download" }, h("b", {}, ico("file"), " Tu informe en PDF"), h("p", {}, "Con tus gráficos, el detalle por sección y tu plan de mejora."), b);
+        return h("div", { class: "rn-download" }, h("b", {}, ico("file"), " Tu informe en PDF"), h("p", {}, r.scoresOnly ? "Con tu puntaje por sección y tu nivel estimado." : "Con tus gráficos, el detalle por sección y tu plan de mejora."), b);
       }
       const box = h("div", { class: "rn-download" });
       const vocational = r.kind === "vocational";
@@ -318,7 +387,7 @@
     };
 
     if (r.kind === "vocational") {
-      root.append(
+      put(
         h("div", { class: "rn-res-head" }, h("div", { class: "rn-top" },
           h("span", { class: "rn-small" }, "La carrera que más te conviene"),
           h("div", { class: "rn-topname" }, r.top.name),
@@ -334,7 +403,18 @@
     }
 
     const ring = h("div", { class: "rn-ring", style: `--p:${r.pct};--c:${bandColor(r.pct)}` }, h("b", {}, r.pct + "%"), h("span", {}, `${r.correct}/${r.total}`));
-    root.append(
+    // Prueba de nivel: solo el puntaje por sección y el nivel estimado (sin explicaciones ni correcciones).
+    if (r.scoresOnly) {
+      put(
+        h("div", { class: "rn-res-head" }, ring, h("div", {}, h("span", { class: "rn-small" }, `${r.title} · ${r.label}`), h("div", { class: "rn-band" }, r.band))),
+        h("h3", { class: "rn-h" }, "Puntaje por sección"),
+        h("div", { class: "rn-bars" }, r.sections.map(s => h("div", { class: "rn-barrow" },
+          h("div", { class: "rn-barlbl" }, h("b", {}, s.name), h("span", {}, `${s.correct}/${s.total} · ${s.pct} %`)),
+          h("div", { class: "bar" }, h("i", { style: `width:${Math.max(3, s.pct)}%;background:${bandColor(s.pct)}` }))))),
+        downloadBox(), ctaRow);
+      return;
+    }
+    put(
       h("div", { class: "rn-res-head" }, ring, h("div", {}, h("span", { class: "rn-small" }, `${r.title} · ${r.label}`), h("div", { class: "rn-band" }, r.band), h("p", {}, r.message))),
       r.topics ? h("h3", { class: "rn-h" }, `Resultado por tema · ${r.sections[0].name}`) : null,
       h("div", { class: "rn-bars" }, (r.topics || r.sections).map(s => h("div", { class: "rn-barrow" },
