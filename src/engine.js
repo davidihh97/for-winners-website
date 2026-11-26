@@ -60,8 +60,8 @@ export function startAttempt(quizId, levelId, { sections: only, seen = [] } = {}
       let block = pickOne(srcs, seenPos, usedKeys, prompts);
       if (!block) break;
       // En los simuladores por partes, una lectura no puede pasarse del cupo de su parte.
-      if (tier && block.length > n - count) block = block.slice(0, n - count);
-      block.forEach(b => { b.section = sec.group || sec.name; b.group = sec.group || sec.name; if (tier) b.tier = tier; });
+      if (block.length > n - count) block = block.slice(0, n - count);
+      block.forEach(b => { b.section = sec.group || sec.name; b.group = sec.group || sec.name; b.si = sections.indexOf(sec); if (tier) b.tier = tier; });
       blocks.push(block);
       count += block.length;
     }
@@ -80,6 +80,11 @@ export function startAttempt(quizId, levelId, { sections: only, seen = [] } = {}
   // Test por partes (vocacional): se respeta el orden de las partes y se mezclan las preguntas dentro de cada una.
   let ordered = shuffle(blocks);
   if (quiz.ordered) { const groups = [...new Set(sections.map(s => s.group || s.name))]; ordered = groups.flatMap(g => ordered.filter(b => b[0].group === g)); }
+  // Prueba de nivel: dentro de cada destreza, de lo más fácil (A2) a lo más difícil (C1).
+  if (quiz.progressive) {
+    const gp = [...new Set(sections.map(s => s.group || s.name))];
+    ordered = ordered.map((b, i) => [b, i]).sort((x, y) => gp.indexOf(x[0][0].group) - gp.indexOf(y[0][0].group) || x[0][0].si - y[0][0].si || x[1] - y[1]).map(x => x[0]);
+  }
   // Simuladores de admisión: primero todas las básicas y luego todas las avanzadas.
   if (quiz.tiers) ordered = ["easy", "hard"].flatMap(t => ordered.filter(b => b[0].tier === t));
   const questions = ordered.flat().map(toClient);
@@ -147,6 +152,7 @@ function toClient({ id, q, section, tier }) {
   if (q.svg) out.svg = q.svg;
   if (q.figure) out.figure = q.figure;
   if (q.optionsSvg) out.optionsSvg = true;
+  if (q.audio) out.audio = q.audio;
   if (type === "mc") out.options = q.keepOrder ? q.options.slice() : shuffle(q.options);
   if (type === "order") {
     let tokens = q.answer.split(/\s+/);
@@ -170,10 +176,16 @@ function isCorrect(q, value) {
 
 const correctText = q => (q.type === "text" ? q.accept[0] : q.type === "order" ? q.answer : q.options[0]);
 
-// Mapa clave de fuente → sección, para no confiar en lo que envía el navegador.
+// Mapa clave de fuente → sección (o su grupo: «Reading A2» cuenta como «Reading»), para no confiar en lo que envía el navegador.
 function sectionMap(level) {
   const m = new Map();
-  for (const s of level.sections) for (const src of s.src) { const k = norm(src).key; if (!m.has(k)) m.set(k, s.name); }
+  for (const s of level.sections) for (const src of s.src) { const k = norm(src).key; if (!m.has(k)) m.set(k, s.group || s.name); }
+  return m;
+}
+// Clave de fuente → nivel MCER de la sección (solo en la prueba de nivel de inglés).
+function cefrMap(level) {
+  const m = new Map();
+  for (const s of level.sections) if (s.cefr) for (const src of s.src) { const k = norm(src).key; if (!m.has(k)) m.set(k, s.cefr); }
   return m;
 }
 
@@ -205,7 +217,7 @@ const band = pct => pct >= 85 ? "Sobresaliente" : pct >= 70 ? "Competitivo" : pc
 const sectionAdvice = pct => pct >= 80 ? "Buen dominio" : pct >= 50 ? "Refuerzo recomendado" : "Necesita apoyo";
 
 function scoreResult(base, quiz, level, graded, mode) {
-  const order = level.sections.map(s => s.name);
+  const order = [...new Set(level.sections.map(s => s.group || s.name))];
   const bySec = new Map();
   for (const g of graded) {
     const s = bySec.get(g.section) || { name: g.section, correct: 0, total: 0 };
@@ -249,6 +261,15 @@ function scoreResult(base, quiz, level, graded, mode) {
     out.weak = out.topics.filter(tp => tp.pct < 70).map(tp => tp.name);
     out.strong = out.topics.filter(tp => tp.pct >= 80).map(tp => tp.name);
     out.message = scoreMessage(base.quiz, pct, out.weak);
+  }
+  // Prueba de nivel: solo puntajes por sección y nivel estimado; sin correcciones ni explicaciones.
+  if (quiz.scoresOnly) {
+    const lv = cefrMap(level), acc = {};
+    for (const g of graded) { const c = lv.get(g.id.split("|")[0]); if (!c) continue; acc[c] ||= [0, 0]; acc[c][1]++; if (g.ok) acc[c][0]++; }
+    let cefr = "A1";
+    for (const c of ["A2", "B1", "B2", "C1"]) { const [ok, tot] = acc[c] || [0, 0]; if (tot && ok / tot >= 0.6) cefr = c; else break; }
+    return { ...base, scoresOnly: true, correct, total, pct, cefr, band: `Nivel estimado ${cefr}`,
+      sections: sections.map(({ name, correct: c, total: t, pct: p }) => ({ name, correct: c, total: t, pct: p })), weak: [], strong: [] };
   }
   if (mode === "full") out.items = graded.map(detail);
   // Informe parcial: solo se revelan algunas correcciones; el resto queda para la clase.

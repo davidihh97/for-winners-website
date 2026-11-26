@@ -81,6 +81,22 @@
       { t: "easy", q: "¿Qué palabra está escrita correctamente?", o: ["exhausto", "exausto", "exaústo", "hexausto"], e: "Exhausto se escribe con «xh»." },
       { t: "hard", q: "En «María regaló flores a su madre», el complemento directo es:", o: ["flores", "a su madre", "María", "regaló"], e: "Lo que se regala: «flores» (se puede cambiar por «las»: María las regaló)." },
     ],
+    sociales: [
+      { t: "easy", q: "¿Cuál es la capital de la provincia de Imbabura?", o: ["Ibarra", "Otavalo", "Tulcán", "Cotacachi"], e: "Ibarra, la Ciudad Blanca, es la capital de Imbabura." },
+      { t: "hard", q: "Los tres poderes clásicos del Estado son:", o: ["Ejecutivo, Legislativo y Judicial", "Militar, Policial y Civil", "Electoral, Social y Económico", "Presidencial, Municipal y Provincial"], e: "En Ecuador la Constitución de 2008 agrega además la Función Electoral y la de Transparencia y Control Social." },
+    ],
+    historia: [
+      { t: "easy", q: "El Primer Grito de Independencia de Quito ocurrió el:", o: ["10 de agosto de 1809", "24 de mayo de 1822", "9 de octubre de 1820", "13 de mayo de 1830"], e: "El 10 de agosto de 1809 los criollos quiteños formaron la primera Junta Soberana." },
+      { t: "hard", q: "¿Cuál de estos hechos ocurrió PRIMERO?", o: ["Revolución Francesa", "Batalla de Pichincha", "Revolución Liberal de Alfaro", "Protocolo de Río de Janeiro"], e: "1789 → 1822 → 1895 → 1942." },
+    ],
+    filosofia: [
+      { t: "easy", q: "«Pienso, luego existo» es de:", o: ["René Descartes", "Immanuel Kant", "John Locke", "Platón"], e: "Descartes, padre del racionalismo moderno." },
+      { t: "hard", q: "Si p es V y q es F, ¿cuál es el valor de verdad de p → q?", o: ["F", "V"], e: "El condicional solo es falso cuando el antecedente es verdadero y el consecuente falso." },
+    ],
+    finanzas: [
+      { t: "easy", q: "Una empresa tiene activos por $8.000 y pasivos por $2.500. ¿Cuál es su patrimonio?", o: ["$5.500", "$10.500", "$2.500", "$8.000"], e: "Activo = Pasivo + Patrimonio → 8.000 − 2.500." },
+      { t: "hard", q: "Se invierten $1.000 al 10 % anual con interés compuesto. ¿Cuál es el monto en 2 años?", o: ["$1.210", "$1.200", "$210", "$1.100"], e: "M = 1.000 · 1,1² = 1.210. Con interés simple serían $1.200." },
+    ],
     // Inglés por nivel
     "en-a1": [{ q: "She ___ a teacher.", o: ["is", "are", "am", "be"], e: "With he / she / it we use «is»." }, { q: "I ___ two brothers.", o: ["have", "has", "having", "am have"], e: "I / you / we / they + have." }],
     "en-a2": [{ q: "Yesterday we ___ to the beach.", o: ["went", "go", "goes", "going"], e: "Past simple of «go» is «went»." }, { q: "This book is ___ than that one.", o: ["more interesting", "interestinger", "most interesting", "more interestinger"], e: "Long adjectives use «more … than»." }],

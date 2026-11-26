@@ -68,6 +68,38 @@ export const AREAS = [
   { id: "quimica", name: "Química", topics: [
     { id: "masa-molar", name: "Masa molar", k: ["q.molar"], r: "Suma las masas atómicas de todos los átomos de la fórmula: CO₂ = 12 + 2·16 = 44 g/mol." },
     { id: "moles", name: "Moles", k: ["q.moles"], r: "n = masa ÷ masa molar. 1 mol contiene 6,022 × 10²³ partículas." },
+    { id: "molaridad", name: "Soluciones: molaridad", k: ["q.molarity"], r: "Molaridad M = moles de soluto ÷ litros de solución. Primero pasa los gramos a moles (n = m/M) y los mL a litros (÷ 1000)." },
+    { id: "porcentaje-masa", name: "Soluciones: % en masa", k: ["q.percent"], r: "% m/m = masa de soluto ÷ masa de SOLUCIÓN × 100. La solución es soluto + solvente: no dividas solo para el agua." },
+    { id: "ph", name: "Ácidos, bases y pH", k: ["q.ph"], r: "pH = −log[H⁺]: si [H⁺] = 1 × 10⁻ⁿ, el pH es n. pH + pOH = 14. Menor que 7: ácido; 7: neutro; mayor que 7: básico." },
+    { id: "gases", name: "Leyes de los gases", k: ["q.gas"], r: "Boyle (T constante): P₁V₁ = P₂V₂. Charles (P constante): V₁/T₁ = V₂/T₂. La temperatura SIEMPRE en kelvin: K = °C + 273." },
+  ] },
+  { id: "biologia", name: "Biología", topics: [
+    { id: "genetica", name: "Genética de Mendel", k: ["b.genetics"], r: "Arma el cuadro de Punnett: los alelos de un padre arriba y los del otro al costado. Aa × Aa da 1 AA : 2 Aa : 1 aa (fenotipo 3 : 1). La mayúscula es el alelo dominante." },
+    { id: "adn", name: "ADN y ARN", k: ["b.dna"], r: "ADN: A con T y C con G. Al transcribir a ARN, la T se reemplaza por U: A → U, T → A, C → G, G → C." },
+  ] },
+  { id: "lengua", name: "Lengua y Literatura", topics: [
+    { id: "acentuacion", name: "Acentuación (agudas, llanas, esdrújulas)", k: ["le.accent"], r: "Aguda: fuerza en la última sílaba, tilde si termina en n, s o vocal (canción). Llana: penúltima, tilde si NO termina en n, s o vocal (árbol). Esdrújulas y sobresdrújulas: siempre llevan tilde." },
+  ] },
+  { id: "historia", name: "Historia", topics: [
+    { id: "cronologia", name: "Cronología del Ecuador y del mundo", k: ["hi.order", "hi.century"], r: "Ubica cada hecho en su siglo: el siglo es el número de centenas + 1 (1809 → siglo XIX). Fechas ancla: 1492 Colón, 1809 Primer Grito, 1822 Pichincha, 1830 República, 1895 Revolución Liberal, 2008 Constitución." },
+  ] },
+  { id: "filosofia", name: "Filosofía", topics: [
+    { id: "logica", name: "Lógica proposicional", k: ["fi.logic"], r: "∧ (y): V solo si ambas son V. ∨ (o): F solo si ambas son F. → (si… entonces): F solo si la primera es V y la segunda F. ↔: V si ambas tienen el mismo valor. ¬ cambia el valor." },
+  ] },
+  { id: "finanzas", name: "Contabilidad y matemática financiera", topics: [
+    { id: "interes-simple", name: "Interés simple", k: ["fn.simple"], r: "I = C · i · t, con la tasa en decimal (8 % = 0,08) y el tiempo en años (meses ÷ 12). Monto = C + I." },
+    { id: "interes-compuesto", name: "Interés compuesto", k: ["fn.compound"], r: "M = C · (1 + i)ⁿ. Cada período el interés se suma al capital y también gana interés." },
+    { id: "iva", name: "IVA y descuentos", k: ["fn.iva", "fn.discount"], r: "En Ecuador el IVA es 15 %: total = base × 1,15 y base = total ÷ 1,15. Descuentos seguidos se multiplican: 20 % y luego 10 % es × 0,8 × 0,9 = × 0,72 (no 30 %)." },
+    { id: "contabilidad", name: "Ecuación contable y depreciación", k: ["fn.equation", "fn.depr"], r: "Activo = Pasivo + Patrimonio. Depreciación en línea recta = (costo − valor residual) ÷ años de vida útil." },
+  ] },
+  { id: "ingles", name: "Inglés (grammar)", topics: [
+    { id: "to-be", name: "Verb to be y artículos", k: ["en.be", "en.article"], r: "I am · he/she/it is · you/we/they are. «an» antes de sonido vocálico (an hour), «a» antes de sonido consonante (a university)." },
+    { id: "presente-simple", name: "Present simple", k: ["en.ps3"], r: "Con he/she/it el verbo lleva -s, -es o -ies (plays, watches, studies). Negativo: don't / doesn't + verbo base." },
+    { id: "pasado-simple", name: "Past simple", k: ["en.past"], r: "Regulares: -ed (played). Irregulares se memorizan: go → went, buy → bought, write → wrote. En negativo y pregunta se usa did + verbo base." },
+    { id: "present-perfect", name: "Present perfect", k: ["en.pp"], r: "have/has + participio (have seen, has written). Se usa con since, for, already, yet, ever, never." },
+    { id: "comparativos", name: "Comparatives", k: ["en.comp"], r: "Adjetivos cortos: -er than (taller than). Largos: more … than (more interesting than). Irregulares: good → better, bad → worse." },
+    { id: "condicionales", name: "Conditionals", k: ["en.cond"], r: "1st: if + present, will + verb. 2nd: if + past, would + verb. 3rd: if + past perfect, would have + participle." },
+    { id: "pasiva", name: "Passive voice", k: ["en.passive"], r: "be (en el tiempo que corresponda) + participio: is built, was written, will be done, has been sold." },
   ] },
   { id: "estadistica", name: "Estadística", topics: [
     { id: "tendencia", name: "Media, mediana y moda", k: ["st.mean", "st.median", "st.mode"], r: "Media: suma ÷ cantidad. Mediana: el valor del centro con los datos ORDENADOS. Moda: el que más se repite." },
