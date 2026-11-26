@@ -167,8 +167,18 @@
     const tw = (W - 2 * M - 8) / 3;
     tile(doc, M, y, tw, 22, "Puntaje", `${r.pct}%`, levelColor(r.pct));
     tile(doc, M + tw + 4, y, tw, 22, "Respuestas correctas", `${r.correct} de ${r.total}`);
-    tile(doc, M + 2 * (tw + 4), y, tw, 22, "Nivel alcanzado", r.band);
+    tile(doc, M + 2 * (tw + 4), y, tw, 22, r.scoresOnly ? "Nivel estimado (MCER)" : "Nivel alcanzado", r.scoresOnly ? r.cefr : r.band);
     y += 30;
+    // Prueba de nivel: solo puntajes por sección.
+    if (r.scoresOnly) {
+      y = sectionTitle(doc, y, "Puntaje por sección");
+      y = bars(doc, M, y + 1, W - 2 * M, r.sections.map(s => ({ label: s.name, pct: s.pct, note: `${s.correct} de ${s.total}` })), { rowH: 12, labelW: 60 }) + 2;
+      y = table(doc, y, { head: [["Sección", "Correctas", "Total", "Puntaje"]], body: r.sections.map(s => [s.name, s.correct, s.total, `${s.pct}%`]),
+        columnStyles: { 1: { halign: "center" }, 2: { halign: "center" }, 3: { halign: "center" } } });
+      contactBox(doc, y + 4, r.cta.text);
+      footer(doc);
+      return doc.save(fileName("Prueba-de-nivel-ingles", contact.name));
+    }
     y = sectionTitle(doc, y, "Resultado general");
     donut(doc, M + 26, y + 26, 24, r.pct, "de aciertos");
     const ry = y + 6;

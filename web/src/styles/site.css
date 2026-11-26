@@ -766,3 +766,17 @@ a.mod:hover { border-color: var(--ink); }
 /* Los últimos submenús se abren hacia la izquierda para no salirse de la pantalla. */
 @media (min-width: 961px) { .nav-item[data-group="ase"] .sub, .nav-item[data-group="comp"] .sub { left: auto; right: -18px; } }
 .hero.landing { overflow-x: clip; } /* la entrada animada del gancho no debe generar scroll lateral */
+
+/* ===== Prueba de nivel de inglés: instrucciones y audio de Listening ===== */
+.rn-inst { margin: 0 0 12px; font-size: 14px; color: var(--mute); line-height: 1.5; }
+.rn-audio { display: grid; gap: 12px; padding: 18px; margin-bottom: 18px; border: 1px solid var(--line); border-radius: var(--r); background: var(--wash); }
+.rn-audio b { font-weight: 600; }
+.rn-audio .row { margin: 0; align-items: center; gap: 12px; justify-content: flex-start; }
+.rn-audio-btn { gap: 8px; }
+.rn-audio-btn[disabled] { opacity: .55; cursor: default; }
+.rn-audio-st { font-size: 13px; color: var(--mute); }
+.nv-part { border: 1px solid var(--line); background: var(--paper); border-radius: var(--r); padding: 22px; display: grid; gap: 4px; align-content: start; }
+.nv-part b { font-size: 18px; font-weight: 600; letter-spacing: -.015em; }
+.nv-part > span:last-child { color: var(--mute); font-size: 14px; line-height: 1.45; }
+.nv-part .ic { margin-bottom: 8px; }
+.nv-notes { margin-top: 28px; max-width: 720px; }

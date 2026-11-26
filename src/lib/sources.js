@@ -42,6 +42,21 @@ export function passages(key, list) {
   });
 }
 
+// Listening: cada grabación (audio) aporta varias preguntas. El texto no se muestra: es el guion del audio.
+// lines: [["W" | "M" | "N", "texto"], …] (mujer, hombre, narrador). El audio se busca en /media/audio/<id>.mp3;
+// si no existe, el navegador lo lee con voz sintética.
+export function listening(key, list) {
+  register(key, {
+    kind: "passage",
+    size: list.length,
+    count: idx => list[idx].qs.length,
+    build: (idx, _r, sub) => {
+      const p = list[idx];
+      return { ...fromItem(p.qs[sub]), keepOrder: false, audio: { id: p.id, title: p.title, lines: p.lines } };
+    },
+  });
+}
+
 function fromItem(it, extra = {}) {
   if (it.s) return { prompt: it.q || extra.orderPrompt || "Ordena las palabras para formar una oración correcta.", type: "order", answer: it.s, explain: it.e };
   if (it.a) return { prompt: it.q, type: "text", accept: it.a, explain: it.e };
