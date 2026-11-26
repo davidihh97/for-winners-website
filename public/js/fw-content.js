@@ -38,14 +38,41 @@
   function selectorOf(el) {
     const parts = [];
     while (el && el.nodeType === 1 && el !== document.body) {
+      if (el.dataset.fwClone) { parts.unshift(`[data-fw-clone="${el.dataset.fwClone}"]`); return parts.join(">"); }
       if (el.id && !/^fw-/.test(el.id)) { parts.unshift("#" + CSS.escape(el.id)); break; }
       let i = 1, s = el;
-      while ((s = s.previousElementSibling)) if (s.tagName === el.tagName) i++;
+      // Si algo se movió de lugar, se usa la posición original (los cambios se guardan sobre la página original).
+      if (el.dataset.fwI) i = +el.dataset.fwI;
+      else while ((s = s.previousElementSibling)) if (s.tagName === el.tagName && !s.dataset.fwClone && !s.dataset.fwSec) i++;
       parts.unshift(`${el.tagName.toLowerCase()}:nth-of-type(${i})`);
       el = el.parentElement;
     }
     if (el === document.body) parts.unshift("body");
     return parts.join(">");
+  }
+
+  // Busca un elemento por su selector aunque algo se haya movido (usa la posición original guardada).
+  function findSel(sel) {
+    if (!document.querySelector("[data-fw-stamped]")) { try { return document.querySelector(sel); } catch (e) { return null; } }
+    let cur = null;
+    for (const part of String(sel).split(">")) {
+      let m;
+      if (part === "body") cur = document.body;
+      else if (part[0] === "#") { try { cur = document.querySelector(part); } catch (e) { return null; } }
+      else if ((m = /^\[data-fw-clone="([\w-]+)"\]$/.exec(part))) cur = document.querySelector(`[data-fw-clone="${m[1]}"]`);
+      else if ((m = /^([a-z0-9]+):nth-of-type\((\d+)\)$/.exec(part)) && cur) {
+        const tag = m[1].toUpperCase(), n = +m[2];
+        let i = 0, hit = null;
+        for (const c of cur.children) {
+          if (c.tagName !== tag || c.dataset.fwClone || c.dataset.fwSec) continue;
+          i++;
+          if ((c.dataset.fwI ? +c.dataset.fwI : i) === n) { hit = c; break; }
+        }
+        cur = hit;
+      } else return null;
+      if (!cur) return null;
+    }
+    return cur;
   }
 
   /* ---------- texto: respeta íconos y formato ---------- */
@@ -124,7 +151,7 @@
     if (!originals.has(el)) originals.set(el, { html: el.innerHTML, href: el.getAttribute("href"), src: el.getAttribute("src"), style: el.getAttribute("style"), cls: el.className, parent: el.parentNode, next: el.nextSibling });
   }
   function revertAll() {
-    document.querySelectorAll("video[data-fw-video]").forEach(v => v.remove());
+    document.querySelectorAll("video[data-fw-video], [data-fw-clone]").forEach(v => v.remove());
     for (const [el, o] of originals) {
       el.innerHTML = o.html;
       o.href == null ? el.removeAttribute("href") : el.setAttribute("href", o.href);
@@ -152,13 +179,32 @@
   window.FW.isVideo = isVideo;
 
   const broken = [];
+  // Bloques (secciones, tarjetas, listas): se reconocen por su primer título, porque parte de su contenido se arma después.
+  const headOf = el => norm((el.querySelector("h1,h2,h3,h4,b,strong") || {}).textContent || "").slice(0, 80);
+  // Los bloques grandes guardan solo el comienzo de su texto (200 letras) para reconocerlos.
+  const sameText = (el, orig) => { const t = norm(el.textContent), o = norm(orig); return o.length >= 200 ? t.startsWith(o) : t === o; };
   function applyOverrides() {
     const list = (C.overrides && C.overrides[PAGE]) || [];
     broken.length = 0;
+    document.querySelectorAll("[data-fw-sec]").forEach(n => n.remove()); // renderSections las vuelve a poner
+    const q = sel => { try { return document.querySelector(sel); } catch (e) { return null; } };
+    // Elementos agregados con «Duplicar»: copia del original, al final de los de su tipo (no mueve a los demás).
+    for (const o of list) {
+      const src = (o.clones || []).length && q(o.sel);
+      if (!src || !src.parentNode) continue;
+      for (const id of o.clones) {
+        if (!/^[\w-]{1,40}$/.test(id) || document.querySelector(`[data-fw-clone="${id}"]`)) continue;
+        const c = src.cloneNode(true);
+        [c, ...c.querySelectorAll("*")].forEach(n => { [...n.attributes].forEach(a => { if (a.name === "id" || a.name.startsWith("data-fw-")) n.removeAttribute(a.name); }); });
+        c.style.removeProperty("display");
+        c.dataset.fwClone = id;
+        const same = [...src.parentNode.children].filter(x => x.tagName === src.tagName);
+        same[same.length - 1].after(c);
+      }
+    }
     const found = list.map(o => {
-      let el = null;
-      try { el = document.querySelector(o.sel); } catch (e) { /* selector inválido */ }
-      if (!el || (o.orig && norm(el.textContent) !== norm(o.orig) && !originals.has(el))) { broken.push(o.sel); return null; }
+      const el = q(o.sel);
+      if (!el || (o.orig && !sameText(el, o.orig) && !originals.has(el)) || (o.head && headOf(el) !== o.head)) { broken.push(o.sel); return null; }
       return [o, el];
     }).filter(Boolean);
     for (const [o, el] of found) {
@@ -179,6 +225,17 @@
       if (o.hidden) el.style.setProperty("display", "none", "important");
     }
     // Cambios de orden al final, cuando todos los selectores ya se resolvieron.
+    // Antes, cada hermano guarda su posición original para que los selectores sigan apuntando bien.
+    for (const [o, el] of found) {
+      if (o.pos == null || !el.parentNode || el.parentNode.dataset.fwStamped) continue;
+      el.parentNode.dataset.fwStamped = "";
+      const n = {};
+      for (const c of el.parentNode.children) {
+        if (c.dataset.fwClone || c.dataset.fwSec) continue;
+        n[c.tagName] = (n[c.tagName] || 0) + 1;
+        c.dataset.fwI = n[c.tagName];
+      }
+    }
     for (const [o, el] of found) {
       if (o.pos == null || !el.parentNode) continue;
       const sibs = [...el.parentNode.children].filter(x => x !== el);
@@ -240,10 +297,11 @@
   style.textContent = `[data-fw-hover]{outline:2px dashed #2E6BD1!important;outline-offset:3px;cursor:pointer!important}
   [data-fw-sel]{outline:3px solid #C9A13B!important;outline-offset:3px}
   [data-fw-panel-hover]{outline:2px dashed #C9A13B!important;outline-offset:4px;cursor:pointer!important}
+  [data-fw-inline]{outline:3px solid #2E6BD1!important;outline-offset:3px;cursor:text!important;background:rgba(46,107,209,.06)}
   .fw-edit-badge{position:fixed;right:12px;bottom:12px;z-index:9999;background:#0B2A5B;color:#fff;font:600 12px Inter,sans-serif;padding:6px 10px;border-radius:999px;opacity:.85;pointer-events:none}`;
   document.head.append(style);
   const badge = document.createElement("div");
-  badge.className = "fw-edit-badge"; badge.textContent = "Modo edición · haz clic en lo que quieras cambiar";
+  badge.className = "fw-edit-badge"; badge.textContent = "Modo edición · clic para elegir · doble clic para escribir";
   document.body.append(badge);
 
   const post = msg => admin && window.parent.postMessage(msg, admin);
@@ -263,27 +321,109 @@
     hovered = t && t.el;
     if (hovered) hovered.setAttribute(t.kind === "el" ? "data-fw-hover" : "data-fw-panel-hover", "");
   });
+  // Abrir el menú del celular y los submenús sí funciona al editar (para llegar a sus textos).
+  const PASS = ".burger, .sub-toggle";
+  const BLOCKS = "main, nav, header, footer, body, html";
+  let editing = null;
   document.addEventListener("click", e => {
+    if (e.target.closest(PASS)) return;
+    if (editing && editing.contains(e.target)) { e.preventDefault(); return; }
     const t = target(e);
     e.preventDefault(); e.stopPropagation();
     if (!t) return;
+    select(t);
+  }, true);
+  function select(t) {
     document.querySelectorAll("[data-fw-sel]").forEach(x => x.removeAttribute("data-fw-sel"));
     t.el.setAttribute("data-fw-sel", "");
     if (t.kind === "section") return post({ fwPick: { section: t.el.dataset.fwSec } });
     if (t.kind === "panel") return post({ fwPick: { panel: t.panel } });
-    const el = t.el, o = originals.get(el);
+    post({ fwPick: pickOf(t.el) });
+  }
+  const canInline = el => el.tagName !== "IMG" && !structured(el) && simple(el);
+  function origOf(el) {
+    const o = originals.get(el);
     const tmp = document.createElement("div"); tmp.innerHTML = o ? o.html : el.innerHTML;
-    post({ fwPick: {
+    tmp.querySelectorAll("[data-fw-clone]").forEach(n => n.remove());
+    return norm(tmp.textContent);
+  }
+  function pickOf(el) {
+    const textEditable = el.tagName !== "IMG" && !structured(el) && (simple(el) || ownText(el));
+    const orig = origOf(el);
+    const sameTag = el.parentNode ? [...el.parentNode.children].filter(x => x.tagName === el.tagName && !x.dataset.fwClone).length : 1;
+    const up = el.parentElement && !el.parentElement.matches(BLOCKS) && !el.dataset.fwClone ? el.parentElement : null;
+    return {
       sel: selectorOf(el), tag: el.tagName.toLowerCase(),
-      orig: norm(tmp.textContent), text: norm(el.textContent),
+      orig: textEditable || el.tagName === "IMG" ? orig : "", head: textEditable || el.tagName === "IMG" ? "" : headOf(el), text: norm(el.textContent),
+      clone: el.dataset.fwClone || null, inClone: !el.dataset.fwClone && !!el.closest("[data-fw-clone]"),
+      // Se puede duplicar si es parte de una lista de elementos iguales (opciones, tarjetas, puntos…).
+      canDup: !el.dataset.fwClone && !el.closest("[data-fw-clone]") && sameTag >= 2 && !el.matches(BLOCKS + ", section"),
+      parent: up ? { sel: selectorOf(up), label: blockName(up) } : null,
+      inline: canInline(el),
+      block: !textEditable && el.tagName !== "IMG",
       href: el.getAttribute("href"), src: el.getAttribute("src"),
       textEditable: el.tagName !== "IMG" && !structured(el) && (simple(el) || ownText(el)),
       siblings: el.parentNode ? el.parentNode.children.length : 1,
       isBtn: el.classList.contains("btn"), outline: el.classList.contains("o"), isWa: el.classList.contains("wal"),
       cur: (() => { const cs = getComputedStyle(el); return { size: Math.round(parseFloat(cs.fontSize)), color: hex(cs.color), bg: hex(cs.backgroundColor), weight: cs.fontWeight, align: cs.textAlign === "start" ? "left" : cs.textAlign }; })(),
       index: el.parentNode ? [...el.parentNode.children].indexOf(el) : 0,
-    } });
+    };
+  }
+  function blockName(el) {
+    const h = el.querySelector("h1,h2,h3,h4,b,strong");
+    const what = { LI: "Elemento de lista", UL: "Lista", OL: "Lista", SECTION: "Sección", ARTICLE: "Tarjeta", A: "Enlace", FIGURE: "Foto" }[el.tagName]
+      || (el.classList.contains("card") ? "Tarjeta" : "Bloque");
+    return h && h !== el ? `${what}: ${norm(h.textContent).slice(0, 40)}` : what;
+  }
+
+  /* ---------- escribir directo en la página (doble clic) ---------- */
+  document.addEventListener("dblclick", e => {
+    const t = target(e);
+    if (!t || t.kind !== "el" || !canInline(t.el)) return;
+    e.preventDefault();
+    startInline(t.el);
   }, true);
+  function startInline(el) {
+    if (editing) finishInline(true);
+    editing = el;
+    const before = norm(el.innerText), orig = origOf(el), sel = selectorOf(el);
+    el.dataset.fwInline = "";
+    el.setAttribute("contenteditable", "plaintext-only");
+    if (el.contentEditable !== "plaintext-only") el.setAttribute("contenteditable", "true");
+    el.focus();
+    const r = document.createRange(); r.selectNodeContents(el);
+    const range = getSelection(); range.removeAllRanges(); range.addRange(r);
+    const key = e => {
+      if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); finishInline(true); }
+      if (e.key === "Escape") { e.preventDefault(); finishInline(false); }
+    };
+    const blur = () => finishInline(true);
+    el.addEventListener("keydown", key);
+    el.addEventListener("blur", blur);
+    el._fwInline = { before, orig, sel, key, blur };
+  }
+  function finishInline(save) {
+    const el = editing;
+    if (!el) return;
+    editing = null;
+    const { before, orig, sel, key, blur } = el._fwInline || {};
+    el.removeEventListener("keydown", key); el.removeEventListener("blur", blur);
+    el.removeAttribute("contenteditable"); delete el.dataset.fwInline; delete el._fwInline;
+    const text = String(el.innerText || "").replace(/\u00a0/g, " ").replace(/[ \t]+\n/g, "\n").trim();
+    if (!save || !text) return post({ fwRefresh: true }); // vuelve a poner el texto como estaba
+    if (norm(text) === before) return;
+    post({ fwInline: { sel, orig, text } });
+  }
+
+  /* ---------- lista de secciones de la página ---------- */
+  function sectionsOf() {
+    const main = document.querySelector("main");
+    if (!main) return [];
+    return [...main.children].filter(x => x.tagName === "SECTION" && !x.dataset.fwSec).map(x => {
+      const title = norm((x.querySelector("h1,h2,h3") || {}).textContent || "") || (x.querySelector("[data-island]") ? "Portada" : norm(x.textContent).slice(0, 50));
+      return { sel: selectorOf(x), title: title.slice(0, 70), orig: "", head: headOf(x), hidden: x.style.display === "none", index: [...main.children].filter(c => !c.dataset.fwSec && !c.dataset.fwClone).indexOf(x) };
+    });
+  }
   // Formularios y botones no deben funcionar mientras se edita.
   document.addEventListener("submit", e => e.preventDefault(), true);
 
@@ -302,10 +442,21 @@
       Object.assign(C, d.fwDraft);
       applyTheme(); revertAll(); applyOverrides(); renderSections();
       window.dispatchEvent(new Event("fw:content"));
-      post({ fwBroken: broken.slice() });
+      post({ fwBroken: broken.slice(), fwSections: sectionsOf() });
+      const was = d.reselect && document.querySelector(d.reselect);
+      if (was) was.setAttribute("data-fw-sel", "");
     }
     if ("fwSeasonPreview" in d) window.dispatchEvent(new CustomEvent("fw:season-preview", { detail: d.fwSeasonPreview || {} }));
-    if (d.fwHello) post({ fwReady: { page: PAGE, title: document.title, description: (document.querySelector('meta[name="description"]') || {}).content || "", broken: broken.slice() } });
+    if (d.fwHello) post({ fwReady: { page: PAGE, title: document.title, description: (document.querySelector('meta[name="description"]') || {}).content || "", broken: broken.slice(), sections: sectionsOf() } });
+    if (d.fwSelect) {
+      const el = findSel(d.fwSelect.sel);
+      if (el) {
+        if (d.fwSelect.scroll !== false) el.scrollIntoView({ behavior: "smooth", block: "center" });
+        // Si el bloque es una zona que se edita con formulario, se abre ese formulario.
+        const pz = panelOf(el);
+        select(pz ? { el, kind: "panel", panel: pz } : { el, kind: "el" });
+      }
+    }
     if (d.fwScrollTo) { const s = document.querySelector(`[data-fw-sec="${CSS.escape(d.fwScrollTo)}"]`); if (s) s.scrollIntoView({ behavior: "smooth", block: "center" }); }
   });
   try { const y = sessionStorage.getItem("fw-scroll"); if (y) { sessionStorage.removeItem("fw-scroll"); addEventListener("load", () => scrollTo(0, +y)); } } catch (e) { /* ignorar */ }

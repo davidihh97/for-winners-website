@@ -19,7 +19,9 @@ function heroes() {
       hook: o.hook || h.hook,
       lead: o.p || h.lead,
       facts: lines(o.facts).length ? lines(o.facts) : h.facts,
-      cta: o.cta ? [h.cta[0], o.cta] : h.cta,
+      cta: [o.ctaHref || h.cta[0], o.cta || h.cta[1]],
+      // Segundo botón: se puede cambiar, agregar (si no tenía) u ocultar.
+      alt: o.noAlt ? null : (o.altText || h.alt) ? [o.altHref || (h.alt || [])[0] || h.cta[0], o.altText || h.alt[1]] : null,
       src: media || "/" + h.img,
       video: /\.(mp4|webm|mov)(\?|$)/i.test(media || ""),
     };
